@@ -1,0 +1,12 @@
+.DS_Store
+*/node_modules/
+*.env
+sc4p-backend/config/serviceAccountKey.json
+.idea/*
+sc4p-backend/prisma/migrations
+.vscode/*
+*.rest
+sc4p-frontend/tsconfig.tsbuildinfo
+*/dist/
+*/dev-dist/
+*/pnpm*
