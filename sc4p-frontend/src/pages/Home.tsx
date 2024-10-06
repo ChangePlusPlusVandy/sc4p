@@ -1,41 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import { getUserData } from "../lib/Services";
 
 const Home: React.FC = () => {
-  const [fact, setFact] = useState<string>("");
+  const [userData, setUserData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    const fetchFact = async () => {
-      console.log("called");
-      try {
-        const token = await currentUser?.getIdToken();
-
-        const payloadHeader = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-
-        // below, the /api is replaced with the server url defined in vite.config.ts
-        // so, if the server is defined as "localhost:3001" in that file,
-        // the fetch url will be "localhost:3001/example"
-        const res = await fetch("/api/example", payloadHeader);
-        setFact(await res.text());
-      } catch (err) {
-        console.log(err);
+    const fetchUserData = async () => {
+      if (currentUser) {
+        const token = await currentUser.getIdToken();
+        try {
+          const response = await getUserData(token);
+          const data = JSON.parse(await response.text());
+          setUserData(data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        } finally {
+          setLoading(false);
+        }
       }
     };
 
-    void fetchFact();
+    fetchUserData();
   }, [currentUser]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
-      <h2>Home Page</h2>
-      <h3>Testing branch 3/</h3>
+      <h1>User List</h1>
+      <ul>
+        {Array.isArray(userData) && userData.length > 0 ? (
+          userData.map((user) => (
+            <li key={user.id}> {user.name || user.email}</li>
+          ))
+        ) : (
+          <li>No users found.</li>
+        )}
+      </ul>
     </div>
   );
 };
