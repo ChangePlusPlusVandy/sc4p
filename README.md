@@ -1,2 +1,41 @@
-# sc4p
-This repository contains the source code for the web application built for Second Chance 4 Pets.
+<h1 align="center">Second Chance 4 Pets Repository</h1>
+
+### Running the backend
+
+Navigate to the backend folder
+
+```
+sc4p-Backend
+```
+
+Install dependencies
+
+```
+npm i
+```
+
+Start server (port 3001)
+
+```
+npm start
+```
+
+### Running the frontend (React)
+
+- Navigate to the frontend directory
+
+```
+sc4p-Frontend
+```
+
+Install dependencies
+
+```
+npm i
+```
+
+Start app
+
+```
+npm start
+```
