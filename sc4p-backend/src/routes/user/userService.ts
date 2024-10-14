@@ -7,9 +7,9 @@ export const getAllUsers = async () => {
 };
 
 export const getUserByEmail = async (email: string) => {
-    return await prisma.user.findUnique({
-        where: { email },
-    });
+  return await prisma.user.findUnique({
+    where: { email },
+  });
 };
 
 export const getUserById = async (id: number) => {
@@ -38,7 +38,7 @@ export const deleteUserById = async (id: number) => {
 };
 
 export const deleteUserByEmail = async (email: string) => {
-    return await prisma.user.delete({
-        where: { email },
-    });
-}
+  return await prisma.user.delete({
+    where: { email },
+  });
+};
