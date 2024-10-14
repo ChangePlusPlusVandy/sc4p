@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getAllUsers,
+  getUserByEmail,
   getUserById,
   createUser,
   updateUser,
@@ -17,6 +18,21 @@ userRouter.get("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error fetching users" });
   }
+});
+
+// Get user by email
+userRouter.get("/:email", async (req, res) => {
+    const { email } = req.params;
+    try {
+        const user = await getUserByEmail(email);
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).json({ message: "User not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching user" });
+    }
 });
 
 // GET user by ID
