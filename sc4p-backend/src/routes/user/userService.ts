@@ -31,8 +31,14 @@ export const updateUser = async (id: number, name: string, email: string) => {
   });
 };
 
-export const deleteUser = async (id: number) => {
+export const deleteUserById = async (id: number) => {
   return await prisma.user.delete({
     where: { id },
   });
 };
+
+export const deleteUserByEmail = async (email: string) => {
+    return await prisma.user.delete({
+        where: { email },
+    });
+}

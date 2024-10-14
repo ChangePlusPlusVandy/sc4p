@@ -5,7 +5,8 @@ import {
   getUserById,
   createUser,
   updateUser,
-  deleteUser,
+  deleteUserById,
+  deleteUserByEmail,
 } from "./userService";
 
 const userRouter = express.Router();
@@ -20,7 +21,7 @@ userRouter.get("/", async (req, res) => {
   }
 });
 
-// Get user by email
+// GET user by email
 userRouter.get("/:email", async (req, res) => {
     const { email } = req.params;
     try {
@@ -73,15 +74,26 @@ userRouter.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE a user
+// DELETE a user by ID
 userRouter.delete("/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    await deleteUser(Number(id));
+    await deleteUserById(Number(id));
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ message: "Error deleting user" });
   }
+});
+
+// DELETE a user by email
+userRouter.delete("/:email", async (req, res) => {
+    const { email } = req.params;
+    try {
+        await deleteUserByEmail(email);
+        res.status(204).send();
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting user" });
+    }
 });
 
 export default userRouter;
