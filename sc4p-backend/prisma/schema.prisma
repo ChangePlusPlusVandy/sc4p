@@ -11,4 +11,12 @@ model User  {
     id Int @id @default(autoincrement())
     name String
     email String @unique
+    address String
+    city String
+    state String
+    zip String
+    home_phone String
+    cell_phone String
+    work_phone String
+    created_at DateTime @default(now())
 }

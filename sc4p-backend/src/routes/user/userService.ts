@@ -1,6 +1,13 @@
 import { PrismaClient } from "@prisma/client";
+import { User } from "../../types/user";
 
 const prisma = new PrismaClient();
+
+export const createUser = async (user: User): Promise<User> => {
+  return await prisma.user.create({
+    data: { ...user },
+  });
+};
 
 export const getAllUsers = async () => {
   return await prisma.user.findMany();
@@ -18,17 +25,19 @@ export const getUserById = async (id: number) => {
   });
 };
 
-export const createUser = async (name: string, email: string) => {
-  return await prisma.user.create({
-    data: { name, email },
+
+export const updateUserById = async (id: number, user: User) => {
+  return await prisma.user.update({
+    where: { id },
+    data: { ...user },
   });
 };
 
-export const updateUser = async (id: number, name: string, email: string) => {
-  return await prisma.user.update({
-    where: { id },
-    data: { name, email },
-  });
+export const updateUserByEmail = async (email: string, user: User) => {
+    return await prisma.user.update({
+        where: { email },
+        data: { ...user },
+    });
 };
 
 export const deleteUserById = async (id: number) => {
