@@ -9,6 +9,7 @@ import PrivateRoute from "./pages/Auth/PrivateRoute";
 import Register from "./pages/Auth/Register";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
+import Form2 from "./pages/form2";
 
 export const App: React.FC = () => {
   return (
@@ -25,6 +26,7 @@ export const App: React.FC = () => {
               path="/profile"
               element={<PrivateRoute element={<Profile />} />}
             />
+            <Route path="/form2" element={<Form2 />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
