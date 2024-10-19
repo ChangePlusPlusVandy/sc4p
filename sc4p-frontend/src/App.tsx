@@ -8,7 +8,9 @@ import Login from "./pages/Auth/Login";
 import PrivateRoute from "./pages/Auth/PrivateRoute";
 import Register from "./pages/Auth/Register";
 import Home from "./pages/Home";
+import Pets from "./pages/Pets";
 import Profile from "./pages/Profile";
+import { NextUIProvider } from "@nextui-org/react";
 
 export const App: React.FC = () => {
   return (
@@ -25,6 +27,7 @@ export const App: React.FC = () => {
               path="/profile"
               element={<PrivateRoute element={<Profile />} />}
             />
+            <Route path="/pets" element={<PrivateRoute element={<Pets />} />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
