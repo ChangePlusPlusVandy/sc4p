@@ -11,6 +11,13 @@ interface FormValues {
   email: string;
   password: string;
   confirmPassword: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  homePhone: string;
+  cellPhone: string;
+  workPhone: string;
 }
 
 const schema = Yup.object().shape({
@@ -24,6 +31,13 @@ const schema = Yup.object().shape({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords do not match")
     .required("Confirm password is required"),
+  address: Yup.string().required("Address is required"),
+  city: Yup.string().required("City is required"),
+  state: Yup.string().required("State is required"),
+  zip: Yup.string().required("Zip code is required"),
+  homePhone: Yup.string().required("Home phone number is required"),
+  cellPhone: Yup.string().required("Cell phone number is required"),
+  workPhone: Yup.string().required("Work phone number is required"),
 });
 
 const Register: React.FC = () => {
@@ -49,7 +63,18 @@ const Register: React.FC = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setError("");
-      await registerUser(values.name, values.email, values.password);
+      await registerUser(
+        values.name,
+        values.email,
+        values.password,
+        values.address,
+        values.city,
+        values.state,
+        values.zip,
+        values.homePhone,
+        values.cellPhone,
+        values.workPhone,
+      );
       navigate("/"); // Redirect to home page
     } catch (err: any) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
@@ -89,6 +114,51 @@ const Register: React.FC = () => {
           />
           {errors.confirmPassword != null && (
             <FormError>{errors.confirmPassword.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="address">Address</label>
+          <input type="text" id="address" {...register("address")} />
+          {errors.address != null && (
+            <FormError>{errors.address.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="city">City</label>
+          <input type="text" id="city" {...register("city")} />
+          {errors.city != null && <FormError>{errors.city.message}</FormError>}
+        </div>
+        <div>
+          <label htmlFor="state">State</label>
+          <input type="text" id="state" {...register("state")} />
+          {errors.state != null && (
+            <FormError>{errors.state.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="zip">Zip</label>
+          <input type="text" id="zip" {...register("zip")} />
+          {errors.zip != null && <FormError>{errors.zip.message}</FormError>}
+        </div>
+        <div>
+          <label htmlFor="homePhone">Home Phone</label>
+          <input type="text" id="homePhone" {...register("homePhone")} />
+          {errors.homePhone != null && (
+            <FormError>{errors.homePhone.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="cellPhone">Cell Phone</label>
+          <input type="text" id="cellPhone" {...register("cellPhone")} />
+          {errors.cellPhone != null && (
+            <FormError>{errors.cellPhone.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="workPhone">Work Phone</label>
+          <input type="text" id="workPhone" {...register("workPhone")} />
+          {errors.workPhone != null && (
+            <FormError>{errors.workPhone.message}</FormError>
           )}
         </div>
         {error && <FormError>{error}</FormError>}

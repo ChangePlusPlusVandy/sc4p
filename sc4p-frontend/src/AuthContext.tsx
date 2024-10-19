@@ -18,6 +18,13 @@ interface AuthContextData {
     name: string,
     email: string,
     password: string,
+    address: string,
+    city: string,
+    state: string,
+    zip: string,
+    homePhone: string,
+    cellPhone: string,
+    workPhone: string,
   ) => Promise<void>;
   logout: () => Promise<void>;
   getUser: () => User | null;
