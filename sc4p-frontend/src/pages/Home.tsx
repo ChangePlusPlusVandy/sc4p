@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { getUserData } from "../lib/Services";
+import AddButton from "../components/AddButton";
+
 
 const Home: React.FC = () => {
   const [userData, setUserData] = useState<any[]>([]);
@@ -30,8 +32,13 @@ const Home: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const tempClick = () => {
+    alert('Button clicked!');
+  };
+
   return (
     <div>
+      <AddButton onClick={tempClick}/>
       <h1>User List</h1>
       <ul>
         {Array.isArray(userData) && userData.length > 0 ? (
@@ -43,7 +50,9 @@ const Home: React.FC = () => {
         )}
       </ul>
     </div>
+    
   );
+
 };
 
 export default Home;
