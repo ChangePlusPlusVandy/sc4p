@@ -67,13 +67,6 @@ const Register: React.FC = () => {
         values.name,
         values.email,
         values.password,
-        values.address,
-        values.city,
-        values.state,
-        values.zip,
-        values.homePhone,
-        values.cellPhone,
-        values.workPhone,
       );
       navigate("/"); // Redirect to home page
     } catch (err: any) {
