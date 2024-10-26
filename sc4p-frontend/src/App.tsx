@@ -10,7 +10,6 @@ import Register from "./pages/Auth/Register";
 import Home from "./pages/Home";
 import Pets from "./pages/Pets";
 import Profile from "./pages/Profile";
-import { NextUIProvider } from "@nextui-org/react";
 
 export const App: React.FC = () => {
   return (
