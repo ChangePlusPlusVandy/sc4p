@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useAuth } from "../../AuthContext";
 import FormError from "./FormError";
+import { Button, Input } from "@nextui-org/react";
 
 interface FormValues {
   email: string;
@@ -54,15 +55,15 @@ const ForgotPassword: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" {...register("email")} />
+          <Input type="email" id="email" {...register("email")} />
           {errors.email != null && (
             <FormError>{errors.email.message}</FormError>
           )}
         </div>
         {error && <FormError>{error}</FormError>}
-        <button disabled={isSubmitting} type="submit">
-          {isSubmitting ? "Submitting" : "Login"}
-        </button>
+        <Button disabled={isSubmitting} type="submit">
+          {isSubmitting ? "Submitting" : "Reset"}
+        </Button>
         {message && <p>{message}</p>}
       </form>
       <p>
