@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useAuth } from "../../AuthContext";
 import FormError from "./FormError";
+import { Input, Button } from "@nextui-org/react";
 
 interface FormValues {
   email: string;
@@ -43,7 +44,7 @@ const Login: React.FC = () => {
       setError("");
       const alal = await login(values.email, values.password);
       console.log(alal);
-      navigate("/"); // Redirect to home page
+      navigate("/");
     } catch (err: any) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
       setError(err.message);
@@ -56,22 +57,22 @@ const Login: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" {...register("email")} />
+          <Input type="email" id="email" {...register("email")} />
           {errors.email != null && (
             <FormError>{errors.email.message}</FormError>
           )}
         </div>
         <div>
           <label htmlFor="password">Password</label>
-          <input type="password" id="password" {...register("password")} />
+          <Input type="password" id="password" {...register("password")} />
           {errors.password != null && (
             <FormError>{errors.password.message}</FormError>
           )}
           {errors && <FormError>{error}</FormError>}
         </div>
-        <button disabled={isSubmitting} type="submit">
+        <Button disabled={isSubmitting} type="submit">
           {isSubmitting ? "Submitting" : "Login"}
-        </button>
+        </Button>
       </form>
       <p>
         Don&apos;t have an account? <Link to="/register">Register</Link>

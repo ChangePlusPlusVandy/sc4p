@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import { useAuth } from "../../AuthContext";
 import FormError from "./FormError";
 
+import { Button, Input } from "@nextui-org/react";
+
 interface FormValues {
   name: string;
   email: string;
@@ -63,14 +65,9 @@ const Register: React.FC = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setError("");
-      await registerUser(
-        values.name,
-        values.email,
-        values.password,
-      );
-      navigate("/"); // Redirect to home page
+      await registerUser(values.name, values.email, values.password);
+      navigate("/");
     } catch (err: any) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
       setError(err.message);
     }
   };
@@ -81,26 +78,26 @@ const Register: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" {...register("name")} />
+          <Input type="text" id="name" {...register("name")} />
           {errors.name != null && <FormError>{errors.name.message}</FormError>}
         </div>
         <div>
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" {...register("email")} />
+          <Input type="email" id="email" {...register("email")} />
           {errors.email != null && (
             <FormError>{errors.email.message}</FormError>
           )}
         </div>
         <div>
           <label htmlFor="password">Password</label>
-          <input type="password" id="password" {...register("password")} />
+          <Input type="password" id="password" {...register("password")} />
           {errors.password != null && (
             <FormError>{errors.password.message}</FormError>
           )}
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
+          <Input
             type="password"
             id="confirmPassword"
             {...register("confirmPassword")}
@@ -111,53 +108,53 @@ const Register: React.FC = () => {
         </div>
         <div>
           <label htmlFor="address">Address</label>
-          <input type="text" id="address" {...register("address")} />
+          <Input type="text" id="address" {...register("address")} />
           {errors.address != null && (
             <FormError>{errors.address.message}</FormError>
           )}
         </div>
         <div>
           <label htmlFor="city">City</label>
-          <input type="text" id="city" {...register("city")} />
+          <Input type="text" id="city" {...register("city")} />
           {errors.city != null && <FormError>{errors.city.message}</FormError>}
         </div>
         <div>
           <label htmlFor="state">State</label>
-          <input type="text" id="state" {...register("state")} />
+          <Input type="text" id="state" {...register("state")} />
           {errors.state != null && (
             <FormError>{errors.state.message}</FormError>
           )}
         </div>
         <div>
           <label htmlFor="zip">Zip</label>
-          <input type="text" id="zip" {...register("zip")} />
+          <Input type="text" id="zip" {...register("zip")} />
           {errors.zip != null && <FormError>{errors.zip.message}</FormError>}
         </div>
         <div>
           <label htmlFor="homePhone">Home Phone</label>
-          <input type="text" id="homePhone" {...register("homePhone")} />
+          <Input type="text" id="homePhone" {...register("homePhone")} />
           {errors.homePhone != null && (
             <FormError>{errors.homePhone.message}</FormError>
           )}
         </div>
         <div>
           <label htmlFor="cellPhone">Cell Phone</label>
-          <input type="text" id="cellPhone" {...register("cellPhone")} />
+          <Input type="text" id="cellPhone" {...register("cellPhone")} />
           {errors.cellPhone != null && (
             <FormError>{errors.cellPhone.message}</FormError>
           )}
         </div>
         <div>
           <label htmlFor="workPhone">Work Phone</label>
-          <input type="text" id="workPhone" {...register("workPhone")} />
+          <Input type="text" id="workPhone" {...register("workPhone")} />
           {errors.workPhone != null && (
             <FormError>{errors.workPhone.message}</FormError>
           )}
         </div>
         {error && <FormError>{error}</FormError>}
-        <button disabled={isSubmitting} type="submit">
+        <Button disabled={isSubmitting} type="submit">
           {isSubmitting ? "Submitting" : "Register"}
-        </button>
+        </Button>
       </form>
       <p>
         Already have an account? <Link to="/login">Login</Link>
