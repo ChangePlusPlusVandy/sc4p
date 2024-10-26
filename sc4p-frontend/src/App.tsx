@@ -10,6 +10,7 @@ import Register from "./pages/Auth/Register";
 import Home from "./pages/Home";
 import Pets from "./pages/Pets";
 import Profile from "./pages/Profile";
+import Caregivers from "./pages/Caregivers";
 
 export const App: React.FC = () => {
   return (
@@ -27,6 +28,11 @@ export const App: React.FC = () => {
               element={<PrivateRoute element={<Profile />} />}
             />
             <Route path="/pets" element={<PrivateRoute element={<Pets />} />} />
+            <Route
+              path="/caregivers"
+              element={<PrivateRoute element={<Caregivers />} />}
+            />
+
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
