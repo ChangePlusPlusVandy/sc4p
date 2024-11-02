@@ -23,6 +23,10 @@ const CustomSidebar = () => {
         <SubMenu label="Forms">
           <MenuItem component={<Link to="/pets" />}>Pets</MenuItem>
           <MenuItem component={<Link to="/Caregivers" />}>Caregivers</MenuItem>
+          <MenuItem component={<Link to="/contacts" />}>
+            Emergency Contacts
+          </MenuItem>
+          <MenuItem component={<Link to="/trustees" />}>Trustees</MenuItem>
         </SubMenu>
         <MenuItem component={<Link to="/profile" />}>Profile</MenuItem>
       </Menu>
