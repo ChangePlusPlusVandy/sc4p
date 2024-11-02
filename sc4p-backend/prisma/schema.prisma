@@ -20,3 +20,41 @@ model User  {
     work_phone String
     created_at DateTime @default(now())
 }
+
+model Pet  {
+  id Int @id @default(autoincrement())
+  name String
+  sex String 
+  date_of_birth DateTime
+  spayed_neutered Boolean
+  type String 
+  microchip_id String
+  license_number String
+  medical_history String
+  special_needs String
+  special_diet String
+  behavioral_habits String
+  commands String
+  daily_routine String
+  allowed_outside Boolean
+  sleep_location String
+  likes_children Boolean
+  home_access String
+  favorite_items String
+  flea_prevention String
+  allergies String
+  special_care_instructions String
+  medical_history_location String
+  food_brand String
+  food_amount String
+  feeding_schedule String
+  medications String
+  emergency_supplies String
+  health_insurance_provider String
+  health_insurance_policy_number String
+  health_insurance_cost Decimal
+  euthanasia_decision String 
+  remains_care String 
+  allocated_remains_fund Decimal
+  created_at DateTime @default(now())
+}

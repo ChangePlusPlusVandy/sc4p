@@ -1,0 +1,35 @@
+export interface Pet {
+  name: string;
+  sex: "Male" | "Female";
+  date_of_birth: Date;
+  spayed_neutered: boolean;
+  type: string;
+  microchip_id?: string;
+  license_number?: string;
+  medical_history?: string;
+  special_needs?: string;
+  special_diet?: string;
+  behavioral_habits?: string;
+  commands?: string;
+  daily_routine?: string;
+  allowed_outside?: boolean;
+  sleep_location?: string;
+  likes_children?: boolean;
+  home_access?: string;
+  favorite_items?: string;
+  flea_prevention?: string;
+  allergies?: string;
+  special_care_instructions?: string;
+  medical_history_location?: string;
+  food_brand?: string;
+  food_amount?: string;
+  feeding_schedule?: string;
+  medications?: string;
+  emergency_supplies?: string;
+  health_insurance_provider?: string;
+  health_insurance_policy_number?: string;
+  health_insurance_cost?: number;
+  euthanasia_decision: string;
+  remains_care: string;
+  allocated_remains_fund?: number;
+}
