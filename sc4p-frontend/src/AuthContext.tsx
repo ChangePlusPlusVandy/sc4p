@@ -10,6 +10,7 @@ import {
 import React, { useContext, useState, useEffect, createContext } from "react";
 import auth from "./firebase";
 import type { UserCredential, User } from "firebase/auth";
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 interface AuthContextData {
   currentUser: User | null;
@@ -18,6 +19,13 @@ interface AuthContextData {
     name: string,
     email: string,
     password: string,
+    address: string,
+    city: string,
+    state: string,
+    zip: string,
+    home_phone: string,
+    cell_phone: string,
+    work_phone: string,
   ) => Promise<void>;
   logout: () => Promise<void>;
   getUser: () => User | null;
@@ -35,18 +43,70 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  async function login(email: string, password: string) {
-    return await signInWithEmailAndPassword(auth, email, password);
+  async function login(
+    email: string,
+    password: string,
+  ): Promise<UserCredential> {
+    // Step 1: Authenticate the user with Firebase
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password,
+    );
+
+    // Step 2: (Optional) Fetch the user data from the SQL database for additional info if needed
+    const response = await fetch(
+      `${backendUrl}/user/email/${userCredential.user.email}`,
+    );
+    if (!response.ok) {
+      throw new Error("Failed to retrieve user data from the SQL database");
+    }
+    const userData = await response.json();
+
+    // Return the user credential, as Firebase is the source of truth for authentication
+    return userData;
   }
 
-  async function registerUser(name: string, email: string, password: string) {
-    return await createUserWithEmailAndPassword(auth, email, password).then(
-      (userCredential) => {
-        void updateProfile(userCredential.user, {
-          displayName: name,
-        });
-      },
+  async function registerUser(
+    name: string,
+    email: string,
+    password: string,
+    address: string,
+    city: string,
+    state: string,
+    zip: string,
+    home_phone: string,
+    cell_phone: string,
+    work_phone: string,
+  ): Promise<void> {
+    // Step 1: Create the user in Firebase
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password,
     );
+
+    // Step 2: Update the user's profile in Firebase with the display name
+    await updateProfile(userCredential.user, { displayName: name });
+
+    // Step 3: Save user data in the SQL database with additional fields
+    await fetch(`${backendUrl}/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name,
+        email,
+        address,
+        city,
+        state,
+        zip,
+        home_phone,
+        cell_phone,
+        work_phone,
+      }),
+    });
   }
 
   async function logout(): Promise<void> {

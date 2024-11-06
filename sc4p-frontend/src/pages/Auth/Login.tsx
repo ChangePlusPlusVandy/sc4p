@@ -36,14 +36,13 @@ const Login: React.FC = () => {
     if (currentUser) {
       navigate("/");
     }
-  }, [currentUser, navigate]);
+  }, [currentUser]);
 
   const onSubmit = async (values: FormValues) => {
     try {
       setError("");
       const alal = await login(values.email, values.password);
       console.log(alal);
-      navigate("/"); // Redirect to home page
     } catch (err: any) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
       setError(err.message);

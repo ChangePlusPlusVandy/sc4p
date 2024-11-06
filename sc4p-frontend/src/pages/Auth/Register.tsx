@@ -11,6 +11,13 @@ interface FormValues {
   email: string;
   password: string;
   confirmPassword: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  home_phone: string;
+  cell_phone: string;
+  work_phone: string;
 }
 
 const schema = Yup.object().shape({
@@ -24,6 +31,15 @@ const schema = Yup.object().shape({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords do not match")
     .required("Confirm password is required"),
+  address: Yup.string().required("Address is required"),
+  city: Yup.string().required("City is required"),
+  state: Yup.string().required("State is required"),
+  zip: Yup.string()
+    .matches(/^\d{5}$/, "ZIP code must be exactly 5 digits")
+    .required("ZIP code is required"),
+  home_phone: Yup.string().required("Home phone is required"),
+  cell_phone: Yup.string().required("Cell phone is required"),
+  work_phone: Yup.string().required("Work phone is required"),
 });
 
 const Register: React.FC = () => {
@@ -34,7 +50,7 @@ const Register: React.FC = () => {
     if (currentUser) {
       navigate("/");
     }
-  }, [currentUser, navigate]);
+  }, [currentUser]);
 
   const {
     register,
@@ -49,10 +65,19 @@ const Register: React.FC = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setError("");
-      await registerUser(values.name, values.email, values.password);
-      navigate("/"); // Redirect to home page
+      await registerUser(
+        values.name,
+        values.email,
+        values.password,
+        values.address,
+        values.city,
+        values.state,
+        values.zip,
+        values.home_phone,
+        values.cell_phone,
+        values.work_phone,
+      );
     } catch (err: any) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
       setError(err.message);
     }
   };
@@ -64,21 +89,17 @@ const Register: React.FC = () => {
         <div>
           <label htmlFor="name">Name</label>
           <input type="text" id="name" {...register("name")} />
-          {errors.name != null && <FormError>{errors.name.message}</FormError>}
+          {errors.name && <FormError>{errors.name.message}</FormError>}
         </div>
         <div>
           <label htmlFor="email">Email</label>
           <input type="email" id="email" {...register("email")} />
-          {errors.email != null && (
-            <FormError>{errors.email.message}</FormError>
-          )}
+          {errors.email && <FormError>{errors.email.message}</FormError>}
         </div>
         <div>
           <label htmlFor="password">Password</label>
           <input type="password" id="password" {...register("password")} />
-          {errors.password != null && (
-            <FormError>{errors.password.message}</FormError>
-          )}
+          {errors.password && <FormError>{errors.password.message}</FormError>}
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
@@ -87,8 +108,49 @@ const Register: React.FC = () => {
             id="confirmPassword"
             {...register("confirmPassword")}
           />
-          {errors.confirmPassword != null && (
+          {errors.confirmPassword && (
             <FormError>{errors.confirmPassword.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="address">Address</label>
+          <input type="text" id="address" {...register("address")} />
+          {errors.address && <FormError>{errors.address.message}</FormError>}
+        </div>
+        <div>
+          <label htmlFor="city">City</label>
+          <input type="text" id="city" {...register("city")} />
+          {errors.city && <FormError>{errors.city.message}</FormError>}
+        </div>
+        <div>
+          <label htmlFor="state">State</label>
+          <input type="text" id="state" {...register("state")} />
+          {errors.state && <FormError>{errors.state.message}</FormError>}
+        </div>
+        <div>
+          <label htmlFor="zip">ZIP Code</label>
+          <input type="text" id="zip" {...register("zip")} />
+          {errors.zip && <FormError>{errors.zip.message}</FormError>}
+        </div>
+        <div>
+          <label htmlFor="home_phone">Home Phone</label>
+          <input type="text" id="home_phone" {...register("home_phone")} />
+          {errors.home_phone && (
+            <FormError>{errors.home_phone.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="cell_phone">Cell Phone</label>
+          <input type="text" id="cell_phone" {...register("cell_phone")} />
+          {errors.cell_phone && (
+            <FormError>{errors.cell_phone.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="work_phone">Work Phone</label>
+          <input type="text" id="work_phone" {...register("work_phone")} />
+          {errors.work_phone && (
+            <FormError>{errors.work_phone.message}</FormError>
           )}
         </div>
         {error && <FormError>{error}</FormError>}
