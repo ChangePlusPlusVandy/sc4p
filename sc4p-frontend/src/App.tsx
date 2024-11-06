@@ -8,8 +8,11 @@ import Login from "./pages/Auth/Login";
 import PrivateRoute from "./pages/Auth/PrivateRoute";
 import Register from "./pages/Auth/Register";
 import Home from "./pages/Home";
+import Pets from "./pages/Pets";
 import Profile from "./pages/Profile";
-import Form2 from "./pages/form2";
+import Caregivers from "./pages/Caregivers";
+import Trustee from "./pages/Trustee";
+import EmergencyContacts from "./pages/EmergencyContact";
 
 export const App: React.FC = () => {
   return (
@@ -26,7 +29,20 @@ export const App: React.FC = () => {
               path="/profile"
               element={<PrivateRoute element={<Profile />} />}
             />
-            <Route path="/form2" element={<Form2 />} />
+            <Route path="/pets" element={<PrivateRoute element={<Pets />} />} />
+            <Route
+              path="/caregivers"
+              element={<PrivateRoute element={<Caregivers />} />}
+            />
+
+            <Route
+              path="/trustees"
+              element={<PrivateRoute element={<Trustee />} />}
+            />
+            <Route
+              path="/contacts"
+              element={<PrivateRoute element={<EmergencyContacts />} />}
+            />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

@@ -6,6 +6,8 @@ import * as Yup from "yup";
 import { useAuth } from "../../AuthContext";
 import FormError from "./FormError";
 
+import { Button, Input } from "@nextui-org/react";
+
 interface FormValues {
   name: string;
   email: string;
@@ -15,9 +17,9 @@ interface FormValues {
   city: string;
   state: string;
   zip: string;
-  home_phone: string;
-  cell_phone: string;
-  work_phone: string;
+  homePhone: string;
+  cellPhone: string;
+  workPhone: string;
 }
 
 const schema = Yup.object().shape({
@@ -34,12 +36,10 @@ const schema = Yup.object().shape({
   address: Yup.string().required("Address is required"),
   city: Yup.string().required("City is required"),
   state: Yup.string().required("State is required"),
-  zip: Yup.string()
-    .matches(/^\d{5}$/, "ZIP code must be exactly 5 digits")
-    .required("ZIP code is required"),
-  home_phone: Yup.string().required("Home phone is required"),
-  cell_phone: Yup.string().required("Cell phone is required"),
-  work_phone: Yup.string().required("Work phone is required"),
+  zip: Yup.string().required("Zip code is required"),
+  homePhone: Yup.string().required("Home phone number is required"),
+  cellPhone: Yup.string().required("Cell phone number is required"),
+  workPhone: Yup.string().required("Work phone number is required"),
 });
 
 const Register: React.FC = () => {
@@ -73,9 +73,9 @@ const Register: React.FC = () => {
         values.city,
         values.state,
         values.zip,
-        values.home_phone,
-        values.cell_phone,
-        values.work_phone,
+        values.homePhone,
+        values.cellPhone,
+        values.workPhone,
       );
     } catch (err: any) {
       setError(err.message);
@@ -88,22 +88,26 @@ const Register: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label htmlFor="name">Name</label>
-          <input type="text" id="name" {...register("name")} />
-          {errors.name && <FormError>{errors.name.message}</FormError>}
+          <Input type="text" id="name" {...register("name")} />
+          {errors.name != null && <FormError>{errors.name.message}</FormError>}
         </div>
         <div>
           <label htmlFor="email">Email</label>
-          <input type="email" id="email" {...register("email")} />
-          {errors.email && <FormError>{errors.email.message}</FormError>}
+          <Input type="email" id="email" {...register("email")} />
+          {errors.email != null && (
+            <FormError>{errors.email.message}</FormError>
+          )}
         </div>
         <div>
           <label htmlFor="password">Password</label>
-          <input type="password" id="password" {...register("password")} />
-          {errors.password && <FormError>{errors.password.message}</FormError>}
+          <Input type="password" id="password" {...register("password")} />
+          {errors.password != null && (
+            <FormError>{errors.password.message}</FormError>
+          )}
         </div>
         <div>
           <label htmlFor="confirmPassword">Confirm Password</label>
-          <input
+          <Input
             type="password"
             id="confirmPassword"
             {...register("confirmPassword")}
@@ -114,49 +118,53 @@ const Register: React.FC = () => {
         </div>
         <div>
           <label htmlFor="address">Address</label>
-          <input type="text" id="address" {...register("address")} />
-          {errors.address && <FormError>{errors.address.message}</FormError>}
+          <Input type="text" id="address" {...register("address")} />
+          {errors.address != null && (
+            <FormError>{errors.address.message}</FormError>
+          )}
         </div>
         <div>
           <label htmlFor="city">City</label>
-          <input type="text" id="city" {...register("city")} />
-          {errors.city && <FormError>{errors.city.message}</FormError>}
+          <Input type="text" id="city" {...register("city")} />
+          {errors.city != null && <FormError>{errors.city.message}</FormError>}
         </div>
         <div>
           <label htmlFor="state">State</label>
-          <input type="text" id="state" {...register("state")} />
-          {errors.state && <FormError>{errors.state.message}</FormError>}
-        </div>
-        <div>
-          <label htmlFor="zip">ZIP Code</label>
-          <input type="text" id="zip" {...register("zip")} />
-          {errors.zip && <FormError>{errors.zip.message}</FormError>}
-        </div>
-        <div>
-          <label htmlFor="home_phone">Home Phone</label>
-          <input type="text" id="home_phone" {...register("home_phone")} />
-          {errors.home_phone && (
-            <FormError>{errors.home_phone.message}</FormError>
+          <Input type="text" id="state" {...register("state")} />
+          {errors.state != null && (
+            <FormError>{errors.state.message}</FormError>
           )}
         </div>
         <div>
-          <label htmlFor="cell_phone">Cell Phone</label>
-          <input type="text" id="cell_phone" {...register("cell_phone")} />
-          {errors.cell_phone && (
-            <FormError>{errors.cell_phone.message}</FormError>
+          <label htmlFor="zip">Zip</label>
+          <Input type="text" id="zip" {...register("zip")} />
+          {errors.zip != null && <FormError>{errors.zip.message}</FormError>}
+        </div>
+        <div>
+          <label htmlFor="homePhone">Home Phone</label>
+          <Input type="text" id="homePhone" {...register("homePhone")} />
+          {errors.homePhone != null && (
+            <FormError>{errors.homePhone.message}</FormError>
           )}
         </div>
         <div>
-          <label htmlFor="work_phone">Work Phone</label>
-          <input type="text" id="work_phone" {...register("work_phone")} />
-          {errors.work_phone && (
-            <FormError>{errors.work_phone.message}</FormError>
+          <label htmlFor="cellPhone">Cell Phone</label>
+          <Input type="text" id="cellPhone" {...register("cellPhone")} />
+          {errors.cellPhone != null && (
+            <FormError>{errors.cellPhone.message}</FormError>
+          )}
+        </div>
+        <div>
+          <label htmlFor="workPhone">Work Phone</label>
+          <Input type="text" id="workPhone" {...register("workPhone")} />
+          {errors.workPhone != null && (
+            <FormError>{errors.workPhone.message}</FormError>
           )}
         </div>
         {error && <FormError>{error}</FormError>}
-        <button disabled={isSubmitting} type="submit">
+        <Button disabled={isSubmitting} type="submit">
           {isSubmitting ? "Submitting" : "Register"}
-        </button>
+        </Button>
       </form>
       <p>
         Already have an account? <Link to="/login">Login</Link>

@@ -18,16 +18,17 @@ const CustomSidebar = () => {
         </button>
       </div>
       <Menu>
-        <MenuItem component={<Link to="/" />}>Dashboard</MenuItem>
-        <MenuItem component={<Link to="/form" />}>Form</MenuItem>
+        <MenuItem component={<Link to="/" />}>Home</MenuItem>
         <MenuItem component={<Link to="/calendar" />}>Calendar</MenuItem>
         <SubMenu label="Forms">
-          <MenuItem component={<Link to="/form1" />}>Caregivers</MenuItem>
-          <MenuItem component={<Link to="/form2" />}>
-            Emergency Contact
+          <MenuItem component={<Link to="/pets" />}>Pets</MenuItem>
+          <MenuItem component={<Link to="/Caregivers" />}>Caregivers</MenuItem>
+          <MenuItem component={<Link to="/contacts" />}>
+            Emergency Contacts
           </MenuItem>
+          <MenuItem component={<Link to="/trustees" />}>Trustees</MenuItem>
         </SubMenu>
-        <MenuItem component={<Link to="/profile" />}>My Account</MenuItem>
+        <MenuItem component={<Link to="/profile" />}>Profile</MenuItem>
       </Menu>
     </Sidebar>
   );
