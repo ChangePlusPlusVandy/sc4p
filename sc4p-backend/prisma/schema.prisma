@@ -20,3 +20,15 @@ model User  {
     work_phone String
     created_at DateTime @default(now())
 }
+
+model Caregiver {
+  owner_id    Int      
+  caregiver_id Int     
+  care_type   String   
+  primary     Boolean
+  accepted    Boolean
+  created_at  DateTime @default(now())
+
+  @@id([owner_id, caregiver_id]) 
+
+}

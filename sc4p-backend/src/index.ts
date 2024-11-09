@@ -5,6 +5,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import { exampleRoute } from "./routes/exampleRoute";
 import userRouter from "./routes/user/userRouter";
+import caregiverRouter from "./routes/caregiver/caregiverRouter";
 import { verifyToken } from "./middlewares/verifyToken";
 import { notFound, errorHandler } from "./middlewares/errors";
 
@@ -26,6 +27,7 @@ app.use(helmet());
  */
 app.use("/example", verifyToken, exampleRoute);
 app.use("/user", userRouter);
+app.use("/caregivers", caregiverRouter)
 
 // Default route: Unprotected
 app.get("/", (_req: Request, res: Response) => {
