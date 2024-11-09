@@ -7,6 +7,43 @@ import Joi from "joi";
 const prisma = new PrismaClient();
 const petRouter = express.Router();
 
+const schema = Joi.object({
+  name: Joi.string().required(),
+  sex: Joi.string().valid("Male", "Female").required(),
+  dateOfBirth: Joi.date().required(),
+  spayedNeutered: Joi.boolean().required(),
+  type: Joi.string().required(),
+  microchipId: Joi.string(),
+  licenseNumber: Joi.string(),
+  medicalHistory: Joi.string(),
+  specialNeeds: Joi.string(),
+  specialDiet: Joi.string(),
+  behavioralHabits: Joi.string(),
+  commands: Joi.string(),
+  dailyRoutine: Joi.string(),
+  allowedOutside: Joi.boolean(),
+  sleepLocation: Joi.string(),
+  likesChildren: Joi.boolean(),
+  homeAccess: Joi.string(),
+  favoriteItems: Joi.string(),
+  fleaPrevention: Joi.string(),
+  allergies: Joi.string(),
+  specialCareInstructions: Joi.string(),
+  medicalHistoryLocation: Joi.string(),
+  foodBrand: Joi.string(),
+  foodAmount: Joi.string(),
+  feedingSchedule: Joi.string(),
+  medications: Joi.string(),
+  emergencySupplies: Joi.string(),
+  healthInsuranceProvider: Joi.string(),
+  healthInsurancePolicyNumber: Joi.string(),
+  healthInsuranceCost: Joi.number().integer(),
+  euthanasiaDecision: Joi.string().required(),
+  remainsCare: Joi.string().required(),
+  allocatedRemainsFund: Joi.number().integer(),
+  createdAt: Joi.date().optional(),
+});
+
 // GET all pets
 petRouter.get("/", async (req, res) => {
   try {
@@ -14,7 +51,6 @@ petRouter.get("/", async (req, res) => {
     res.status(200).json(pets);
   } catch (error) {
     console.log(error);
-
     res.status(500).json({ message: "Error fetching pets" });
   }
 });
@@ -36,42 +72,6 @@ petRouter.get("/id/:id", async (req, res) => {
 
 // POST create a new pet
 petRouter.post("/", async (req, res) => {
-  const schema = Joi.object({
-    name: Joi.string().required(),
-    sex: Joi.string().valid("Male", "Female").required(),
-    date_of_birth: Joi.date().required(),
-    spayed_neutered: Joi.boolean().required(),
-    type: Joi.string().required(),
-    microchip_id: Joi.string(),
-    license_number: Joi.string(),
-    medical_history: Joi.string(),
-    special_needs: Joi.string(),
-    special_diet: Joi.string(),
-    behavioral_habits: Joi.string(),
-    commands: Joi.string(),
-    daily_routine: Joi.string(),
-    allowed_outside: Joi.boolean(),
-    sleep_location: Joi.string(),
-    likes_children: Joi.boolean(),
-    home_access: Joi.string(),
-    favorite_items: Joi.string(),
-    flea_prevention: Joi.string(),
-    allergies: Joi.string(),
-    special_care_instructions: Joi.string(),
-    medical_history_location: Joi.string(),
-    food_brand: Joi.string(),
-    food_amount: Joi.string(),
-    feeding_schedule: Joi.string(),
-    medications: Joi.string(),
-    emergency_supplies: Joi.string(),
-    health_insurance_provider: Joi.string(),
-    health_insurance_policy_number: Joi.string(),
-    health_insurance_cost: Joi.number(),
-    euthanasia_decision: Joi.string(),
-    remains_care: Joi.string(),
-    allocated_remains_fund: Joi.number(),
-    created_at: Joi.date(),
-  });
   const petInfo = req.body;
   try {
     const data = (await schema.validateAsync(petInfo)) as Pet;
@@ -84,42 +84,6 @@ petRouter.post("/", async (req, res) => {
 
 // PUT update a pet
 petRouter.put("/:id", async (req, res) => {
-  const schema = Joi.object({
-    name: Joi.string().required(),
-    sex: Joi.string().valid("Male", "Female").required(),
-    date_of_birth: Joi.date().required(),
-    spayed_neutered: Joi.boolean().required(),
-    type: Joi.string().required(),
-    microchip_id: Joi.string(),
-    license_number: Joi.string(),
-    medical_history: Joi.string(),
-    special_needs: Joi.string(),
-    special_diet: Joi.string(),
-    behavioral_habits: Joi.string(),
-    commands: Joi.string(),
-    daily_routine: Joi.string(),
-    allowed_outside: Joi.boolean(),
-    sleep_location: Joi.string(),
-    likes_children: Joi.boolean(),
-    home_access: Joi.string(),
-    favorite_items: Joi.string(),
-    flea_prevention: Joi.string(),
-    allergies: Joi.string(),
-    special_care_instructions: Joi.string(),
-    medical_history_location: Joi.string(),
-    food_brand: Joi.string(),
-    food_amount: Joi.string(),
-    feeding_schedule: Joi.string(),
-    medications: Joi.string(),
-    emergency_supplies: Joi.string(),
-    health_insurance_provider: Joi.string(),
-    health_insurance_policy_number: Joi.string(),
-    health_insurance_cost: Joi.number(),
-    euthanasia_decision: Joi.string(),
-    remains_care: Joi.string(),
-    allocated_remains_fund: Joi.number(),
-    created_at: Joi.date(),
-  });
   const { id } = req.params;
   const data = (await schema.validateAsync(req.body)) as Pet;
   try {
