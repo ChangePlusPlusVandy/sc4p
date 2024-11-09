@@ -40,7 +40,7 @@ const schema = Joi.object({
   healthInsuranceCost: Joi.number().integer(),
   euthanasiaDecision: Joi.string().required(),
   remainsCare: Joi.string().required(),
-  allocatedRemainsFund: Joi.number().integer(),
+  allocatedRemainsFund: Joi.number().integer().allow(null),
   createdAt: Joi.date().optional(),
 });
 
@@ -50,58 +50,83 @@ petRouter.get("/", async (req, res) => {
     const pets = await PetService.getAllPets();
     res.status(200).json(pets);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Error fetching pets" });
+    console.error("Error fetching pets:", error);
+    res.status(500).json({ message: "Failed to fetch pets" });
   }
 });
 
 // GET pet by ID
 petRouter.get("/id/:id", async (req, res) => {
-  const { id } = req.params;
   try {
-    const pet = await PetService.getPetById(Number(id));
+    const pet = await PetService.getPetById(Number(req.params.id));
     if (pet) {
       res.status(200).json(pet);
     } else {
       res.status(404).json({ message: "Pet not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Error fetching pet" });
+    console.error("Error fetching pet:", error);
+    res.status(500).json({ message: "Failed to fetch pet" });
   }
 });
 
 // POST create a new pet
 petRouter.post("/", async (req, res) => {
-  const petInfo = req.body;
   try {
-    const data = (await schema.validateAsync(petInfo)) as Pet;
-    const newPet = await PetService.createPet(data);
+    const validatedData = await schema.validateAsync(req.body);
+    const newPet = await PetService.createPet(validatedData);
     res.status(201).json(newPet);
-  } catch (error) {
-    res.status(500).json({ message: "Error creating pet" });
+  } catch (error: any) {
+    if (error.isJoi) {
+      res.status(400).json({
+        message: "Validation error",
+        details: error.details.map((d: any) => d.message),
+      });
+    } else {
+      console.error("Error creating pet:", error);
+      res.status(500).json({ message: "Failed to create pet" });
+    }
   }
 });
 
 // PUT update a pet
 petRouter.put("/:id", async (req, res) => {
-  const { id } = req.params;
-  const data = (await schema.validateAsync(req.body)) as Pet;
   try {
-    const updatedPet = await PetService.updatePetById(Number(id), data);
-    res.status(200).json(updatedPet);
-  } catch (error) {
-    res.status(500).json({ message: "Error updating pet" });
+    const validatedData = await schema.validateAsync(req.body);
+    const updatedPet = await PetService.updatePetById(
+      Number(req.params.id),
+      validatedData,
+    );
+    if (updatedPet) {
+      res.status(200).json(updatedPet);
+    } else {
+      res.status(404).json({ message: "Pet not found" });
+    }
+  } catch (error: any) {
+    if (error.isJoi) {
+      res.status(400).json({
+        message: "Validation error",
+        details: error.details.map((d: any) => d.message),
+      });
+    } else {
+      console.error("Error updating pet:", error);
+      res.status(500).json({ message: "Failed to update pet" });
+    }
   }
 });
 
 // DELETE a pet by ID
 petRouter.delete("/id/:id", async (req, res) => {
-  const { id } = req.params;
   try {
-    await PetService.deletePetById(Number(id));
-    res.status(204).send();
+    const pet = await PetService.getPetById(Number(req.params.id));
+    if (!pet) {
+      return res.status(404).json({ message: "Pet not found" });
+    }
+    await PetService.deletePetById(Number(req.params.id));
+    res.sendStatus(204);
   } catch (error) {
-    res.status(500).json({ message: "Error deleting pet" });
+    console.error("Error deleting pet:", error);
+    res.status(500).json({ message: "Failed to delete pet" });
   }
 });
 
