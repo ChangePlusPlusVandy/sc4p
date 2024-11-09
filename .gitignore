@@ -10,3 +10,4 @@ sc4p-frontend/tsconfig.tsbuildinfo
 */dist/
 */dev-dist/
 */pnpm*
+node_modules
