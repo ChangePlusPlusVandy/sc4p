@@ -92,67 +92,21 @@ const Register: React.FC = () => {
       <div className="flex">
         <img
           src={Logo}
-          style={{
-            width: "55.6px",
-            height: "109.7px",
-            marginTop: "25.98px",
-            marginLeft: "33.9px",
-          }}
+          className="w-[55.6px] h-[109.7px] mt-[25.98px] ml-[33.9px]"
         ></img>
-        <h1
-          style={{
-            width: "160.64px",
-            height: "78px",
-            marginTop: "48.4px",
-            marginLeft: "15px",
-            fontFamily: "Inter",
-            fontSize: "24px",
-            fontWeight: "700",
-            lineHeight: "28.73px",
-            textAlign: "left",
-            color: "#5E3593",
-          }}
-        >
+        <h1 className="w-[160.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
           2nd Chance For Pets
         </h1>
       </div>
-      <h1
-        style={{
-          marginLeft: "200px",
-          width: "110px",
-          height: "54px",
-          marginTop: "10px",
-          fontFamily: "Inter",
-          fontSize: "32px",
-          fontWeight: "800",
-          lineHeight: "48.41px",
-        }}
-      >
+      <h1 className="w-[400px] h-[54px] ml-[200px] mt-[10px] font-[Inter] font-extrabold text-[32px] leading-[48.41px]">
         Register
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 350px)",
-            gridTemplateRows: "repeat(3, auto)",
-            columnGap: "40px",
-            rowGap: "8px", // Space between columns
-
-            marginLeft: "200px",
-          }}
-        >
+        <div className="grid grid-cols-[repeat(2,_350px)] grid-rows-[repeat(3,_auto)] gap-x-[40px] gap-y-[8px] ml-[200px]">
           <div>
             <label
               htmlFor="name"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Name
             </label>
@@ -164,14 +118,7 @@ const Register: React.FC = () => {
           <div>
             <label
               htmlFor="workPhone"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Work Phone
             </label>
@@ -183,14 +130,7 @@ const Register: React.FC = () => {
           <div>
             <label
               htmlFor="password"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Password
             </label>
@@ -202,14 +142,7 @@ const Register: React.FC = () => {
           <div>
             <label
               htmlFor="confirmPassword"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Confirm Password
             </label>
@@ -225,14 +158,7 @@ const Register: React.FC = () => {
           <div>
             <label
               htmlFor="email"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Email
             </label>
@@ -245,14 +171,7 @@ const Register: React.FC = () => {
           <div>
             <label
               htmlFor="confirmEmail"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Confirm Email
             </label>
@@ -266,21 +185,10 @@ const Register: React.FC = () => {
             )}
           </div>
         </div>
-        <div
-          style={{
-            marginLeft: "200px",
-          }}
-        >
+        <div className="ml-[200px]">
           <label
             htmlFor="address"
-            style={{
-              width: "121px",
-              height: "29px",
-              fontFamily: "Inter",
-              fontSize: "17px",
-              fontWeight: "700",
-              lineHeight: "39.05px",
-            }}
+            className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
           >
             Address
           </label>
@@ -289,24 +197,11 @@ const Register: React.FC = () => {
             <FormError>{errors.address.message}</FormError>
           )}
         </div>
-        <div
-          className="flex"
-          style={{
-            marginLeft: "200px",
-            gap: "40px",
-          }}
-        >
+        <div className="flex ml-[200px] gap-[40px]">
           <div>
             <label
               htmlFor="city"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               City
             </label>
@@ -318,14 +213,7 @@ const Register: React.FC = () => {
           <div>
             <label
               htmlFor="state"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               State
             </label>
@@ -337,14 +225,7 @@ const Register: React.FC = () => {
           <div>
             <label
               htmlFor="zip"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Zip
             </label>
@@ -371,34 +252,14 @@ const Register: React.FC = () => {
         <Button
           disabled={isSubmitting}
           type="submit"
-          style={{
-            background: "#A377DC",
-            color: "white",
-            width: "100px",
-            height: "42px",
-            padding: "16px 24px 16px 24px",
-            gap: "14px",
-            borderRadius: "15px",
-            marginTop: "15px",
-            fontFamily: "Inter",
-            fontWeight: "600",
-            marginLeft: "200px",
-          }}
+          className="bg-[#A377DC] text-white w-[100px] h-[42px] p-[16px_24px] gap-[14px] rounded-[15px] mt-[15px] font-[Inter] font-semibold ml-[200px]"
         >
           {isSubmitting ? "Submitting" : "Sign Up"}
         </Button>
       </form>
-      <p
-        style={{
-          marginLeft: "200px",
-          fontFamily: "Inter",
-          fontSize: "14px",
-          fontWeight: "600",
-          lineHeight: "41.78px",
-        }}
-      >
+      <p className="ml-[200px] font-[Inter] text-[14px] font-semibold leading-[41.78px]">
         Already have an account?{" "}
-        <span style={{ color: "#5F17BE", textDecoration: "underline" }}>
+        <span className="text-[#5F17BE] underline">
           <Link to="/login">Login</Link>
         </span>
       </p>

@@ -59,65 +59,24 @@ const Login: React.FC = () => {
         <div className="flex">
           <img
             src={Logo}
-            style={{
-              width: "55.6px",
-              height: "109.7px",
-              marginTop: "25.98px",
-              marginLeft: "33.9px",
-            }}
+            className="w-[55.6px] h-[109.7px] mt-[25.98px] ml-[33.9px]"
           ></img>
-          <h1
-            style={{
-              width: "160.64px",
-              height: "78px",
-              marginTop: "48.4px",
-              marginLeft: "15px",
-              fontFamily: "Inter",
-              fontSize: "24px",
-              fontWeight: "700",
-              lineHeight: "28.73px",
-              textAlign: "left",
-              color: "#5E3593",
-            }}
-          >
+          <h1 className="w-[160.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
             2nd Chance For Pets
           </h1>
         </div>
-        <h1
-          style={{
-            marginLeft: "200px",
-            width: "110px",
-            height: "54px",
-            marginTop: "10px",
-            fontFamily: "Inter",
-            fontSize: "32px",
-            fontWeight: "800",
-            lineHeight: "48.41px",
-          }}
-        >
+        <h1 className="w-[110px] h-[54px] ml-[200px] mt-[10px] font-[Inter] font-extrabold text-[32px] leading-[48.41px]">
           Login
         </h1>
-        <form onSubmit={handleSubmit(onSubmit)} style={{ marginLeft: "200px" }}>
+        <form onSubmit={handleSubmit(onSubmit)} className="ml-[200px]">
           <div>
             <label
               htmlFor="email"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Username
             </label>
-            <Input
-              type="email"
-              id="email"
-              {...register("email")}
-              style={{ width: "10px" }}
-            />
+            <Input type="email" id="email" {...register("email")} />
             {errors.email != null && (
               <FormError>{errors.email.message}</FormError>
             )}
@@ -125,14 +84,7 @@ const Login: React.FC = () => {
           <div>
             <label
               htmlFor="password"
-              style={{
-                width: "121px",
-                height: "29px",
-                fontFamily: "Inter",
-                fontSize: "17px",
-                fontWeight: "700",
-                lineHeight: "39.05px",
-              }}
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
             >
               Password
             </label>
@@ -142,144 +94,50 @@ const Login: React.FC = () => {
             )}
             {errors && <FormError>{error}</FormError>}
           </div>
-          <p
-            style={{
-              fontFamily: "Inter",
-              fontSize: "12px",
-              fontWeight: "600",
-              lineHeight: "29.36px",
-              textAlign: "left",
-              color: "#5F17BE",
-            }}
-          >
+          <p className="font-[Inter] text-[12px] font-semibold leading-[29.36px] text-left text-[#5F17BE]">
             <Link to="/forgot-password">Forgot password?</Link>
           </p>
           <Button
             disabled={isSubmitting}
             type="submit"
-            style={{
-              background: "#A377DC",
-              color: "white",
-              width: "105px",
-              height: "42px",
-              padding: "16px 24px 16px 24px",
-              gap: "14px",
-              borderRadius: "15px",
-              marginTop: "8px",
-              fontFamily: "Inter",
-              fontWeight: "600",
-            }}
+            className="bg-[#A377DC] text-white w-[105px] h-[42px] p-[16px_24px] gap-[14px] rounded-[15px] mt-[8px] font-[Inter] font-semibold"
           >
             {isSubmitting ? "Submitting" : "Login"}
           </Button>
         </form>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            marginLeft: "200px",
-            marginRight: "200px",
-          }}
-        >
-          <hr style={{ flex: 1, borderColor: "#ccc" }} />
-          <span
-            style={{
-              fontFamily: "Inter",
-              fontSize: "14px",
-              fontWeight: "600",
-              lineHeight: "41.78px",
-              margin: "4px",
-            }}
-          >
+        <div className="flex items-center ml-[200px] mr-[200px]">
+          <hr className="flex-1 border border-black" />
+          <span className="font-[Inter] text-[14px] font-semibold leading-[41.78px] m-[4px]">
             Or login with
           </span>
-          <hr style={{ flex: 1, borderColor: "#ccc" }} />
+          <hr className="flex-1 border border-black" />
         </div>
-        <div
-          className="flex"
-          style={{
-            marginLeft: "200px",
-          }}
-        >
-          <Button
-            style={{
-              width: "160px",
-              height: "44px",
-              borderRadius: "15px",
-              border: "2px 0px 0px 0px",
-              marginRight: "30px",
-              background: "white",
-              borderColor: "#A33D24",
-              borderWidth: "2px",
-              borderStyle: "solid",
-              color: "#A33D24",
-              fontFamily: "Inter",
-              fontSize: "14px",
-              fontWeight: "600",
-              lineHeight: "41.78px",
-            }}
-          >
+        <div className="flex ml-[200px]">
+          <Button className="w-[160px] h-[44px] rounded-[15px] border-2 mr-[30px] bg-white border-[#A33D24] text-[#A33D24] font-[Inter] text-[14px] font-semibold leading-[41.78px]">
             <img
               src={Google}
               alt=""
-              style={{
-                width: "24.15px",
-                height: "24.15px",
-                marginRight: "12px",
-              }}
+              className="w-[24.16px] h-[24.15px] mr-[12px]"
             />
             Google
           </Button>
-          <Button
-            style={{
-              width: "160px",
-              height: "44px",
-              borderRadius: "15px",
-              border: "2px 0px 0px 0px",
-              background: "white",
-              borderColor: "#254984",
-              borderWidth: "2px",
-              borderStyle: "solid",
-              color: "#254984",
-              fontFamily: "Inter",
-              fontSize: "14px",
-              fontWeight: "600",
-              lineHeight: "41.78px",
-            }}
-          >
+          <Button className="w-[160px] h-[44px] rounded-[15px] border-2 bg-white border-[#254984] text-[#254984] font-[Inter] text-[14px] font-semibold leading-[41.78px]">
             <img
               src={Facebook}
               alt=""
-              style={{
-                width: "24.15px",
-                height: "24.15px",
-                marginRight: "12px",
-              }}
+              className="w-[24.16px] h-[24.15px] mr-[12px]"
             />
             Facebook
           </Button>
         </div>
-        <p
-          style={{
-            marginLeft: "200px",
-            fontFamily: "Inter",
-            fontSize: "14px",
-            fontWeight: "600",
-            lineHeight: "41.78px",
-          }}
-        >
+        <p className="ml-[200px] font-[Inter] text-[14px] font-semibold leading-[41.78px]">
           Don&apos;t have an account?{" "}
-          <span style={{ color: "#5F17BE", textDecoration: "underline" }}>
+          <span className="text-[#5F17BE] underline">
             <Link to="/register">Sign Up</Link>
           </span>
         </p>
       </div>
-      <div
-        style={{
-          width: "530.12px", // Exact width
-          backgroundColor: "#E6D1FF",
-        }}
-      ></div>
+      <div className="w-[530.12px] bg-[#E6D1FF]"></div>
     </div>
   );
 };
