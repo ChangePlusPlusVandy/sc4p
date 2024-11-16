@@ -32,7 +32,7 @@ export const App: React.FC = () => {
             />
             <Route path="/pets" element={<PrivateRoute element={<Pets />} />} />
             <Route
-              path="/petInfo"
+              path="/pets/:id"
               element={<PrivateRoute element={<PetInfo />} />}
             />
             <Route
