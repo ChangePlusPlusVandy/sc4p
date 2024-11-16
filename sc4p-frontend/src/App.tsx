@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import Caregivers from "./pages/Caregivers";
 import Trustee from "./pages/Trustee";
 import EmergencyContacts from "./pages/EmergencyContact";
+import PetInfo from "./pages/PetInfo";
 
 export const App: React.FC = () => {
   return (
@@ -30,6 +31,10 @@ export const App: React.FC = () => {
               element={<PrivateRoute element={<Profile />} />}
             />
             <Route path="/pets" element={<PrivateRoute element={<Pets />} />} />
+            <Route
+              path="/petInfo"
+              element={<PrivateRoute element={<PetInfo />} />}
+            />
             <Route
               path="/caregivers"
               element={<PrivateRoute element={<Caregivers />} />}
