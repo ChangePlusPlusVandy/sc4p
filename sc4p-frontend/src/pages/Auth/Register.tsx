@@ -50,7 +50,7 @@ const Register: React.FC = () => {
     if (currentUser) {
       navigate("/");
     }
-  }, [currentUser, navigate]);
+  }, [currentUser]);
 
   const {
     register,
@@ -65,8 +65,18 @@ const Register: React.FC = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setError("");
-      await registerUser(values.name, values.email, values.password);
-      navigate("/");
+      await registerUser(
+        values.name,
+        values.email,
+        values.password,
+        values.address,
+        values.city,
+        values.state,
+        values.zip,
+        values.homePhone,
+        values.cellPhone,
+        values.workPhone,
+      );
     } catch (err: any) {
       setError(err.message);
     }
@@ -102,7 +112,7 @@ const Register: React.FC = () => {
             id="confirmPassword"
             {...register("confirmPassword")}
           />
-          {errors.confirmPassword != null && (
+          {errors.confirmPassword && (
             <FormError>{errors.confirmPassword.message}</FormError>
           )}
         </div>
