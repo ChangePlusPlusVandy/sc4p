@@ -65,7 +65,7 @@ const ForgotPassword: React.FC = () => {
         <h1 className="w-[400px] h-[54px] ml-[200px] mt-[50px] font-[Inter] font-extrabold text-[32px] leading-[48.41px]">
           Forgot Password
         </h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="ml[200px]">
+        <form onSubmit={handleSubmit(onSubmit)} className="ml-[200px]">
           <div>
             <label
               htmlFor="email"
@@ -74,7 +74,12 @@ const ForgotPassword: React.FC = () => {
               Enter your email address or phone number and we will send you the
               reset instruction
             </label>
-            <Input type="email" id="email" {...register("email")} />
+            <Input
+              type="email"
+              id="email"
+              {...register("email")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.email != null && (
               <FormError>{errors.email.message}</FormError>
             )}

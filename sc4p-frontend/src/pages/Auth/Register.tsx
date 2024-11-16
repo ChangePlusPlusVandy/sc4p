@@ -110,7 +110,12 @@ const Register: React.FC = () => {
             >
               Name
             </label>
-            <Input type="text" id="name" {...register("name")} />
+            <Input
+              type="text"
+              id="name"
+              {...register("name")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.name != null && (
               <FormError>{errors.name.message}</FormError>
             )}
@@ -122,7 +127,12 @@ const Register: React.FC = () => {
             >
               Work Phone
             </label>
-            <Input type="text" id="workPhone" {...register("workPhone")} />
+            <Input
+              type="text"
+              id="workPhone"
+              {...register("workPhone")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.workPhone != null && (
               <FormError>{errors.workPhone.message}</FormError>
             )}
@@ -134,7 +144,12 @@ const Register: React.FC = () => {
             >
               Password
             </label>
-            <Input type="password" id="password" {...register("password")} />
+            <Input
+              type="password"
+              id="password"
+              {...register("password")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.password != null && (
               <FormError>{errors.password.message}</FormError>
             )}
@@ -150,6 +165,7 @@ const Register: React.FC = () => {
               type="password"
               id="confirmPassword"
               {...register("confirmPassword")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
             />
             {errors.confirmPassword && (
               <FormError>{errors.confirmPassword.message}</FormError>
@@ -162,7 +178,12 @@ const Register: React.FC = () => {
             >
               Email
             </label>
-            <Input type="email" id="email" {...register("email")} />
+            <Input
+              type="email"
+              id="email"
+              {...register("email")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.email != null && (
               <FormError>{errors.email.message}</FormError>
             )}
@@ -179,6 +200,7 @@ const Register: React.FC = () => {
               type="email"
               id="confirmEmail"
               {...register("confirmEmail")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
             />
             {errors.confirmEmail && (
               <FormError>{errors.confirmEmail.message}</FormError>
@@ -192,7 +214,12 @@ const Register: React.FC = () => {
           >
             Address
           </label>
-          <Input type="text" id="address" {...register("address")} />
+          <Input
+            type="text"
+            id="address"
+            {...register("address")}
+            className="font-[Inter] w-[450px] border-2 border-[#AF94D3] rounded-[15px]"
+          />
           {errors.address != null && (
             <FormError>{errors.address.message}</FormError>
           )}
@@ -205,7 +232,12 @@ const Register: React.FC = () => {
             >
               City
             </label>
-            <Input type="text" id="city" {...register("city")} />
+            <Input
+              type="text"
+              id="city"
+              {...register("city")}
+              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.city != null && (
               <FormError>{errors.city.message}</FormError>
             )}
@@ -217,7 +249,12 @@ const Register: React.FC = () => {
             >
               State
             </label>
-            <Input type="text" id="state" {...register("state")} />
+            <Input
+              type="text"
+              id="state"
+              {...register("state")}
+              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.state != null && (
               <FormError>{errors.state.message}</FormError>
             )}
@@ -229,7 +266,13 @@ const Register: React.FC = () => {
             >
               Zip
             </label>
-            <Input type="text" id="zip" {...register("zip")} />
+            <Input
+              type="text"
+              id="zip"
+              {...register("zip")}
+              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+
             {errors.zip != null && <FormError>{errors.zip.message}</FormError>}
           </div>
         </div>

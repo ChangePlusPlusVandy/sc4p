@@ -76,11 +76,17 @@ const Login: React.FC = () => {
             >
               Username
             </label>
-            <Input type="email" id="email" {...register("email")} />
+            <Input
+              type="email"
+              id="email"
+              {...register("email")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.email != null && (
               <FormError>{errors.email.message}</FormError>
             )}
           </div>
+
           <div>
             <label
               htmlFor="password"
@@ -88,7 +94,12 @@ const Login: React.FC = () => {
             >
               Password
             </label>
-            <Input type="password" id="password" {...register("password")} />
+            <Input
+              type="password"
+              id="password"
+              {...register("password")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
             {errors.password != null && (
               <FormError>{errors.password.message}</FormError>
             )}
