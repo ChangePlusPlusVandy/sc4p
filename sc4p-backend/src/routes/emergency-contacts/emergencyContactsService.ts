@@ -1,17 +1,10 @@
-import { PrismaClient, type Prisma } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { type EmergencyContact } from "../../types/emergencyContacts";
 
 const prisma = new PrismaClient();
 
-export type EmergencyContactCreateInput = Omit<
-  EmergencyContact,
-  "id" | "createdAt"
->;
-
-export type EmergencyContactUpdateInput = Partial<EmergencyContactCreateInput>;
-
 export const createContact = async (
-  contact: EmergencyContactCreateInput,
+  contact: EmergencyContact,
 ): Promise<EmergencyContact> => {
   try {
     return await prisma.emergencyContact.create({
@@ -47,7 +40,7 @@ export const getContactById = async (
 
 export const updateContactById = async (
   id: number,
-  contact: EmergencyContactUpdateInput,
+  contact: EmergencyContact,
 ): Promise<EmergencyContact> => {
   try {
     return await prisma.emergencyContact.update({
