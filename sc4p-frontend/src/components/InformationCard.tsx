@@ -65,16 +65,22 @@ const PurposeCard: React.FC<CardProps> = ({
             />
             {/* Caregiver Info */}
             <div>
-              <h4 className="text-xl font-semibold text-black mb-1">
-                {name}{" "}
-                <span className="text-sm text-gray-500">({relation})</span>
-              </h4>
+              <div className="flex gap-8 items-center">
+                <h4 className="text-xl font-semibold text-black mb-1">
+                  {name}
+                </h4>
+                <p className="text-sm text-black font-semibold">
+                  {"("}
+                  {relation}
+                  {")"}
+                </p>
+              </div>
               <div className="flex gap-8">
                 <p className="text-sm text-black font-semibold">
-                  Phone <span className="text-gray-600 ml-1">{phone}</span>
+                  Phone <span className="text-gray-500 ml-1">{phone}</span>
                 </p>
                 <p className="text-sm text-black font-semibold">
-                  Email <span className="text-gray-600 ml-1">{email}</span>
+                  Email <span className="text-gray-500 ml-1">{email}</span>
                 </p>
               </div>
             </div>
