@@ -8,7 +8,13 @@ module.exports = {
     "./index.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        base: {
+          DEFAULT: "#A377DC",
+        },
+      },
+    },
   },
   darkMode: "class",
   plugins: [nextui()],
