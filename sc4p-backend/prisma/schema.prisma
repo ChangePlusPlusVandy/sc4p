@@ -7,53 +7,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User  {
-    id Int @id @default(autoincrement())
-    name String
-    email String @unique
-    address String
-    city String
-    state String
-    zip String
-    home_phone String
-    cell_phone String
-    work_phone String
-    created_at DateTime @default(now())
+model User {
+  id         Int      @id @default(autoincrement())
+  name       String
+  email      String   @unique
+  address    String
+  city       String
+  state      String
+  zip        String
+  home_phone String
+  cell_phone String
+  work_phone String
+  created_at DateTime @default(now())
 }
 
 model Pet {
-  id                     Int      @id @default(autoincrement())
-  name                   String
-  sex                    String
-  dateOfBirth            DateTime
-  spayedNeutered         Boolean
-  type                   String
-  microchipId            String?  
-  licenseNumber          String?  
-  medicalHistory         String?  
-  specialNeeds           String?  
-  specialDiet            String?  
-  behavioralHabits       String?  
-  commands               String?  
-  dailyRoutine           String?  
-  allowedOutside         Boolean? 
-  sleepLocation          String?  
-  likesChildren          Boolean? 
-  homeAccess             String?  
-  favoriteItems          String?  
-  fleaPrevention         String?  
-  allergies              String?  
-  specialCareInstructions String?  
-  medicalHistoryLocation String?  
-  foodBrand              String?  
-  foodAmount             String?  
-  feedingSchedule        String?  
-  medications            String?  
-  emergencySupplies      String?  
-  healthInsuranceProvider String?  
-  healthInsurancePolicyNumber String?  
-  healthInsuranceCost    Int? 
-  euthanasiaDecision     String
-  remainsCare            String
-  allocatedRemainsFund   Int?
+  id                          Int      @id @default(autoincrement())
+  name                        String
+  sex                         String
+  dateOfBirth                 DateTime
+  spayedNeutered              Boolean
+  type                        String
+  microchipId                 String?
+  licenseNumber               String?
+  medicalHistory              String?
+  specialNeeds                String?
+  specialDiet                 String?
+  behavioralHabits            String?
+  commands                    String?
+  dailyRoutine                String?
+  allowedOutside              Boolean?
+  sleepLocation               String?
+  likesChildren               Boolean?
+  homeAccess                  String?
+  favoriteItems               String?
+  fleaPrevention              String?
+  allergies                   String?
+  specialCareInstructions     String?
+  medicalHistoryLocation      String?
+  foodBrand                   String?
+  foodAmount                  String?
+  feedingSchedule             String?
+  medications                 String?
+  emergencySupplies           String?
+  healthInsuranceProvider     String?
+  healthInsurancePolicyNumber String?
+  healthInsuranceCost         Int?
+  euthanasiaDecision          String
+  remainsCare                 String
+  allocatedRemainsFund        Int?
+}
+
+model boarding_fac {
+  id           Int      @id @default(autoincrement())
+  owner_id     Int
+  contact_name String
+  daily_charge Float
+  address      String
+  city         String
+  state        String
+  zip          String
+  home_phone   String
+  cell_phone   String
+  email        String
+  created_at   DateTime @default(now())
 }

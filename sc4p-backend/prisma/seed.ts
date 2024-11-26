@@ -112,6 +112,45 @@ const main = async () => {
     },
   ];
 
+  const boarding_facs = [
+    {
+      owner_id: 1,
+      contact_name: "Alice Johnson",
+      daily_charge: 30.0,
+      address: "123 Pet Lane",
+      city: "Petville",
+      state: "CA",
+      zip: "90210",
+      home_phone: "310-555-1234",
+      cell_phone: "310-555-5678",
+      email: "alice@example.com",
+    },
+    {
+      owner_id: 2,
+      contact_name: "Bob Smith",
+      daily_charge: 25.0,
+      address: "456 Animal Ave",
+      city: "Critter City",
+      state: "TX",
+      zip: "73301",
+      home_phone: "512-555-1234",
+      cell_phone: "512-555-5678",
+      email: "bob@example.com",
+    },
+    {
+      owner_id: 3,
+      contact_name: "Carol White",
+      daily_charge: 35.0,
+      address: "789 Furry Rd",
+      city: "Petropolis",
+      state: "FL",
+      zip: "33101",
+      home_phone: "305-555-1234",
+      cell_phone: "305-555-5678",
+      email: "carol@example.com",
+    },
+  ];
+
   for (const user of users) {
     await prisma.user.create({
       data: user,
@@ -121,6 +160,12 @@ const main = async () => {
   for (const pet of pets) {
     await prisma.pet.create({
       data: pet,
+    });
+  }
+
+  for (const boarding_fac of boarding_facs) {
+    await prisma.boarding_fac.create({
+      data: boarding_fac,
     });
   }
 
