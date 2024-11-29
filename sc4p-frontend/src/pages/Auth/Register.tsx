@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useAuth } from "../../AuthContext";
 import FormError from "./FormError";
+import Logo from "../../images/logo.png";
 
 import { Button, Input } from "@nextui-org/react";
 
@@ -13,6 +14,7 @@ interface FormValues {
   email: string;
   password: string;
   confirmPassword: string;
+  confirmEmail: string;
   address: string;
   city: string;
   state: string;
@@ -33,6 +35,9 @@ const schema = Yup.object().shape({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords do not match")
     .required("Confirm password is required"),
+  confirmEmail: Yup.string()
+    .oneOf([Yup.ref("email")], "Emails do not match")
+    .required("Confirm email is required"),
   address: Yup.string().required("Address is required"),
   city: Yup.string().required("City is required"),
   state: Yup.string().required("State is required"),
@@ -84,63 +89,194 @@ const Register: React.FC = () => {
 
   return (
     <div>
-      <h1>Register</h1>
+      <div className="flex">
+        <img
+          src={Logo}
+          className="w-[55.6px] h-[109.7px] mt-[25.98px] ml-[33.9px]"
+        ></img>
+        <h1 className="w-[160.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
+          2nd Chance For Pets
+        </h1>
+      </div>
+      <h1 className="w-[400px] h-[54px] ml-[200px] mt-[10px] font-[Inter] font-extrabold text-[32px] leading-[48.41px]">
+        Register
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <label htmlFor="name">Name</label>
-          <Input type="text" id="name" {...register("name")} />
-          {errors.name != null && <FormError>{errors.name.message}</FormError>}
+        <div className="grid grid-cols-[repeat(2,_350px)] grid-rows-[repeat(3,_auto)] gap-x-[40px] gap-y-[8px] ml-[200px]">
+          <div>
+            <label
+              htmlFor="name"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Name
+            </label>
+            <Input
+              type="text"
+              id="name"
+              {...register("name")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+            {errors.name != null && (
+              <FormError>{errors.name.message}</FormError>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="workPhone"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Work Phone
+            </label>
+            <Input
+              type="text"
+              id="workPhone"
+              {...register("workPhone")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+            {errors.workPhone != null && (
+              <FormError>{errors.workPhone.message}</FormError>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="password"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Password
+            </label>
+            <Input
+              type="password"
+              id="password"
+              {...register("password")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+            {errors.password != null && (
+              <FormError>{errors.password.message}</FormError>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="confirmPassword"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Confirm Password
+            </label>
+            <Input
+              type="password"
+              id="confirmPassword"
+              {...register("confirmPassword")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+            {errors.confirmPassword && (
+              <FormError>{errors.confirmPassword.message}</FormError>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="email"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Email
+            </label>
+            <Input
+              type="email"
+              id="email"
+              {...register("email")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+            {errors.email != null && (
+              <FormError>{errors.email.message}</FormError>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="confirmEmail"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Confirm Email
+            </label>
+            <Input
+              type="email"
+              id="confirmEmail"
+              {...register("confirmEmail")}
+              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+            {errors.confirmEmail && (
+              <FormError>{errors.confirmEmail.message}</FormError>
+            )}
+          </div>
         </div>
-        <div>
-          <label htmlFor="email">Email</label>
-          <Input type="email" id="email" {...register("email")} />
-          {errors.email != null && (
-            <FormError>{errors.email.message}</FormError>
-          )}
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <Input type="password" id="password" {...register("password")} />
-          {errors.password != null && (
-            <FormError>{errors.password.message}</FormError>
-          )}
-        </div>
-        <div>
-          <label htmlFor="confirmPassword">Confirm Password</label>
+        <div className="ml-[200px]">
+          <label
+            htmlFor="address"
+            className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+          >
+            Address
+          </label>
           <Input
-            type="password"
-            id="confirmPassword"
-            {...register("confirmPassword")}
+            type="text"
+            id="address"
+            {...register("address")}
+            className="font-[Inter] w-[450px] border-2 border-[#AF94D3] rounded-[15px]"
           />
-          {errors.confirmPassword && (
-            <FormError>{errors.confirmPassword.message}</FormError>
-          )}
-        </div>
-        <div>
-          <label htmlFor="address">Address</label>
-          <Input type="text" id="address" {...register("address")} />
           {errors.address != null && (
             <FormError>{errors.address.message}</FormError>
           )}
         </div>
-        <div>
-          <label htmlFor="city">City</label>
-          <Input type="text" id="city" {...register("city")} />
-          {errors.city != null && <FormError>{errors.city.message}</FormError>}
+        <div className="flex ml-[200px] gap-[40px]">
+          <div>
+            <label
+              htmlFor="city"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              City
+            </label>
+            <Input
+              type="text"
+              id="city"
+              {...register("city")}
+              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+            {errors.city != null && (
+              <FormError>{errors.city.message}</FormError>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="state"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              State
+            </label>
+            <Input
+              type="text"
+              id="state"
+              {...register("state")}
+              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+            {errors.state != null && (
+              <FormError>{errors.state.message}</FormError>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="zip"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Zip
+            </label>
+            <Input
+              type="text"
+              id="zip"
+              {...register("zip")}
+              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+            />
+
+            {errors.zip != null && <FormError>{errors.zip.message}</FormError>}
+          </div>
         </div>
-        <div>
-          <label htmlFor="state">State</label>
-          <Input type="text" id="state" {...register("state")} />
-          {errors.state != null && (
-            <FormError>{errors.state.message}</FormError>
-          )}
-        </div>
-        <div>
-          <label htmlFor="zip">Zip</label>
-          <Input type="text" id="zip" {...register("zip")} />
-          {errors.zip != null && <FormError>{errors.zip.message}</FormError>}
-        </div>
-        <div>
+        {/* <div>
           <label htmlFor="homePhone">Home Phone</label>
           <Input type="text" id="homePhone" {...register("homePhone")} />
           {errors.homePhone != null && (
@@ -153,21 +289,22 @@ const Register: React.FC = () => {
           {errors.cellPhone != null && (
             <FormError>{errors.cellPhone.message}</FormError>
           )}
-        </div>
-        <div>
-          <label htmlFor="workPhone">Work Phone</label>
-          <Input type="text" id="workPhone" {...register("workPhone")} />
-          {errors.workPhone != null && (
-            <FormError>{errors.workPhone.message}</FormError>
-          )}
-        </div>
+        </div> */}
+
         {error && <FormError>{error}</FormError>}
-        <Button disabled={isSubmitting} type="submit">
-          {isSubmitting ? "Submitting" : "Register"}
+        <Button
+          disabled={isSubmitting}
+          type="submit"
+          className="bg-[#A377DC] text-white w-[100px] h-[42px] p-[16px_24px] gap-[14px] rounded-[15px] mt-[15px] font-[Inter] font-semibold ml-[200px]"
+        >
+          {isSubmitting ? "Submitting" : "Sign Up"}
         </Button>
       </form>
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
+      <p className="ml-[200px] font-[Inter] text-[14px] font-semibold leading-[41.78px]">
+        Already have an account?{" "}
+        <span className="text-[#5F17BE] underline">
+          <Link to="/login">Login</Link>
+        </span>
       </p>
     </div>
   );
