@@ -34,6 +34,7 @@ const ForgotPassword: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: yupResolver(schema),
+    mode: "onBlur",
   });
 
   const [message, setMessage] = useState<string>("");
@@ -77,14 +78,19 @@ const ForgotPassword: React.FC = () => {
             <Input
               type="email"
               id="email"
+              isInvalid={!!errors.email}
               {...register("email")}
-              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[350px] border-2 rounded-[15px] ${
+                errors.email ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
-            {errors.email != null && (
-              <FormError>{errors.email.message}</FormError>
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.email.message}
+              </p>
             )}
           </div>
-          {error && <FormError>{error}</FormError>}
+
           <Button
             disabled={isSubmitting}
             type="submit"

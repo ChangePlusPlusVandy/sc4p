@@ -30,7 +30,7 @@ const schema = Yup.object().shape({
     .email("Invalid email address")
     .required("Email is required"),
   password: Yup.string()
-    .min(5, "Password must be at least 5 characters")
+    .min(8, "Password must be at least 8 characters")
     .required("Password is required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Passwords do not match")
@@ -41,10 +41,20 @@ const schema = Yup.object().shape({
   address: Yup.string().required("Address is required"),
   city: Yup.string().required("City is required"),
   state: Yup.string().required("State is required"),
-  zip: Yup.string().required("Zip code is required"),
-  homePhone: Yup.string().required("Home phone number is required"),
-  cellPhone: Yup.string().required("Cell phone number is required"),
-  workPhone: Yup.string().required("Work phone number is required"),
+  zip: Yup.string()
+    .required("Zip code is required")
+    .matches(/^\d{5}$/, "Invalid zip code"),
+
+  homePhone: Yup.string()
+    .required("Home phone number is required")
+    .matches(/^\d+$/, "Invalid phone number"),
+  cellPhone: Yup.string()
+    .required("Cell phone number is required")
+    .matches(/^\d+$/, "Invalid phone number"),
+
+  workPhone: Yup.string()
+    .required("Work phone number is required")
+    .matches(/^\d+$/, "Invalid phone number"),
 });
 
 const Register: React.FC = () => {
@@ -63,6 +73,7 @@ const Register: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: yupResolver(schema),
+    mode: "onBlur",
   });
 
   const [error, setError] = useState<string>("");
@@ -113,11 +124,16 @@ const Register: React.FC = () => {
             <Input
               type="text"
               id="name"
+              isInvalid={errors.name != null}
               {...register("name")}
-              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[350px] border-2 rounded-[15px] ${
+                errors.name ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
             {errors.name != null && (
-              <FormError>{errors.name.message}</FormError>
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.name.message}
+              </p>
             )}
           </div>
           <div>
@@ -130,11 +146,16 @@ const Register: React.FC = () => {
             <Input
               type="text"
               id="workPhone"
+              isInvalid={errors.workPhone != null}
               {...register("workPhone")}
-              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[350px] border-2 rounded-[15px] ${
+                errors.workPhone ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
             {errors.workPhone != null && (
-              <FormError>{errors.workPhone.message}</FormError>
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.workPhone.message}
+              </p>
             )}
           </div>
           <div>
@@ -147,11 +168,16 @@ const Register: React.FC = () => {
             <Input
               type="password"
               id="password"
+              isInvalid={errors.password != null}
               {...register("password")}
-              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[350px] border-2 rounded-[15px] ${
+                errors.password ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
             {errors.password != null && (
-              <FormError>{errors.password.message}</FormError>
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.password.message}
+              </p>
             )}
           </div>
           <div>
@@ -164,11 +190,16 @@ const Register: React.FC = () => {
             <Input
               type="password"
               id="confirmPassword"
+              isInvalid={errors.confirmPassword != null}
               {...register("confirmPassword")}
-              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[350px] border-2 rounded-[15px] ${
+                errors.confirmPassword ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
-            {errors.confirmPassword && (
-              <FormError>{errors.confirmPassword.message}</FormError>
+            {errors.confirmPassword != null && (
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.confirmPassword.message}
+              </p>
             )}
           </div>
           <div>
@@ -181,11 +212,16 @@ const Register: React.FC = () => {
             <Input
               type="email"
               id="email"
+              isInvalid={errors.email != null}
               {...register("email")}
-              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[350px] border-2 rounded-[15px] ${
+                errors.email ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
             {errors.email != null && (
-              <FormError>{errors.email.message}</FormError>
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
@@ -199,11 +235,16 @@ const Register: React.FC = () => {
             <Input
               type="email"
               id="confirmEmail"
+              isInvalid={errors.confirmEmail != null}
               {...register("confirmEmail")}
-              className="font-[Inter] w-[350px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[350px] border-2 rounded-[15px] ${
+                errors.confirmEmail ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
-            {errors.confirmEmail && (
-              <FormError>{errors.confirmEmail.message}</FormError>
+            {errors.confirmEmail != null && (
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.confirmEmail.message}
+              </p>
             )}
           </div>
         </div>
@@ -217,11 +258,16 @@ const Register: React.FC = () => {
           <Input
             type="text"
             id="address"
+            isInvalid={errors.address != null}
             {...register("address")}
-            className="font-[Inter] w-[450px] border-2 border-[#AF94D3] rounded-[15px]"
+            className={`font-[Inter] w-[450px] border-2 rounded-[15px] ${
+              errors.address ? "border-red-500" : "border-[#AF94D3]"
+            }`}
           />
           {errors.address != null && (
-            <FormError>{errors.address.message}</FormError>
+            <p className="text-red-500 text-sm mt-1 font-[Inter]">
+              {errors.address.message}
+            </p>
           )}
         </div>
         <div className="flex ml-[200px] gap-[40px]">
@@ -235,11 +281,16 @@ const Register: React.FC = () => {
             <Input
               type="text"
               id="city"
+              isInvalid={errors.city != null}
               {...register("city")}
-              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[250px] border-2 rounded-[15px] ${
+                errors.city ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
             {errors.city != null && (
-              <FormError>{errors.city.message}</FormError>
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.city.message}
+              </p>
             )}
           </div>
           <div>
@@ -252,11 +303,16 @@ const Register: React.FC = () => {
             <Input
               type="text"
               id="state"
+              isInvalid={errors.state != null}
               {...register("state")}
-              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[250px] border-2 rounded-[15px] ${
+                errors.state ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
             {errors.state != null && (
-              <FormError>{errors.state.message}</FormError>
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.state.message}
+              </p>
             )}
           </div>
           <div>
@@ -269,11 +325,17 @@ const Register: React.FC = () => {
             <Input
               type="text"
               id="zip"
+              isInvalid={errors.zip != null}
               {...register("zip")}
-              className="font-[Inter] w-[250px] border-2 border-[#AF94D3] rounded-[15px]"
+              className={`font-[Inter] w-[250px] border-2 rounded-[15px] ${
+                errors.zip ? "border-red-500" : "border-[#AF94D3]"
+              }`}
             />
-
-            {errors.zip != null && <FormError>{errors.zip.message}</FormError>}
+            {errors.zip != null && (
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.zip.message}
+              </p>
+            )}
           </div>
         </div>
         {/* <div>
@@ -299,6 +361,12 @@ const Register: React.FC = () => {
         >
           {isSubmitting ? "Submitting" : "Sign Up"}
         </Button>
+
+        {error && (
+          <p className="ml-[200px] text-red-500 text-sm mt-1 font-[Inter]">
+            {error}
+          </p>
+        )}
       </form>
       <p className="ml-[200px] font-[Inter] text-[14px] font-semibold leading-[41.78px]">
         Already have an account?{" "}
