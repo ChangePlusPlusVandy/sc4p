@@ -22,6 +22,7 @@ import {
   Textarea,
   SharedSelection,
 } from "@nextui-org/react";
+import InformationCard from "../components/InformationCard";
 import { CalendarDate } from "@internationalized/date";
 
 const Pets: React.FC = () => {
@@ -80,9 +81,10 @@ const Pets: React.FC = () => {
   }
 
   return (
-    <div className="flex gap-4 items-center">
-      <Button onPress={onOpen} color="primary">
-        Add pet
+    <div className="flex flex-col items-start w-full pl-6 pt-6 h-full">
+      <h1 className="text-6xl font-bold mb-8">Pets</h1>
+      <Button onPress={onOpen} className="mb-6 bg-base text-white">
+        Add Pet
       </Button>
       <Modal
         isOpen={isOpen}
@@ -468,6 +470,29 @@ const Pets: React.FC = () => {
           )}
         </ModalContent>
       </Modal>
+      <div className="w-full mt-6">
+        {/* First Pet */}
+        <InformationCard
+          purpose="pet"
+          imageSrc="https://via.placeholder.com/64"
+          name="Oreo"
+          petType="Dog"
+        />
+        {/* Second Pet */}
+        <InformationCard
+          purpose="pet"
+          imageSrc="https://via.placeholder.com/64"
+          name="Whiskers"
+          petType="Cat"
+        />
+        {/* Third Pet */}
+        <InformationCard
+          purpose="pet"
+          imageSrc="https://via.placeholder.com/64"
+          name="Chirpy"
+          petType="Bird"
+        />
+      </div>
     </div>
   );
 };

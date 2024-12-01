@@ -17,6 +17,7 @@ import {
 } from "@nextui-org/react";
 import { useAuth } from "../AuthContext";
 import { getUserData } from "../lib/Services";
+import InformationCard from "../components/InformationCard";
 
 const Caregivers: React.FC = () => {
   const [userData, setUserData] = useState<any[]>([]);
@@ -63,9 +64,9 @@ const Caregivers: React.FC = () => {
   }
 
   return (
-    <div>
-      <h2>Caregivers Page</h2>
-      <Button onPress={onOpenChange} color="primary">
+    <div className="flex flex-col items-start w-full pl-6 pt-6 h-full">
+      <h1 className="text-6xl font-bold mb-8">Caregivers</h1>
+      <Button onPress={onOpen} className="mb-6 bg-base text-white">
         Add Caregiver
       </Button>
       <Modal
@@ -341,6 +342,35 @@ const Caregivers: React.FC = () => {
           )}
         </ModalContent>
       </Modal>
+      <div className="w-full mt-6">
+        {/* First Pet */}
+        <InformationCard
+          purpose="caregiver"
+          imageSrc="https://via.placeholder.com/64"
+          name="Alina Antonelli"
+          phone="123-456-7890"
+          relation="primary"
+          email="randomperson@gmail.com"
+        />
+        {/* Second Pet */}
+        <InformationCard
+          purpose="caregiver"
+          imageSrc="https://via.placeholder.com/64"
+          name="Alina Antonelli"
+          phone="123-456-7890"
+          relation="primary"
+          email="randomperson@gmail.com"
+        />
+        {/* Third Pet */}
+        <InformationCard
+          purpose="caregiver"
+          imageSrc="https://via.placeholder.com/64"
+          name="Alina Antonelli"
+          phone="123-456-7890"
+          relation="primary"
+          email="randomperson@gmail.com"
+        />
+      </div>
     </div>
   );
 };
