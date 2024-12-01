@@ -361,6 +361,12 @@ const Register: React.FC = () => {
         >
           {isSubmitting ? "Submitting" : "Sign Up"}
         </Button>
+
+        {error && (
+          <p className="ml-[200px] text-red-500 text-sm mt-1 font-[Inter]">
+            {error}
+          </p>
+        )}
       </form>
       <p className="ml-[200px] font-[Inter] text-[14px] font-semibold leading-[41.78px]">
         Already have an account?{" "}

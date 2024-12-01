@@ -47,11 +47,16 @@ const Login: React.FC = () => {
   const onSubmit = async (values: FormValues) => {
     try {
       setError("");
-      const alal = await login(values.email, values.password);
-      console.log(alal);
+      await login(values.email, values.password);
+      console.log("Login successful");
     } catch (err: any) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument
-      setError(err.message);
+      if (err.message.includes("Incorrect password")) {
+        setError("The password you entered is incorrect.");
+      } else if (err.message.includes("User not found")) {
+        setError("No account found with this email.");
+      } else {
+        setError("Failed to login. Please try again later.");
+      }
     }
   };
 
@@ -110,12 +115,15 @@ const Login: React.FC = () => {
                 errors.password ? "border-red-500" : "border-[#AF94D3]"
               }`}
             />
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1 font-[Inter]">
-                {errors.password.message}
-              </p>
+            {error ? (
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">{error}</p>
+            ) : (
+              errors.password && (
+                <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                  {errors.password.message}
+                </p>
+              )
             )}
-            {errors && <FormError>{error}</FormError>}
           </div>
           <p className="font-[Inter] text-[12px] font-semibold leading-[29.36px] text-left text-[#5F17BE]">
             <Link to="/forgot-password">Forgot password?</Link>
