@@ -14,6 +14,7 @@ const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 interface AuthContextData {
   currentUser: User | null;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<UserCredential>;
   registerUser: (
     name: string,
@@ -42,6 +43,7 @@ export function useAuth(): AuthContextData {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   async function login(
     email: string,
@@ -126,8 +128,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+      if (user) {
+        // Get the ID token with fresh claims
+        const token = await user.getIdTokenResult(true);
+        setIsAdmin(!!token.claims.admin);
+      } else {
+        setIsAdmin(false);
+      }
       setIsLoading(false);
     });
     return unsubscribe;
@@ -135,6 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     currentUser,
+    isAdmin,
     login,
     registerUser,
     logout,
