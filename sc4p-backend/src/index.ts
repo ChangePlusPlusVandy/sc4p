@@ -7,6 +7,7 @@ import { exampleRoute } from "./routes/exampleRoute";
 import userRouter from "./routes/user/userRouter";
 import petRouter from "./routes/pet/petRouter";
 import boardingFacilityRouter from "./routes/boarding_fac/boardingFacRouter";
+import adminRouter from "./routes/admin/adminRouter";
 import { verifyToken } from "./middlewares/verifyToken";
 import { notFound, errorHandler } from "./middlewares/errors";
 
@@ -30,6 +31,7 @@ app.use("/example", verifyToken, exampleRoute);
 app.use("/user", userRouter);
 app.use("/pets", petRouter);
 app.use("/boarding-fac", boardingFacilityRouter);
+app.use("/admin", adminRouter);
 
 // Default route: Unprotected
 app.get("/", (_req: Request, res: Response) => {
