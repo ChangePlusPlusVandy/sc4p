@@ -20,12 +20,21 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="flex justify-between items-center p-4 bg-gray-800 text-white">
-      <ul>
-        <li style={{ display: "inline", marginRight: "10px" }}>
-          <Link to="/">Home</Link>
+      <ul className="flex gap-6">
+        <li>
+          <Link to="/" className="hover:text-gray-300">
+            Home
+          </Link>
         </li>
-        <li style={{ display: "inline" }}>
-          <Link to="/users">Users</Link>
+        <li>
+          <Link to="/users" className="hover:text-gray-300">
+            Users
+          </Link>
+        </li>
+        <li>
+          <Link to="/admins" className="hover:text-gray-300">
+            Admins
+          </Link>
         </li>
       </ul>
       <Button color="primary" variant="light" onPress={handleLogout}>

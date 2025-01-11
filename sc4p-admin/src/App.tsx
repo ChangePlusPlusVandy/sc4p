@@ -4,6 +4,7 @@ import Layout from "./components/Layout";
 import PrivateRoute from "./components/PrivateRoute";
 import Home from "./pages/Home";
 import Users from "./pages/Users";
+import Admins from "./pages/Admins";
 import Login from "./pages/Login";
 
 export const App = () => {
@@ -18,6 +19,7 @@ export const App = () => {
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/users" element={<Users />} />
+              <Route path="/admins" element={<Admins />} />
             </Route>
           </Route>
         </Routes>
