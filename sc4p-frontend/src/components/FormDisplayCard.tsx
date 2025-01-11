@@ -19,6 +19,11 @@ import {
   SelectItem,
 } from "@nextui-org/react";
 
+type petDataType = {
+  name: string;
+  id: string;
+};
+
 type InfoSection = {
   title: string;
   content: string;
@@ -34,10 +39,12 @@ type InfoSection = {
 
 type FormDisplayCardProps = {
   headerTitle: string;
+  petData?: petDataType;
   sections: InfoSection[][];
 };
 
 const FormDisplayCard: React.FC<FormDisplayCardProps> = ({
+  petData,
   headerTitle,
   sections,
 }) => {
@@ -79,8 +86,8 @@ const FormDisplayCard: React.FC<FormDisplayCardProps> = ({
           fontFamily: "Inter, sans-serif",
         }}
       >
-        <CardHeader className="flex justify-between items-center mb-[60px]">
-          <h2 className="text-xl font-bold">{headerTitle}</h2>
+        <CardHeader className="flex justify-between items-center mb-[20px]">
+          <h1 className="text-xl font-bold">{headerTitle}</h1>
           <button
             onClick={handleEditClick}
             className="rounded-full p-2"
@@ -92,7 +99,7 @@ const FormDisplayCard: React.FC<FormDisplayCardProps> = ({
           </button>
         </CardHeader>
 
-        <CardBody className="flex flex-col gap-y-5 w-full">
+        <CardBody className="flex flex-col gap-y-2 w-full">
           {editableSections.map((section, sectionIndex) => (
             <div
               key={sectionIndex}
@@ -103,9 +110,9 @@ const FormDisplayCard: React.FC<FormDisplayCardProps> = ({
                   key={itemIndex}
                   className="flex flex-row gap-4 justify-start w-full"
                 >
-                  <strong className="w-full w-max-[40%] break-words">
+                  <h3 className="w-full font-bold w-max-[33%] break-words">
                     {item.title}
-                  </strong>
+                  </h3>
                   <span className="w-full">{item.content || "No Entry"}</span>{" "}
                   {/* Default value */}
                 </div>

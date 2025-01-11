@@ -1,0 +1,36 @@
+export interface Pet {
+  id: number;
+  name: string;
+  sex: string;
+  dateOfBirth: Date;
+  spayedNeutered: boolean;
+  type: string;
+  microchipId?: string | null;
+  licenseNumber?: string | null;
+  medicalHistory?: string | null;
+  specialNeeds?: string | null;
+  specialDiet?: string | null;
+  behavioralHabits?: string | null;
+  commands?: string | null;
+  dailyRoutine?: string | null;
+  allowedOutside?: boolean | null;
+  sleepLocation?: string | null;
+  likesChildren?: boolean | null;
+  homeAccess?: string | null;
+  favoriteItems?: string | null;
+  fleaPrevention?: string | null;
+  allergies?: string | null;
+  specialCareInstructions?: string | null;
+  medicalHistoryLocation?: string | null;
+  foodBrand?: string | null;
+  foodAmount?: string | null;
+  feedingSchedule?: string | null;
+  medications?: string | null;
+  emergencySupplies?: string | null;
+  healthInsuranceProvider?: string | null;
+  healthInsurancePolicyNumber?: string | null;
+  healthInsuranceCost?: number | null;
+  euthanasiaDecision: string;
+  remainsCare: string;
+  allocatedRemainsFund?: number | null;
+}

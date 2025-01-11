@@ -17,7 +17,6 @@ userRouter.get("/", async (req, res) => {
 
     res.status(500).json({ message: "Error fetching users" });
   }
-  
 });
 
 // GET user by email
@@ -50,8 +49,9 @@ userRouter.get("/id/:id", async (req, res) => {
   }
 });
 
-// POST create a new user
+// POST: Create a new user
 userRouter.post("/", async (req, res) => {
+  // Define validation schema without `created_at`
   const schema = Joi.object({
     name: Joi.string(),
     email: Joi.string().email().required(),
@@ -62,15 +62,21 @@ userRouter.post("/", async (req, res) => {
     home_phone: Joi.string(),
     cell_phone: Joi.string(),
     work_phone: Joi.string(),
-    created_at: Joi.date(),
   });
-  const userInfo = req.body;
+
   try {
-    const data = (await schema.validateAsync(userInfo)) as User;
+    console.log("hello");
+    // Validate user information against schema
+    const data = await schema.validateAsync(req.body);
+
+    // Pass validated data to UserService for creation in database
     const newUser = await UserService.createUser(data);
-    res.status(201).json(newUser);
+
+    console.log(newUser);
+
+    res.status(201).json(newUser); // Respond with created user data
   } catch (error) {
-    res.status(500).json({ message: "Error creating user" });
+    res.status(500).json({ message: "Error creating user", error });
   }
 });
 
