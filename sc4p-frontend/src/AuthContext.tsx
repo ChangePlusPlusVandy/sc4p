@@ -23,9 +23,9 @@ interface AuthContextData {
     city: string,
     state: string,
     zip: string,
-    home_phone: string,
-    cell_phone: string,
-    work_phone: string,
+    home_phone?: string,
+    cell_phone?: string,
+    work_phone?: string,
   ) => Promise<void>;
   logout: () => Promise<void>;
   getUser: () => User | null;
@@ -63,7 +63,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     const userData = await response.json();
 
-    // Return the user credential, as Firebase is the source of truth for authentication
     return userData;
   }
 
@@ -75,9 +74,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     city: string,
     state: string,
     zip: string,
-    home_phone: string,
-    cell_phone: string,
-    work_phone: string,
+    home_phone?: string,
+    cell_phone?: string,
+    work_phone?: string,
   ): Promise<void> {
     // Step 1: Create the user in Firebase
     const userCredential = await createUserWithEmailAndPassword(
