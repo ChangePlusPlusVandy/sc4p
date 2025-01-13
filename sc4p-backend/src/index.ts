@@ -29,7 +29,7 @@ app.use(helmet());
  */
 app.use("/example", verifyToken, exampleRoute);
 app.use("/user", userRouter);
-app.use("/pets", petRouter);
+app.use("/pet", petRouter);
 app.use("/boarding-fac", boardingFacilityRouter);
 app.use("/admin", adminRouter);
 
