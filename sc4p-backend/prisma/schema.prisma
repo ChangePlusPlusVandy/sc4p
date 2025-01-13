@@ -36,6 +36,13 @@ model Caregiver {
   name          String
   care_type     String    // 'short-term', 'long-term', 'both'
   primary       Boolean
+  accepted      Boolean   
+  address       String
+  city          String
+  state         String
+  zip           String
+  phone         String
+  email         String
   created_at    DateTime  @default(now())
   
   // Relationships

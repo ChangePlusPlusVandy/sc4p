@@ -10,6 +10,8 @@ import boardingFacilityRouter from "./routes/boarding_fac/boardingFacRouter";
 import adminRouter from "./routes/admin/adminRouter";
 import { verifyToken } from "./middlewares/verifyToken";
 import { notFound, errorHandler } from "./middlewares/errors";
+import caregiverRouter from "./routes/caregiver/caregiverRouter";
+import emergencyContactRouter from "./routes/emergency_contact/emergencyContactRouter";
 
 dotenv.config();
 
@@ -32,6 +34,8 @@ app.use("/user", userRouter);
 app.use("/pet", petRouter);
 app.use("/boarding-fac", boardingFacilityRouter);
 app.use("/admin", adminRouter);
+app.use("/caregiver", caregiverRouter);
+app.use("/emergency-contacts", emergencyContactRouter);
 
 // Default route: Unprotected
 app.get("/", (_req: Request, res: Response) => {
