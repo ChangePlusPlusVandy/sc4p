@@ -591,6 +591,48 @@ const main = async () => {
     });
   }
 
+  const veterinarians = [
+    {
+      owner_id: createdUsers[0].id,
+      name: "Dr. Smith",
+      address: "456 Pet St",
+      city: "Springfield",
+      state: "IL",
+      zip: "62701",
+      cell_phone: "217-555-4321",
+      office_phone: "217-555-8765",
+      emergency_phone: "217-555-0000",
+    },
+    {
+      owner_id: createdUsers[1].id,
+      name: "Dr. Johnson",
+      address: "789 Animal Ave",
+      city: "Nashville",
+      state: "TN",
+      zip: "33333",
+      cell_phone: "123-555-6789",
+      office_phone: "123-555-9876",
+      emergency_phone: "123-555-1111",
+    },
+    {
+      owner_id: createdUsers[2].id,
+      name: "Dr. Williams",
+      address: "101 Vet Blvd",
+      city: "Denver",
+      state: "CO",
+      zip: "80203",
+      cell_phone: "303-555-4321",
+      office_phone: "303-555-8765",
+      emergency_phone: "303-555-0000",
+    },
+  ];
+
+  for (const vet of veterinarians) {
+    await prisma.veterinarian.create({
+      data: vet,
+    });
+  }
+
   console.log("Seed data has been added successfully.");
 };
 
