@@ -1,26 +1,24 @@
 export interface EmergencyContact {
   id: number;
   owner_id: number;
-  contact_name: string;
+  name: string;
   address: string;
   city: string;
   state: string;
   zip: string;
-  home_phone: string | null;
-  cell_phone: string;
+  phone: string | null;
   email: string;
   created_at: Date;
 }
 
 export interface CreateEmergencyContact {
   owner_id: number;
-  contact_name: string;
+  name: string;
   address: string;
   city: string;
   state: string;
   zip: string;
-  home_phone?: string;
-  cell_phone: string;
+  phone: string;
   email: string;
 }
 
