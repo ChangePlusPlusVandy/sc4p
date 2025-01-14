@@ -1,19 +1,25 @@
-export interface EmergencyContact {
+export interface Caregiver {
   id: number;
   owner_id: number;
   name: string;
+  care_type: string;
+  primary: boolean;
+  accepted: boolean;
   address: string;
   city: string;
   state: string;
   zip: string;
-  phone: string | null;
+  phone: string;
   email: string;
   created_at: Date;
 }
 
-export interface CreateEmergencyContact {
+export interface CreateCaregiver {
   owner_id: number;
   name: string;
+  care_type: string;
+  primary: boolean;
+  accepted: boolean;
   address: string;
   city: string;
   state: string;
@@ -22,5 +28,4 @@ export interface CreateEmergencyContact {
   email: string;
 }
 
-export interface UpdateEmergencyContact
-  extends Partial<CreateEmergencyContact> {}
+export interface UpdateCaregiver extends Partial<CreateCaregiver> {}

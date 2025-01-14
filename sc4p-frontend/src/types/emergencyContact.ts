@@ -6,13 +6,12 @@ export interface EmergencyContact {
   city: string;
   state: string;
   zip: string;
-  phone: string | null;
+  phone: string;
   email: string;
   created_at: Date;
 }
 
 export interface CreateEmergencyContact {
-  owner_id: number;
   name: string;
   address: string;
   city: string;
