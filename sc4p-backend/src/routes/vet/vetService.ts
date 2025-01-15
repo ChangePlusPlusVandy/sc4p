@@ -3,8 +3,6 @@ import {
   Veterinarian,
   CreateVeterinarian,
   UpdateVeterinarian,
-  CreateVeterinarian,
-  UpdateVeterinarian,
 } from "../../types/veterinarian";
 
 const prisma = new PrismaClient();
