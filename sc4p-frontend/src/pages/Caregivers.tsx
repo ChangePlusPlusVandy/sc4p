@@ -25,6 +25,7 @@ import {
   createCaregiver,
   deleteCaregiver,
   getBoardingFacilities,
+  createBoardingFacility,
   deleteBoardingFacility,
 } from "../lib/Services";
 
@@ -195,6 +196,35 @@ const Caregivers = () => {
     }
   };
 
+  const onSubmitBoardingFac = async (
+    data: CreateBoardingFac,
+    onClose: () => void,
+  ) => {
+    try {
+      if (!currentUser?.email || !userData?.id) return;
+
+      const token = await currentUser.getIdToken();
+      const response = await createBoardingFacility(token, {
+        ...data,
+        owner_id: userData.id,
+        daily_charge: Number(data.daily_charge),
+      });
+
+      if (response.ok) {
+        await fetchBoardingFacilities();
+        resetBoardingFac();
+        onClose();
+      } else {
+        console.error(
+          "Failed to create boarding facility:",
+          await response.text(),
+        );
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
   return (
     <div className="flex flex-col items-start w-full pl-6 pt-6 h-full">
       <h1 className="text-6xl font-bold mb-8">Caregivers</h1>
@@ -360,97 +390,99 @@ const Caregivers = () => {
               <ModalHeader className="flex flex-col gap-1">
                 Boarding Facility Information
               </ModalHeader>
-              <ModalBody>
-                <div className="flex w-full flex-col">
-                  <Card shadow="none">
-                    <CardBody className="flex flex-col gap-4">
-                      <Input
-                        label="Contact"
-                        placeholder="Enter contact name"
-                        isRequired
-                        labelPlacement="outside"
-                        {...registerBoardingFac("contact_name")}
-                      />
-                      <Input
-                        label="Average Daily Charge"
-                        placeholder="Enter average daily charge"
-                        type="number"
-                        isRequired
-                        labelPlacement="outside"
-                        {...registerBoardingFac("daily_charge")}
-                      />
-                      <Input
-                        label="Address"
-                        placeholder="Enter address"
-                        isRequired
-                        labelPlacement="outside"
-                        {...registerBoardingFac("address")}
-                      />
-                      <div className="flex flex-row gap-2">
+              <form
+                onSubmit={handleSubmitBoardingFac((data) =>
+                  onSubmitBoardingFac(data, onClose),
+                )}
+              >
+                <ModalBody>
+                  <div className="flex w-full flex-col">
+                    <Card shadow="none">
+                      <CardBody className="flex flex-col gap-4">
                         <Input
-                          label="City"
-                          placeholder="Enter city"
+                          label="Contact"
+                          placeholder="Enter contact name"
                           isRequired
                           labelPlacement="outside"
-                          {...registerBoardingFac("city")}
+                          {...registerBoardingFac("contact_name")}
                         />
                         <Input
-                          label="State"
-                          placeholder="Enter state"
+                          label="Average Daily Charge"
+                          placeholder="Enter average daily charge"
+                          type="number"
                           isRequired
                           labelPlacement="outside"
-                          {...registerBoardingFac("state")}
+                          {...registerBoardingFac("daily_charge")}
                         />
                         <Input
-                          label="Zip"
-                          placeholder="Enter zip code"
+                          label="Address"
+                          placeholder="Enter address"
                           isRequired
                           labelPlacement="outside"
-                          {...registerBoardingFac("zip")}
+                          {...registerBoardingFac("address")}
                         />
-                      </div>
-                      <Input
-                        type="tel"
-                        label="Home Phone"
-                        placeholder="Enter home phone number"
-                        labelPlacement="outside"
-                        {...registerBoardingFac("home_phone")}
-                      />
-                      <Input
-                        type="tel"
-                        label="Cell Phone"
-                        placeholder="Enter cell phone number"
-                        isRequired
-                        labelPlacement="outside"
-                        {...registerBoardingFac("cell_phone")}
-                      />
-                      <Input
-                        type="email"
-                        label="Email"
-                        placeholder="Enter email address"
-                        labelPlacement="outside"
-                        {...registerBoardingFac("email")}
-                      />
-                    </CardBody>
-                  </Card>
-                </div>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  onPress={() =>
-                    handleSubmitBoardingFac((data) => {
-                      console.log(data);
-                      onClose();
-                    })()
-                  }
-                >
-                  Submit
-                </Button>
-              </ModalFooter>
+                        <div className="flex flex-row gap-2">
+                          <Input
+                            label="City"
+                            placeholder="Enter city"
+                            isRequired
+                            labelPlacement="outside"
+                            {...registerBoardingFac("city")}
+                          />
+                          <Input
+                            label="State"
+                            placeholder="Enter state"
+                            isRequired
+                            labelPlacement="outside"
+                            {...registerBoardingFac("state")}
+                          />
+                          <Input
+                            label="Zip"
+                            placeholder="Enter zip code"
+                            isRequired
+                            labelPlacement="outside"
+                            {...registerBoardingFac("zip")}
+                          />
+                        </div>
+                        <Input
+                          type="tel"
+                          label="Home Phone"
+                          placeholder="Enter home phone number"
+                          labelPlacement="outside"
+                          {...registerBoardingFac("home_phone")}
+                        />
+                        <Input
+                          type="tel"
+                          label="Cell Phone"
+                          placeholder="Enter cell phone number"
+                          isRequired
+                          labelPlacement="outside"
+                          {...registerBoardingFac("cell_phone")}
+                        />
+                        <Input
+                          type="email"
+                          label="Email"
+                          placeholder="Enter email address"
+                          labelPlacement="outside"
+                          {...registerBoardingFac("email")}
+                        />
+                      </CardBody>
+                    </Card>
+                  </div>
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="danger" variant="flat" onPress={onClose}>
+                    Cancel
+                  </Button>
+                  <Button
+                    color="primary"
+                    type="submit"
+                    isLoading={isSubmitting}
+                  >
+                    Add Boarding Facility
+                  </Button>
+                </ModalFooter>
+              </form>
             </>
           )}
         </ModalContent>
