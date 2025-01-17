@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
   Card,
@@ -18,6 +20,48 @@ import {
 import { useAuth } from "../AuthContext";
 import { getUserData } from "../lib/Services";
 import InformationCard from "../components/InformationCard";
+import { CreateCaregiver, Caregiver } from "~/types/caregiver";
+import { CreateBoardingFac, BoardingFac } from "~/types/boardingFac";
+import * as yup from "yup";
+
+const caregiverSchema = yup.object().shape({
+  primary: yup.object().shape({
+    name: yup.string().required(),
+    care_type: yup.string().required(),
+    primary: yup.boolean().required(),
+    accepted: yup.boolean().required(),
+    address: yup.string().required(),
+    city: yup.string().required(),
+    state: yup.string().required(),
+    zip: yup.string().required(),
+    phone: yup.string().required(),
+    email: yup.string().email().required(),
+  }),
+  alternate: yup.object().shape({
+    name: yup.string().required(),
+    care_type: yup.string().required(),
+    primary: yup.boolean().required(),
+    accepted: yup.boolean().required(),
+    address: yup.string().required(),
+    city: yup.string().required(),
+    state: yup.string().required(),
+    zip: yup.string().required(),
+    phone: yup.string().required(),
+    email: yup.string().email().required(),
+  }),
+});
+
+const boardingFacSchema = yup.object().shape({
+  contact_name: yup.string().required(),
+  daily_charge: yup.number(),
+  address: yup.string().required(),
+  city: yup.string().required(),
+  state: yup.string().required(),
+  zip: yup.string().required(),
+  home_phone: yup.string(),
+  cell_phone: yup.string().required(),
+  email: yup.string().email(),
+});
 
 const Caregivers: React.FC = () => {
   const [userData, setUserData] = useState<any[]>([]);
@@ -39,6 +83,26 @@ const Caregivers: React.FC = () => {
       setSelectedTab(selectedTab - 1);
     }
   };
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<CreateCaregiver>({
+    resolver: yupResolver(caregiverSchema),
+    mode: "onBlur",
+  });
+
+  const {
+    register: registerBoardingFac,
+    handleSubmit: handleSubmitBoardingFac,
+    reset: resetBoardingFac,
+    formState: { errors: boardingFacErrors, isSubmitting: isSubmittingBoardingFac },
+  } = useForm<CreateBoardingFac>({
+    resolver: yupResolver(boardingFacSchema),
+    mode: "onBlur",
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -110,9 +174,17 @@ const Caregivers: React.FC = () => {
                   {selectedTab === 1 && (
                     <Card shadow="none">
                       <CardBody className="flex flex-col gap-4">
+                        <Input
+                          label="Name"
+                          placeholder="Enter name"
+                          isRequired
+                          labelPlacement="outside"
+                          {...register("primary.name")}
+                        />
                         <RadioGroup
                           label="Primary Caregiver Agreement"
                           orientation="horizontal"
+                          {...register("primary.primary")}
                         >
                           <Radio value="yes">Yes</Radio>
                           <Radio value="no">No</Radio>
@@ -121,6 +193,7 @@ const Caregivers: React.FC = () => {
                         <RadioGroup
                           label="This caregiver will provide"
                           orientation="vertical"
+                          {...register("primary.care_type")}
                         >
                           <Radio value="short-term">Short-term care</Radio>
                           <Radio value="long-term">Long-term care</Radio>
@@ -132,6 +205,7 @@ const Caregivers: React.FC = () => {
                           placeholder="Enter address"
                           isRequired
                           labelPlacement="outside"
+                          {...register("primary.address")}
                         />
                         <div className="flex flex-row gap-2">
                           <Input
@@ -140,6 +214,7 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter city"
                             isRequired
                             labelPlacement="outside"
+                            {...register("primary.city")}
                           />
                           <Input
                             type="text"
@@ -147,6 +222,7 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter state"
                             isRequired
                             labelPlacement="outside"
+                            {...register("primary.state")}
                           />
                           <Input
                             type="text"
@@ -154,21 +230,16 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter zip code"
                             isRequired
                             labelPlacement="outside"
+                            {...register("primary.zip")}
                           />
                         </div>
                         <Input
                           type="tel"
-                          label="Home Phone"
-                          placeholder="Enter home phone number"
+                          label="Phone"
+                          placeholder="Enter phone number (e.g., 123-456-7890)"
                           isRequired
                           labelPlacement="outside"
-                        />
-                        <Input
-                          type="tel"
-                          label="Cell Phone"
-                          placeholder="Enter cell phone number"
-                          isRequired
-                          labelPlacement="outside"
+                          {...register("primary.phone")}
                         />
                         <Input
                           type="email"
@@ -176,6 +247,7 @@ const Caregivers: React.FC = () => {
                           placeholder="Enter email address"
                           isRequired
                           labelPlacement="outside"
+                          {...register("primary.email")}
                         />
                       </CardBody>
                     </Card>
@@ -187,6 +259,9 @@ const Caregivers: React.FC = () => {
                         <RadioGroup
                           label="Alternate Caregiver Agreement"
                           orientation="horizontal"
+                            {...register("alternate.primary", {
+                            setValueAs: (value) => value === "yes",
+                            })}
                         >
                           <Radio value="yes">Yes</Radio>
                           <Radio value="no">No</Radio>
@@ -195,6 +270,7 @@ const Caregivers: React.FC = () => {
                         <RadioGroup
                           label="This caregiver will provide"
                           orientation="vertical"
+                          {...register("alternate.care_type")}
                         >
                           <Radio value="short-term">Short-term care</Radio>
                           <Radio value="long-term">Long-term care</Radio>
@@ -206,6 +282,7 @@ const Caregivers: React.FC = () => {
                           placeholder="Enter address"
                           isRequired
                           labelPlacement="outside"
+                          {...register("alternate.address")}
                         />
                         <div className="flex flex-row gap-2">
                           <Input
@@ -214,6 +291,7 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter city"
                             isRequired
                             labelPlacement="outside"
+                            {...register("alternate.city")}
                           />
                           <Input
                             type="text"
@@ -221,6 +299,7 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter state"
                             isRequired
                             labelPlacement="outside"
+                            {...register("alternate.state")}
                           />
                           <Input
                             type="text"
@@ -228,21 +307,16 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter zip code"
                             isRequired
                             labelPlacement="outside"
+                            {...register("alternate.zip")}
                           />
                         </div>
                         <Input
                           type="tel"
-                          label="Home Phone"
-                          placeholder="Enter home phone number"
+                          label="Phone"
+                          placeholder="Enter phone number (e.g., 123-456-7890)"
                           isRequired
                           labelPlacement="outside"
-                        />
-                        <Input
-                          type="tel"
-                          label="Cell Phone"
-                          placeholder="Enter cell phone number"
-                          isRequired
-                          labelPlacement="outside"
+                          {...register("alternate.phone")}
                         />
                         <Input
                           type="email"
@@ -250,6 +324,7 @@ const Caregivers: React.FC = () => {
                           placeholder="Enter email address"
                           isRequired
                           labelPlacement="outside"
+                          {...register("alternate.email")}
                         />
                       </CardBody>
                     </Card>
@@ -263,18 +338,21 @@ const Caregivers: React.FC = () => {
                           placeholder="Enter contact name"
                           isRequired
                           labelPlacement="outside"
+                          {...registerBoardingFac("contact_name")}
                         />
                         <Input
                           label="Average Daily Charge (or costs)"
                           placeholder="Enter average daily charge"
                           isRequired
                           labelPlacement="outside"
+                          {...registerBoardingFac("daily_charge")}
                         />
                         <Input
                           label="Address"
                           placeholder="Enter address"
                           isRequired
                           labelPlacement="outside"
+                          {...registerBoardingFac("address")}
                         />
                         <div className="flex flex-row gap-2">
                           <Input
@@ -283,6 +361,7 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter city"
                             isRequired
                             labelPlacement="outside"
+                            {...registerBoardingFac("city")}
                           />
                           <Input
                             type="text"
@@ -290,6 +369,7 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter state"
                             isRequired
                             labelPlacement="outside"
+                            {...registerBoardingFac("state")}
                           />
                           <Input
                             type="text"
@@ -297,6 +377,7 @@ const Caregivers: React.FC = () => {
                             placeholder="Enter zip code"
                             isRequired
                             labelPlacement="outside"
+                            {...registerBoardingFac("zip")}
                           />
                         </div>
                         <Input
@@ -305,6 +386,7 @@ const Caregivers: React.FC = () => {
                           placeholder="Enter home phone number"
                           isRequired
                           labelPlacement="outside"
+                          {...registerBoardingFac("home_phone")}
                         />
                         <Input
                           type="tel"
@@ -312,6 +394,7 @@ const Caregivers: React.FC = () => {
                           placeholder="Enter cell phone number"
                           isRequired
                           labelPlacement="outside"
+                          {...registerBoardingFac("cell_phone")}
                         />
                         <Input
                           type="email"
@@ -319,6 +402,7 @@ const Caregivers: React.FC = () => {
                           placeholder="Enter email address"
                           isRequired
                           labelPlacement="outside"
+                          {...registerBoardingFac("email")}
                         />
                       </CardBody>
                     </Card>

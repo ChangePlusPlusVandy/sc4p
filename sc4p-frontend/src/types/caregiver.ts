@@ -15,17 +15,31 @@ export interface Caregiver {
 }
 
 export interface CreateCaregiver {
-  owner_id: number;
-  name: string;
-  care_type: string;
-  primary: boolean;
-  accepted: boolean;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  phone: string;
-  email: string;
+  primary: {
+    name: string;
+    care_type: string;
+    primary: boolean;
+    accepted: boolean;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    phone: string;
+    email: string;
+  };
+
+  alternate: {
+    name: string;
+    care_type: string;
+    primary: boolean;
+    accepted: boolean;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    phone: string;
+    email: string;
+  };
 }
 
 export interface UpdateCaregiver extends Partial<CreateCaregiver> {}
