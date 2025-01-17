@@ -40,3 +40,62 @@ export const deleteEmergencyContact = async (
     },
   });
 };
+
+export const getCaregivers = async (token: string, ownerId: number) => {
+  return await fetch(`${backendUrl}/caregiver/owner/${ownerId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createCaregiver = async (token: string, data: any) => {
+  return await fetch(`${backendUrl}/caregiver`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteCaregiver = async (token: string, caregiverId: number) => {
+  return await fetch(`${backendUrl}/caregiver/${caregiverId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getBoardingFacilities = async (token: string, ownerId: number) => {
+  return await fetch(`${backendUrl}/boarding-fac/owner/${ownerId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createBoardingFacility = async (token: string, data: any) => {
+  return await fetch(`${backendUrl}/boarding-fac`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteBoardingFacility = async (
+  token: string,
+  facilityId: number,
+) => {
+  return await fetch(`${backendUrl}/boarding-fac/${facilityId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
