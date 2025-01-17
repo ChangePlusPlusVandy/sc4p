@@ -98,7 +98,10 @@ const Caregivers: React.FC = () => {
     register: registerBoardingFac,
     handleSubmit: handleSubmitBoardingFac,
     reset: resetBoardingFac,
-    formState: { errors: boardingFacErrors, isSubmitting: isSubmittingBoardingFac },
+    formState: {
+      errors: boardingFacErrors,
+      isSubmitting: isSubmittingBoardingFac,
+    },
   } = useForm<CreateBoardingFac>({
     resolver: yupResolver(boardingFacSchema),
     mode: "onBlur",
@@ -256,12 +259,19 @@ const Caregivers: React.FC = () => {
                   {selectedTab === 2 && (
                     <Card shadow="none">
                       <CardBody className="flex flex-col gap-4">
+                        <Input
+                          label="Name"
+                          placeholder="Enter name"
+                          isRequired
+                          labelPlacement="outside"
+                          {...register("alternate.name")}
+                        />
                         <RadioGroup
                           label="Alternate Caregiver Agreement"
                           orientation="horizontal"
-                            {...register("alternate.primary", {
+                          {...register("alternate.primary", {
                             setValueAs: (value) => value === "yes",
-                            })}
+                          })}
                         >
                           <Radio value="yes">Yes</Radio>
                           <Radio value="no">No</Radio>
