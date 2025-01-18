@@ -1,90 +1,93 @@
 import express from "express";
 import * as BoardingFacService from "./boardingFacService";
-import { PrismaClient } from "@prisma/client";
-import { BoardingFac } from "../../types/boardingFac";
-import Joi from "joi";
+import { CreateBoardingFac, UpdateBoardingFac } from "../../types/boardingFac";
 
-const boardingFacilityRouter = express.Router();
-
-const schema = Joi.object({
-    owner_id: Joi.number().integer().required(),
-    contact_name: Joi.string().required(),
-    daily_charge: Joi.number().required(),
-    address: Joi.string().required(),
-    city: Joi.string().required(),
-    state: Joi.string().required(),
-    zip: Joi.string().required(),
-    home_phone: Joi.string().required(),
-    cell_phone: Joi.string().required(),
-    email: Joi.string().required(),
-});
+const boardingFacRouter = express.Router();
 
 // GET all boarding facilities
-boardingFacilityRouter.get("/", async (req, res) => {
-    try {
-        const boardingFacs = await BoardingFacService.getAllBoardingFacs();
-        res.status(200).json(boardingFacs);
-    } catch (error) {
-        console.error("Error fetching boarding facilities:", error);
-        res.status(500).json({ message: "Failed to fetch boarding facilities" });
-    }
+boardingFacRouter.get("/", async (req, res) => {
+  try {
+    const boardingFacs = await BoardingFacService.getAllBoardingFacs();
+    res.status(200).json(boardingFacs);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching boarding facilities" });
+  }
 });
 
 // GET boarding facility by ID
-boardingFacilityRouter.get("/id/:id", async (req, res) => {
-    try {
-        const boardingFac = await BoardingFacService.getBoardingFacById(parseInt(req.params.id));
-        res.status(200).json(boardingFac);
-    } catch (error) {
-        console.error("Error fetching boarding facility:", error);
-        res.status(500).json({ message: "Failed to fetch boarding facility" });
+boardingFacRouter.get("/id/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const boardingFac = await BoardingFacService.getBoardingFacById(Number(id));
+    if (boardingFac) {
+      res.status(200).json(boardingFac);
+    } else {
+      res.status(404).json({ message: "Boarding facility not found" });
     }
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching boarding facility" });
+  }
 });
 
-// POST new boarding facility
-boardingFacilityRouter.post("/", async (req, res) => {
-    try {
-        const newBoardingFac: BoardingFac = req.body;
-        console.log(newBoardingFac);
-        const { error } = schema.validate(newBoardingFac);
-        if (error) {
-            console.error("Validation error:", error);
-            return res.status(400).json({ message: "Invalid request body" });
-        }
-        const boardingFac = await BoardingFacService.createBoardingFac(newBoardingFac);
-        res.status(201).json(boardingFac);
-    } catch (error) {
-        console.error("Error creating boarding facility:", error);
-        res.status(500).json({ message: "Failed to create boarding facility" });
-    }
+// GET boarding facilities by owner ID
+boardingFacRouter.get("/owner/:owner_id", async (req, res) => {
+  const { owner_id } = req.params;
+  try {
+    const boardingFacs = await BoardingFacService.getBoardingFacsByOwnerId(
+      Number(owner_id),
+    );
+    res.status(200).json(boardingFacs);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching boarding facilities" });
+  }
 });
 
-// PUT update boarding facility by ID
-boardingFacilityRouter.put("/:id", async (req, res) => {
-    try {
-        const updatedBoardingFac: BoardingFac = req.body;
-        const { error } = schema.validate(updatedBoardingFac);
-        if (error) {
-            console.error("Validation error:", error);
-            return res.status(400).json({ message: "Invalid request body" });
-        }
-        const boardingFac = await BoardingFacService.updateBoardingFacById(parseInt(req.params.id), updatedBoardingFac);
-        res.status(200).json(boardingFac);
-    } catch (error) {
-        console.error("Error updating boarding facility:", error);
-        res.status(500).json({ message: "Failed to update boarding facility" });
-    }
+// POST create a new boarding facility
+boardingFacRouter.post("/", async (req, res) => {
+  try {
+    const boardingFacData: CreateBoardingFac = {
+      owner_id: req.body.owner_id,
+      contact_name: req.body.contact_name,
+      daily_charge: req.body.daily_charge || null,
+      address: req.body.address,
+      city: req.body.city,
+      state: req.body.state,
+      zip: req.body.zip,
+      home_phone: req.body.home_phone || null,
+      cell_phone: req.body.cell_phone,
+      email: req.body.email || null,
+    };
+    const boardingFac =
+      await BoardingFacService.createBoardingFac(boardingFacData);
+    res.status(201).json(boardingFac);
+  } catch (error) {
+    res.status(400).json({ error: (error as Error).message });
+  }
 });
 
-// DELETE boarding facility by ID
-boardingFacilityRouter.delete("/:id", async (req, res) => {
-    try {
-        await BoardingFacService.deleteBoardingFacById(parseInt(req.params.id));
-        res.status(204).end();
-    } catch (error) {
-        console.error("Error deleting boarding facility:", error);
-        res.status(500).json({ message: "Failed to delete boarding facility" });
-    }
+// PUT update a boarding facility
+boardingFacRouter.put("/id/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedBoardingFac = await BoardingFacService.updateBoardingFac(
+      Number(id),
+      req.body,
+    );
+    res.status(200).json(updatedBoardingFac);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating boarding facility" });
+  }
 });
 
-export default boardingFacilityRouter;
+// DELETE a boarding facility
+boardingFacRouter.delete("/id/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await BoardingFacService.deleteBoardingFac(Number(id));
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting boarding facility" });
+  }
+});
+
+export default boardingFacRouter;

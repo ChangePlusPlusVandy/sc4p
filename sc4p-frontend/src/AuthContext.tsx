@@ -10,10 +10,13 @@ import {
 import React, { useContext, useState, useEffect, createContext } from "react";
 import auth from "./firebase";
 import type { UserCredential, User } from "firebase/auth";
+import { UserType } from "./types/user";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 interface AuthContextData {
   currentUser: User | null;
+  userData: UserType | null;
+  isAdmin: boolean;
   login: (email: string, password: string) => Promise<UserCredential>;
   registerUser: (
     name: string,
@@ -29,8 +32,10 @@ interface AuthContextData {
   ) => Promise<void>;
   logout: () => Promise<void>;
   getUser: () => User | null;
+  getUserData: () => UserType | null;
   forgotPassword: (email: string) => Promise<void>;
   confirmReset: (code: string, password: string) => Promise<void>;
+  refreshUserData: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -41,29 +46,43 @@ export function useAuth(): AuthContextData {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserType | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Function to fetch user data from SQL database
+  const fetchUserData = async (email: string) => {
+    try {
+      const response = await fetch(`${backendUrl}/user/email/${email}`);
+      if (!response.ok) {
+        throw new Error("Failed to retrieve user data from the SQL database");
+      }
+      const data = await response.json();
+      setUserData(data);
+      return data;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      return null;
+    }
+  };
+
+  async function refreshUserData(): Promise<void> {
+    if (currentUser?.email) {
+      await fetchUserData(currentUser.email);
+    }
+  }
 
   async function login(
     email: string,
     password: string,
   ): Promise<UserCredential> {
-    // Step 1: Authenticate the user with Firebase
     const userCredential = await signInWithEmailAndPassword(
       auth,
       email,
       password,
     );
-
-    // Step 2: (Optional) Fetch the user data from the SQL database for additional info if needed
-    const response = await fetch(
-      `${backendUrl}/user/email/${userCredential.user.email}`,
-    );
-    if (!response.ok) {
-      throw new Error("Failed to retrieve user data from the SQL database");
-    }
-    const userData = await response.json();
-
-    return userData;
+    await fetchUserData(email);
+    return userCredential;
   }
 
   async function registerUser(
@@ -89,7 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await updateProfile(userCredential.user, { displayName: name });
 
     // Step 3: Save user data in the SQL database with additional fields
-    await fetch(`${backendUrl}/user`, {
+    const response = await fetch(`${backendUrl}/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,14 +125,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         work_phone,
       }),
     });
+
+    if (response.ok) {
+      const userData = await response.json();
+      setUserData(userData);
+    }
   }
 
   async function logout(): Promise<void> {
+    setUserData(null);
     return await signOut(auth);
   }
 
   function getUser(): User | null {
     return currentUser;
+  }
+
+  function getUserData(): UserType | null {
+    return userData;
   }
 
   async function forgotPassword(email: string): Promise<void> {
@@ -125,8 +154,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
+      if (user) {
+        // Get the ID token with fresh claims
+        const token = await user.getIdTokenResult(true);
+        setIsAdmin(!!token.claims.admin);
+        // Fetch user data when auth state changes
+        await fetchUserData(user.email!);
+      } else {
+        setIsAdmin(false);
+        setUserData(null);
+      }
       setIsLoading(false);
     });
     return unsubscribe;
@@ -134,12 +173,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = {
     currentUser,
+    userData,
+    isAdmin,
     login,
     registerUser,
     logout,
     getUser,
+    getUserData,
     forgotPassword,
     confirmReset,
+    refreshUserData,
   };
 
   return (

@@ -1,33 +1,39 @@
 import { PrismaClient } from "@prisma/client";
-import { Pet } from "../../types/pet";
+import { Pet, CreatePet, UpdatePet } from "../../types/pet";
 
 const prisma = new PrismaClient();
 
-export const createPet = async (pet: Pet): Promise<Pet> => {
+export async function createPet(pet: CreatePet): Promise<Pet> {
   return await prisma.pet.create({
-    data: { ...pet },
+    data: pet,
   });
-};
+}
 
-export const getAllPets = async () => {
+export async function getAllPets(): Promise<Pet[]> {
   return await prisma.pet.findMany();
-};
+}
 
-export const getPetById = async (id: number) => {
+export async function getPetById(id: number): Promise<Pet | null> {
   return await prisma.pet.findUnique({
     where: { id },
   });
-};
+}
 
-export const updatePetById = async (id: number, pet: Pet) => {
+export async function updatePetById(id: number, data: UpdatePet): Promise<Pet> {
   return await prisma.pet.update({
     where: { id },
-    data: { ...pet },
+    data,
   });
-};
+}
 
-export const deletePetById = async (id: number) => {
+export async function deletePetById(id: number): Promise<Pet> {
   return await prisma.pet.delete({
     where: { id },
   });
-};
+}
+
+export async function getPetsByOwnerId(ownerId: number): Promise<Pet[]> {
+  return await prisma.pet.findMany({
+    where: { owner_id: ownerId },
+  });
+}

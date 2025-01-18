@@ -1,38 +1,52 @@
 import { PrismaClient } from "@prisma/client";
-import { BoardingFac } from "../../types/boardingFac";
+import {
+  BoardingFac,
+  CreateBoardingFac,
+  UpdateBoardingFac,
+} from "../../types/boardingFac";
 
 const prisma = new PrismaClient();
 
-export const getAllBoardingFacs = async () => {
-  return await prisma.boarding_fac.findMany();
-};
+export async function getAllBoardingFacs(): Promise<BoardingFac[]> {
+  return await prisma.boardingFac.findMany();
+}
 
-export const createBoardingFac = async (
-  boardingFac: BoardingFac,
-): Promise<BoardingFac> => {
-  return await prisma.boarding_fac.create({
-    data: { ...boardingFac },
-  });
-};
-
-export const getBoardingFacById = async (id: number) => {
-  return await prisma.boarding_fac.findUnique({
-    where: { id },
-  });
-};
-
-export const updateBoardingFacById = async (
+export async function getBoardingFacById(
   id: number,
-  boardingFac: BoardingFac,
-) => {
-  return await prisma.boarding_fac.update({
+): Promise<BoardingFac | null> {
+  return await prisma.boardingFac.findUnique({
     where: { id },
-    data: { ...boardingFac },
   });
-};
+}
 
-export const deleteBoardingFacById = async (id: number) => {
-  return await prisma.boarding_fac.delete({
+export async function getBoardingFacsByOwnerId(
+  owner_id: number,
+): Promise<BoardingFac[]> {
+  return await prisma.boardingFac.findMany({
+    where: { owner_id },
+  });
+}
+
+export async function createBoardingFac(
+  boardingFac: CreateBoardingFac,
+): Promise<BoardingFac> {
+  return await prisma.boardingFac.create({
+    data: boardingFac,
+  });
+}
+
+export async function updateBoardingFac(
+  id: number,
+  data: UpdateBoardingFac,
+): Promise<BoardingFac> {
+  return await prisma.boardingFac.update({
+    where: { id },
+    data,
+  });
+}
+
+export async function deleteBoardingFac(id: number): Promise<void> {
+  await prisma.boardingFac.delete({
     where: { id },
   });
-};
+}
