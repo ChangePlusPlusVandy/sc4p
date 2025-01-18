@@ -15,11 +15,10 @@ export interface Caregiver {
 }
 
 export interface CreateCaregiver {
-  owner_id: number;
   name: string;
-  care_type: string;
-  primary: boolean;
-  accepted: boolean;
+  care_type: "short-term" | "long-term" | "both";
+  primary: string;
+  accepted: string;
   address: string;
   city: string;
   state: string;
