@@ -19,9 +19,9 @@ interface FormValues {
   city: string;
   state: string;
   zip: string;
-  homePhone: string;
-  cellPhone: string;
-  workPhone: string;
+  homePhone?: string;
+  cellPhone?: string;
+  workPhone?: string;
 }
 
 const schema = Yup.object().shape({
@@ -45,16 +45,10 @@ const schema = Yup.object().shape({
     .required("Zip code is required")
     .matches(/^\d{5}$/, "Invalid zip code"),
 
-  homePhone: Yup.string()
-    .required("Home phone number is required")
-    .matches(/^\d+$/, "Invalid phone number"),
-  cellPhone: Yup.string()
-    .required("Cell phone number is required")
-    .matches(/^\d+$/, "Invalid phone number"),
+  homePhone: Yup.string().optional().matches(/^\d+$/, "Invalid phone number"),
+  cellPhone: Yup.string().optional().matches(/^\d+$/, "Invalid phone number"),
 
-  workPhone: Yup.string()
-    .required("Work phone number is required")
-    .matches(/^\d+$/, "Invalid phone number"),
+  workPhone: Yup.string().optional().matches(/^\d+$/, "Invalid phone number"),
 });
 
 const Register: React.FC = () => {
@@ -94,6 +88,7 @@ const Register: React.FC = () => {
         values.workPhone,
       );
     } catch (err: any) {
+      console.error("Registration error:", err);
       setError(err.message);
     }
   };
@@ -338,20 +333,52 @@ const Register: React.FC = () => {
             )}
           </div>
         </div>
-        {/* <div>
-          <label htmlFor="homePhone">Home Phone</label>
-          <Input type="text" id="homePhone" {...register("homePhone")} />
-          {errors.homePhone != null && (
-            <FormError>{errors.homePhone.message}</FormError>
-          )}
+        <div className="flex ml-[200px] gap-[40px] mt-4">
+          <div>
+            <label
+              htmlFor="homePhone"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Home Phone
+            </label>
+            <Input
+              type="text"
+              id="homePhone"
+              isInvalid={errors.homePhone != null}
+              {...register("homePhone")}
+              className={`font-[Inter] w-[250px] border-2 rounded-[15px] ${
+                errors.homePhone ? "border-red-500" : "border-[#AF94D3]"
+              }`}
+            />
+            {errors.homePhone != null && (
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.homePhone.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="cellPhone"
+              className="w-[121px] h-[29px] font-[Inter] text-[17px] font-bold leading-[39.05px]"
+            >
+              Cell Phone
+            </label>
+            <Input
+              type="text"
+              id="cellPhone"
+              isInvalid={errors.cellPhone != null}
+              {...register("cellPhone")}
+              className={`font-[Inter] w-[250px] border-2 rounded-[15px] ${
+                errors.cellPhone ? "border-red-500" : "border-[#AF94D3]"
+              }`}
+            />
+            {errors.cellPhone != null && (
+              <p className="text-red-500 text-sm mt-1 font-[Inter]">
+                {errors.cellPhone.message}
+              </p>
+            )}
+          </div>
         </div>
-        <div>
-          <label htmlFor="cellPhone">Cell Phone</label>
-          <Input type="text" id="cellPhone" {...register("cellPhone")} />
-          {errors.cellPhone != null && (
-            <FormError>{errors.cellPhone.message}</FormError>
-          )}
-        </div> */}
 
         {error && <FormError>{error}</FormError>}
         <Button
