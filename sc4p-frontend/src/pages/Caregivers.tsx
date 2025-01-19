@@ -20,6 +20,7 @@ import {
 import { useAuth } from "../AuthContext";
 import { CreateCaregiver, Caregiver } from "~/types/caregiver";
 import { BoardingFac, CreateBoardingFac } from "~/types/boardingFac";
+import InformationCard from "../components/InformationCard";
 import {
   getCaregivers,
   createCaregiver,
@@ -497,27 +498,21 @@ const Caregivers = () => {
                 key={caregiver.id}
                 className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center"
               >
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-lg font-semibold">{caregiver.name}</h3>
-                  <div className="text-sm text-gray-600">
-                    <p>Phone: {caregiver.phone}</p>
-                    <p>Email: {caregiver.email}</p>
-                    <p>Care Type: {caregiver.care_type}</p>
-                    <p>Role: {caregiver.primary ? "Primary" : "Secondary"}</p>
-                    <p>Accepted: {caregiver.accepted ? "Yes" : "No"}</p>
-                    <p className="text-xs text-gray-500">
-                      {caregiver.address}, {caregiver.city}, {caregiver.state}{" "}
-                      {caregiver.zip}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  color="danger"
-                  variant="light"
-                  onPress={() => handleDelete(caregiver.id)}
-                >
-                  Delete
-                </Button>
+                <InformationCard
+                purpose="caregiver"
+                name = {caregiver.name}
+                phone= {caregiver.phone}
+                email= {caregiver.email}
+                relation= {caregiver.primary ? "Primary" : "Secondary"}
+                care_type= {caregiver.care_type}
+                accepted= {caregiver.accepted ? "Yes" : "No"}
+                address= {caregiver.address}
+                city= {caregiver.city}
+                state={caregiver.state}
+                zip={caregiver.zip}
+                id={caregiver.id}
+                deleteItem={handleDelete}
+                />
               </div>
             ))}
             {caregivers.length === 0 && (
@@ -536,30 +531,20 @@ const Caregivers = () => {
                 key={facility.id}
                 className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center"
               >
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-lg font-semibold">
-                    {facility.contact_name}
-                  </h3>
-                  <div className="text-sm text-gray-600">
-                    <p>Daily Charge: ${facility.daily_charge}</p>
-                    <p>Cell Phone: {facility.cell_phone}</p>
-                    {facility.home_phone && (
-                      <p>Home Phone: {facility.home_phone}</p>
-                    )}
-                    {facility.email && <p>Email: {facility.email}</p>}
-                    <p className="text-xs text-gray-500">
-                      {facility.address}, {facility.city}, {facility.state}{" "}
-                      {facility.zip}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  color="danger"
-                  variant="light"
-                  onPress={() => handleDeleteFacility(facility.id)}
-                >
-                  Delete
-                </Button>
+                <InformationCard
+                purpose="boarding_facilities"
+                name= {facility.contact_name}
+                phone= {facility.cell_phone}
+                home_phone = {facility.home_phone}
+                daily_charge={facility.daily_charge}
+                email= {facility.email}
+                address= {facility.address}
+                city= {facility.city}
+                state={facility.state}
+                zip={facility.zip}
+                id = {facility.id}
+                deleteItem={handleDeleteFacility}
+                />
               </div>
             ))}
             {boardingFacilities.length === 0 && (
