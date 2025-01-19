@@ -245,9 +245,9 @@ const PurposeCard: React.FC<CardProps> = ({
 
 {purpose == "emergency_contact" && (
         <div className="flex items-center justify-between w-full">
-          {/* Facility Layout */}
+          {/* emergency Layout */}
           <div className="flex items-center gap-8">
-            {/* Facility Info */}
+            {/* emergency Info */}
             <div>
               <div className="flex gap-8 items-center">
                 <h4 className="text-xl font-semibold text-black mb-1">
