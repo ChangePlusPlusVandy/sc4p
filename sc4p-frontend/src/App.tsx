@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import Caregivers from "./pages/Caregivers";
 import Trustee from "./pages/Trustee";
 import EmergencyContacts from "./pages/EmergencyContact";
+import Vets from "./pages/Vets";
 import { NextUIProvider, createTheme } from "@nextui-org/react";
 
 export const App: React.FC = () => {
@@ -44,6 +45,7 @@ export const App: React.FC = () => {
               path="/contacts"
               element={<PrivateRoute element={<EmergencyContacts />} />}
             />
+            <Route path="/vets" element={<PrivateRoute element={<Vets />} />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

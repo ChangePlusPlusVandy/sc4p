@@ -85,6 +85,9 @@ const CustomSidebar = () => {
             >
               <span className="font-bold text-black">Emergency Contacts</span>
             </MenuItem>
+            <MenuItem component={<Link to="/vets" />} className="bg-[#E6D1FF]">
+              <span className="font-bold text-black">Vets</span>
+            </MenuItem>
           </SubMenu>
           <MenuItem
             component={<Link to="/profile" />}
