@@ -633,6 +633,12 @@ const main = async () => {
     });
   }
 
+  await prisma.statistics.create({
+    data: {
+      user_form_submissions: 0,
+    }
+  })
+
   console.log("Seed data has been added successfully.");
 };
 
