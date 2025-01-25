@@ -8,7 +8,7 @@ import {
 } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import { CalendarDate } from "@internationalized/date";
-import { useState } from "react";
+
 export const states = [
   { key: "AL", label: "AL" },
   { key: "AK", label: "AK" },
@@ -62,7 +62,7 @@ export const states = [
   { key: "WY", label: "WY" },
 ];
 
-const [hidePlaceholders, setHidePlaceholders] = useState(false);
+const hidePlaceholders = false;
 
 const InitialForm = () => {
   return (
