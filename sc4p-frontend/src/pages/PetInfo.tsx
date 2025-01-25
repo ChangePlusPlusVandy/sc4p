@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import FormDisplayCard from "../components/FormDisplayCard";
 import { Spinner } from "@nextui-org/react";
+import { getPetById } from "../lib/Services";
+import { useAuth } from "../AuthContext";
 
 const PetInfo: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [petData, setPetData] = useState<any | null>(null);
+  const { currentUser, userData } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchPetData = async () => {
+      if (!currentUser || !userData) return;
+      const token = await currentUser.getIdToken();
       try {
-        const response = await axios.get(`/api/pets/id/${id}`);
-        setPetData(response.data);
+        const pet = await getPetById(token, Number(id));
+        if (pet) {
+          setPetData(pet);
+        } else {
+          setError("Pet not found.");
+        }
       } catch (err: any) {
         console.error("Error fetching pet data:", err);
         setError("Failed to load pet information.");
@@ -24,7 +32,7 @@ const PetInfo: React.FC = () => {
     };
 
     if (id) fetchPetData();
-  }, [id]);
+  }, []);
 
   if (loading) {
     return (

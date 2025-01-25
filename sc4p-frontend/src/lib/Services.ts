@@ -18,6 +18,14 @@ export const getEmergencyContacts = async (token: string, ownerId: number) => {
   });
 };
 
+export const getPetById = async (token: string, petId: number) => {
+  return await fetch(`${backendUrl}/pets/id/${petId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const createEmergencyContact = async (token: string, data: any) => {
   return await fetch(`${backendUrl}/emergency-contacts`, {
     method: "POST",
