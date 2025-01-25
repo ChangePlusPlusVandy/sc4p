@@ -7,8 +7,7 @@ import {
   Textarea,
 } from "@nextui-org/react";
 import { Link } from "react-router-dom";
-import { CalendarDate } from "@internationalized/date";
-
+import { useState } from "react";
 export const states = [
   { key: "AL", label: "AL" },
   { key: "AK", label: "AK" },
@@ -65,6 +64,14 @@ export const states = [
 const hidePlaceholders = false;
 
 const InitialForm = () => {
+  const [petSections, setPetSections] = useState([1]);
+  const [totalPets, setTotalPets] = useState(1);
+
+  const addPetSection = () => {
+    setPetSections([...petSections, totalPets + 1]);
+    setTotalPets(totalPets + 1);
+  };
+
   return (
     <form className="w-full px-[100px] py-[60px] h-auto flex flex-col items-center justify-center gap-[30px]">
       <section className="ownerInfo w-full flex flex-col gap-4  ">
@@ -83,7 +90,8 @@ const InitialForm = () => {
               variant="bordered"
               label="First and Last Name"
               labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "Your Name"}
+              key={"user_name"}
+              placeholder={hidePlaceholders ? " " : "Your Name"}
               type="text"
             />
             <Input
@@ -98,7 +106,8 @@ const InitialForm = () => {
               variant="bordered"
               label="Cell Phone"
               labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+              key={"user_cell_phone"}
+              placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
               type="text"
             />
             <Input
@@ -113,7 +122,8 @@ const InitialForm = () => {
               variant="bordered"
               label="Email"
               labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "your.email@email.com"}
+              key={"user_email"}
+              placeholder={hidePlaceholders ? " " : "your.email@email.com"}
               type="email"
             />
           </div>
@@ -130,7 +140,8 @@ const InitialForm = () => {
               variant="bordered"
               label="Address"
               labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "123 Street name"}
+              key={"user_address"}
+              placeholder={hidePlaceholders ? " " : "123 Street name"}
               type="text"
             />
             <Input
@@ -145,7 +156,8 @@ const InitialForm = () => {
               variant="bordered"
               label="City"
               labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "City name"}
+              key={"user_city"}
+              placeholder={hidePlaceholders ? " " : "City name"}
               type="text"
             />
           </div>
@@ -167,7 +179,8 @@ const InitialForm = () => {
               variant="bordered"
               label="State"
               labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "Select your state"}
+              key={"user_state"}
+              placeholder={hidePlaceholders ? " " : "Select your state"}
             >
               {states.map((state) => (
                 <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -185,7 +198,8 @@ const InitialForm = () => {
               variant="bordered"
               label="Zip Code"
               labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "12345"}
+              key={"user_zip"}
+              placeholder={hidePlaceholders ? " " : "12345"}
               type="text"
             />
             <Select
@@ -205,7 +219,8 @@ const InitialForm = () => {
               variant="bordered"
               label="Care-giving Length"
               labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "Select"}
+              key={""}
+              placeholder={hidePlaceholders ? " " : "Select"}
             >
               <SelectItem key="">Option</SelectItem>
             </Select>
@@ -252,7 +267,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Your Name"}
+                key={"primary_caregiver_name"}
+                placeholder={hidePlaceholders ? " " : "Your Name"}
                 type="text"
               />
               <Input
@@ -267,7 +283,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+                key={"primary_caregiver_cell_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -282,7 +299,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Email"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "your.email@email.com"}
+                key={"primary_caregiver_email"}
+                placeholder={hidePlaceholders ? " " : "your.email@email.com"}
                 type="email"
               />
             </div>
@@ -299,7 +317,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123 Street name"}
+                key={"primary_caregiver_address"}
+                placeholder={hidePlaceholders ? " " : "123 Street name"}
                 type="text"
               />
               <Input
@@ -314,7 +333,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City name"}
+                key={"primary_caregiver_city"}
+                placeholder={hidePlaceholders ? " " : "City name"}
                 type="text"
               />
             </div>
@@ -336,7 +356,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select your state"}
+                key={"primary_caregiver_state"}
+                placeholder={hidePlaceholders ? " " : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -354,7 +375,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "12345"}
+                key={"primary_caregiver_zip"}
+                placeholder={hidePlaceholders ? " " : "12345"}
                 type="text"
               />
               <Select
@@ -374,7 +396,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Care-giving Length"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select"}
+                key={""}
+                placeholder={hidePlaceholders ? " " : "Select"}
               >
                 <SelectItem key="">Option</SelectItem>
               </Select>
@@ -406,7 +429,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Your Name"}
+                key={"alternate_caregiver_name"}
+                placeholder={hidePlaceholders ? " " : "Your Name"}
                 type="text"
               />
               <Input
@@ -421,7 +445,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+                key={"alternate_caregiver_cell_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -436,7 +461,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Email"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "your.email@email.com"}
+                key={"alternate_caregiver_email"}
+                placeholder={hidePlaceholders ? " " : "your.email@email.com"}
                 type="email"
               />
             </div>
@@ -453,7 +479,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123 Street name"}
+                key={"alternate_caregiver_address"}
+                placeholder={hidePlaceholders ? " " : "123 Street name"}
                 type="text"
               />
               <Input
@@ -468,7 +495,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City name"}
+                key={"alternate_caregiver_city"}
+                placeholder={hidePlaceholders ? " " : "City name"}
                 type="text"
               />
             </div>
@@ -490,7 +518,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select your state"}
+                key={"alternate_caregiver_state"}
+                placeholder={hidePlaceholders ? " " : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -508,7 +537,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "12345"}
+                key={"alternate_caregiver_zip"}
+                placeholder={hidePlaceholders ? " " : "12345"}
                 type="text"
               />
               <Select
@@ -528,7 +558,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Care-giving Length"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select"}
+                key={""}
+                placeholder={hidePlaceholders ? " " : "Select"}
               >
                 <SelectItem key="">Option</SelectItem>
               </Select>
@@ -562,7 +593,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Your Name"}
+                key={"boarding_fac_name"}
+                placeholder={hidePlaceholders ? " " : "Your Name"}
                 type="text"
               />
               <Input
@@ -577,7 +609,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+                key={"boarding_fac_cell_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -592,7 +625,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Email"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "your.email@email.com"}
+                key={"boarding_fac_email"}
+                placeholder={hidePlaceholders ? " " : "your.email@email.com"}
                 type="email"
               />
             </div>
@@ -609,7 +643,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123 Street name"}
+                key={"boarding_fac_address"}
+                placeholder={hidePlaceholders ? " " : "123 Street name"}
                 type="text"
               />
               <Input
@@ -624,7 +659,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City name"}
+                key={"boarding_fac_city"}
+                placeholder={hidePlaceholders ? " " : "City name"}
                 type="text"
               />
             </div>
@@ -646,7 +682,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select your state"}
+                key={"boarding_fac_state"}
+                placeholder={hidePlaceholders ? " " : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -664,7 +701,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "12345"}
+                key={"boarding_fac_zip"}
+                placeholder={hidePlaceholders ? " " : "12345"}
                 type="text"
               />
               <Input
@@ -679,7 +717,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Average Daily Charge"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "USD 123.00"}
+                key={"boarding_fac_charge"}
+                placeholder={hidePlaceholders ? " " : "USD 123.00"}
                 type="text"
               />
             </div>
@@ -719,7 +758,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Your Name"}
+                key={"emergency_contact1_name"}
+                placeholder={hidePlaceholders ? " " : "Your Name"}
                 type="text"
               />
               <Input
@@ -734,7 +774,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+                key={"emergency_contact1_cell_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -749,7 +790,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Email"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "your.email@email.com"}
+                key={"emergency_contact1_email"}
+                placeholder={hidePlaceholders ? " " : "your.email@email.com"}
                 type="email"
               />
             </div>
@@ -766,7 +808,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123 Street name"}
+                key={"emergency_contact1_address"}
+                placeholder={hidePlaceholders ? " " : "123 Street name"}
                 type="text"
               />
               <Input
@@ -781,7 +824,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City name"}
+                key={"emergency_contact1_city"}
+                placeholder={hidePlaceholders ? " " : "City name"}
                 type="text"
               />
             </div>
@@ -803,7 +847,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select your state"}
+                key={"emergency_contact1_state"}
+                placeholder={hidePlaceholders ? " " : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -821,7 +866,142 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "12345"}
+                key={"emergency_contact1_zip"}
+                placeholder={hidePlaceholders ? " " : "12345"}
+                type="text"
+              />
+            </div>
+          </div>
+
+          <hr />
+
+          <div className="sectionTitle">
+            <h2 className="text-lg font-bold">Contact 2</h2>
+          </div>
+          <div className="flex flex-col w-full gap-4">
+            <div className="row1 flex flex-row w-full gap-6">
+              <Input
+                classNames={{
+                  label: "font-bold",
+                  inputWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                }}
+                variant="bordered"
+                label="First and Last Name"
+                labelPlacement="outside"
+                key={"emergency_contact2_name"}
+                placeholder={hidePlaceholders ? " " : "Your Name"}
+                type="text"
+              />
+              <Input
+                classNames={{
+                  label: "font-bold",
+                  inputWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                }}
+                variant="bordered"
+                label="Cell Phone"
+                labelPlacement="outside"
+                key={"emergency_contact2_cell_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
+                type="text"
+              />
+              <Input
+                classNames={{
+                  label: "font-bold",
+                  inputWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                }}
+                variant="bordered"
+                label="Email"
+                labelPlacement="outside"
+                key={"emergency_contact2_email"}
+                placeholder={hidePlaceholders ? " " : "your.email@email.com"}
+                type="email"
+              />
+            </div>
+            <div className="row2 flex flex-row w-full gap-6">
+              <Input
+                classNames={{
+                  label: "font-bold",
+                  inputWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                }}
+                variant="bordered"
+                label="Address"
+                labelPlacement="outside"
+                key={"emergency_contact2_address"}
+                placeholder={hidePlaceholders ? " " : "123 Street name"}
+                type="text"
+              />
+              <Input
+                classNames={{
+                  label: "font-bold",
+                  inputWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                }}
+                variant="bordered"
+                label="City"
+                labelPlacement="outside"
+                key={"emergency_contact2_city"}
+                placeholder={hidePlaceholders ? " " : "City name"}
+                type="text"
+              />
+            </div>
+            <div className="row3 flex flex-row w-full gap-6">
+              <Select
+                classNames={{
+                  label: "font-bold",
+                  innerWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                  trigger: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                }}
+                variant="bordered"
+                label="State"
+                labelPlacement="outside"
+                key={"emergency_contact2_state"}
+                placeholder={hidePlaceholders ? " " : "Select your state"}
+              >
+                {states.map((state) => (
+                  <SelectItem key={state.key}>{state.label}</SelectItem>
+                ))}
+              </Select>
+              <Input
+                classNames={{
+                  label: "font-bold",
+                  inputWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                }}
+                variant="bordered"
+                label="Zip Code"
+                labelPlacement="outside"
+                key={"emergency_contact2_zip"}
+                placeholder={hidePlaceholders ? " " : "12345"}
                 type="text"
               />
             </div>
@@ -864,7 +1044,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Your Name"}
+                key={"veterinarian_name"}
+                placeholder={hidePlaceholders ? " " : "Your Name"}
                 type="text"
               />
               <Input
@@ -879,7 +1060,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+                key={"veterinarian_cell_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -894,7 +1076,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Emergency Phone"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+                key={"veterinarian_emergency_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
                 type="text"
               />
             </div>
@@ -911,7 +1094,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123 Street name"}
+                key={"veterinarian_address"}
+                placeholder={hidePlaceholders ? " " : "123 Street name"}
                 type="text"
               />
               <Input
@@ -926,7 +1110,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City name"}
+                key={"veterinarian_city"}
+                placeholder={hidePlaceholders ? " " : "City name"}
                 type="text"
               />
             </div>
@@ -948,7 +1133,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select your state"}
+                key={"veterinarian_state"}
+                placeholder={hidePlaceholders ? " " : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -966,7 +1152,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "12345"}
+                key={"veterinarian_zip"}
+                placeholder={hidePlaceholders ? " " : "12345"}
                 type="text"
               />
             </div>
@@ -1011,7 +1198,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123 Street name"}
+                key={"primary_trustee_address"}
+                placeholder={hidePlaceholders ? " " : "123 Street name"}
                 type="text"
               />
               <Input
@@ -1026,7 +1214,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City name"}
+                key={"primary_trustee_city"}
+                placeholder={hidePlaceholders ? " " : "City name"}
                 type="text"
               />
             </div>
@@ -1048,7 +1237,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select your state"}
+                key={"primary_trustee_state"}
+                placeholder={hidePlaceholders ? " " : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -1066,7 +1256,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "12345"}
+                key={"primary_trustee_zip"}
+                placeholder={hidePlaceholders ? " " : "12345"}
                 type="text"
               />
               <Input
@@ -1081,7 +1272,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+                key={"primary_trustee_cell_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -1096,7 +1288,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Emergency Phone"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
+                key={"primary_trustee_emergency_phone"}
+                placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
                 type="text"
               />
             </div>
@@ -1113,7 +1306,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Money allocated per year to Trustee to provide for caregiver"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "USD 1000.00"}
+                key={"primary_trustee_allocated_amount"}
+                placeholder={hidePlaceholders ? " " : "USD 1000.00"}
                 type="text"
               />
             </div>
@@ -1150,6 +1344,7 @@ const InitialForm = () => {
                     ? ""
                     : "Please indicate how you plan to provide funds for the care of your pet"
                 }
+                key={"trust_fund_funding_plan"}
                 type="text"
               />
             </div>
@@ -1183,7 +1378,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="2nd Chance 4 Pets"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "e.g: 50%"}
+                key={"2nd_chance_4_pets"}
+                placeholder={hidePlaceholders ? " " : "e.g: 50%"}
                 type="text"
               />
               <Input
@@ -1198,7 +1394,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Other pet welfare organization"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "e.g: 30%"}
+                key={"other_pet_welfare_org"}
+                placeholder={hidePlaceholders ? " " : "e.g: 30%"}
                 type="text"
               />
             </div>
@@ -1215,7 +1412,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123 Street name"}
+                key={"other_pet_welfare_org_address"}
+                placeholder={hidePlaceholders ? " " : "123 Street name"}
                 type="text"
               />
               <Input
@@ -1230,7 +1428,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City name"}
+                key={"other_pet_welfare_org_city"}
+                placeholder={hidePlaceholders ? " " : "City name"}
                 type="text"
               />
             </div>
@@ -1252,7 +1451,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select your state"}
+                key={"other_pet_welfare_org_state"}
+                placeholder={hidePlaceholders ? " " : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -1270,7 +1470,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "12345"}
+                key={"other_pet_welfare_org_zip"}
+                placeholder={hidePlaceholders ? " " : "12345"}
                 type="text"
               />
               <Input
@@ -1285,7 +1486,8 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Other Beneficiary"
                 labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "e.g: 20%"}
+                key={"other_beneficiary_name"}
+                placeholder={hidePlaceholders ? " " : "e.g: 20%"}
                 type="text"
               />
             </div>
@@ -1295,625 +1497,690 @@ const InitialForm = () => {
 
       <hr className="border-[#e5e7eb] h-px w-full" />
 
-      <section className="petInfo w-full flex flex-col gap-6">
-        <section className="mainPetInfo">
-          <h2 className="text-3xl font-bold">Pet Information</h2>
-          <div className="flex flex-col w-full gap-4">
-            <div className="row1 flex flex-row w-full gap-6">
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Pet's Name"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Your Name"}
-                type="text"
-              />
-              <Select
-                classNames={{
-                  label: "font-bold",
-                  innerWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                  trigger: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Sex"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select"}
-              >
-                <SelectItem key="M">Male</SelectItem>
-                <SelectItem key="F">Female</SelectItem>
-                <SelectItem key="O">Other</SelectItem>
-              </Select>
-              <Select
-                classNames={{
-                  label: "font-bold",
-                  innerWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                  trigger: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Spayed or Neutered"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select"}
-              >
-                <SelectItem key="Y">Yes</SelectItem>
-                <SelectItem key="N">No</SelectItem>
-              </Select>
-            </div>
-            <div className="row2 flex flex-row w-full gap-6">
-              <DateInput
-                classNames={{
-                  label: "font-bold",
-                  innerWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Birth date"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123 Street name"}
-                placeholderValue={new CalendarDate(1995, 16, 6)}
-              />
-              <Select
-                classNames={{
-                  label: "font-bold",
-                  innerWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                  trigger: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Type"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Select"}
-              >
-                <SelectItem key="1">1</SelectItem>
-                <SelectItem key="2">2</SelectItem>
-              </Select>
-            </div>
-          </div>
-        </section>
-        <hr />
-        <section className="petIdentification  w-full flex flex-col gap-4">
-          <div className="sectionTitle">
-            <h2 className="text-lg font-bold">Pet ID</h2>
-            <p>Please indicate if your pet has the following identification:</p>
-          </div>
-          <div className="flex flex-col w-full gap-4">
-            <div className="row1 flex flex-row w-full gap-6">
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Microchip ID"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Brand name"}
-                type="text"
-              />
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="ID Number"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123456789"}
-                type="text"
-              />
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="License Tag"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City/Country"}
-                type="text"
-              />
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Tag Number"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123456789"}
-                type="text"
-              />
-            </div>
-          </div>
-        </section>
-        <hr />
-        <section className="petIdentification  w-full flex flex-col gap-4">
-          <div className="sectionTitle">
-            <h2 className="text-lg font-bold">Pet Health and Habits</h2>
-          </div>
-          <div className="flex flex-col w-full gap-4">
-            <Textarea
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Medical History"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders
-                  ? ""
-                  : "Any specific information relative to the pet’s health history"
-              }
-            />
-            <Textarea
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Special Needs"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders
-                  ? ""
-                  : "Permanent medical condition or special exercise routine"
-              }
-            />
-            <Textarea
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Special Diet Requirements"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders
-                  ? ""
-                  : "Any specific dietary requirements or restrictions"
-              }
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Please note verbal/nonverbal commands your pet responds to and body language used to communicate:"
-              labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "sit, stay, paw, etc."}
-              type="text"
-            />
-            <div className="row1 flex flex-row w-full gap-6">
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Is your pet allowed outside?"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Brand name"}
-                type="text"
-              />
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Where does your pet sleep?"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Inside, outside, etc."}
-                type="text"
-              />
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Does your pet like children?"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "City/Country"}
-                type="text"
-              />
-            </div>
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="What access does your pet have to your home and furniture?"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders ? "" : "Has access to the couch, bed, etc."
-              }
-              type="text"
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="If your pet has any favorite games, toys or possessions, please note where they are located"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders
-                  ? ""
-                  : "Stuffies in the living room, ball in the backyard, etc."
-              }
-              type="text"
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Type of flea/heartworm preventative and when administered"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders ? "" : "Brand name, once a month, etc."
-              }
-              type="text"
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Allergies"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders
-                  ? ""
-                  : "Foods, medications, fleas, flea control products, etc."
-              }
-              type="text"
-            />
-            <Textarea
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Special care instruction"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders
-                  ? ""
-                  : "Instructions for grooming, bathing, etc."
-              }
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Where is your pet’s medical history located?"
-              labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "Location of records"}
-              type="text"
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="What brand of food do you feed this pet?"
-              labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "Brand Name"}
-              type="text"
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Approximately how much food per day?"
-              labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "for example: 3 cups/day"}
-              type="text"
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="When are the typical feeding times and amounts?"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders ? "" : "8am and 6pm, 1 cup each time"
-              }
-              type="text"
-            />
-            <Textarea
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="List any medications and/or supplements"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders ? "" : "Medication name, dosage, frequency"
-              }
-            />
-            <Textarea
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Emergency supplies for my pet"
-              labelPlacement="outside"
-              placeholder={
-                hidePlaceholders
-                  ? ""
-                  : "Location of leashes and harnesses, food, food bowls, medicine, and veterinarian records"
-              }
-            />
-          </div>
-        </section>
-        <hr />
-        <section className="petHealthInsurance w-full flex flex-col gap-4">
-          <div className="sectionTitle">
-            <h2 className="text-lg font-bold">Pet Health Insurance</h2>
-          </div>
-          <div className="flex flex-col w-full gap-4">
-            <div className="row3 flex flex-row w-full gap-6">
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Name of Provider"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "Name"}
-                type="text"
-              />
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Phone"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
-                type="text"
-              />
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Policy Number"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "123456789"}
-                type="text"
-              />
-              <Input
-                classNames={{
-                  label: "font-bold",
-                  inputWrapper: [
-                    "border-[#AF94D3]",
-                    "hover:border-[#D7BEF7]",
-                    "focus-within:border-[#5E3593]",
-                  ],
-                }}
-                variant="bordered"
-                label="Cost per year"
-                labelPlacement="outside"
-                placeholder={hidePlaceholders ? "" : "USD 1,234.56"}
-                type="text"
-              />
-            </div>
-          </div>
-        </section>
+      <div className=" flex flex-col gap-6 w-full">
+        {petSections.map((pet, index) => (
+          <section
+            key={"pet_" + index}
+            className="petInfo w-full flex flex-col gap-6"
+          >
+            <section className="mainPetInfo">
+              <h2 className="text-3xl font-bold">Pet Information {pet}</h2>
+              <div className="flex flex-col w-full gap-4">
+                <div className="row1 flex flex-row w-full gap-6">
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Pet's Name"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_name"}
+                    placeholder={hidePlaceholders ? " " : "Your Name"}
+                    type="text"
+                  />
+                  <Select
+                    classNames={{
+                      label: "font-bold",
+                      innerWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                      trigger: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Sex"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_sex"}
+                    placeholder={hidePlaceholders ? " " : "Select"}
+                  >
+                    <SelectItem key="M">Male</SelectItem>
+                    <SelectItem key="F">Female</SelectItem>
+                    <SelectItem key="O">Other</SelectItem>
+                  </Select>
+                  <Select
+                    classNames={{
+                      label: "font-bold",
+                      innerWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                      trigger: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Spayed or Neutered"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_spayed_neutered"}
+                    placeholder={hidePlaceholders ? " " : "Select"}
+                  >
+                    <SelectItem key="Y">Yes</SelectItem>
+                    <SelectItem key="N">No</SelectItem>
+                  </Select>
+                </div>
+                <div className="row2 flex flex-row w-full gap-6">
+                  <DateInput
+                    classNames={{
+                      label: "font-bold",
+                      innerWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Birth date"
+                    labelPlacement="outside"
+                    key={"pet" + index + "date_of_birth"}
+                    placeholder={hidePlaceholders ? " " : "Birth date"}
+                  />
+                  <Select
+                    classNames={{
+                      label: "font-bold",
+                      innerWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                      trigger: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Type"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_type"}
+                    placeholder={hidePlaceholders ? " " : "Select"}
+                  >
+                    <SelectItem key="1">1</SelectItem>
+                    <SelectItem key="2">2</SelectItem>
+                  </Select>
+                </div>
+              </div>
+            </section>
+            <hr />
+            <section className="petIdentification  w-full flex flex-col gap-4">
+              <div className="sectionTitle">
+                <h2 className="text-lg font-bold">Pet ID</h2>
+                <p>
+                  Please indicate if your pet has the following identification:
+                </p>
+              </div>
+              <div className="flex flex-col w-full gap-4">
+                <div className="row1 flex flex-row w-full gap-6">
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Microchip ID"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_microchip_id"}
+                    placeholder={hidePlaceholders ? " " : "Brand name"}
+                    type="text"
+                  />
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="ID Number"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_id_number"}
+                    placeholder={hidePlaceholders ? " " : "123456789"}
+                    type="text"
+                  />
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="License Tag"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_license_tag"}
+                    placeholder={hidePlaceholders ? " " : "City/Country"}
+                    type="text"
+                  />
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Tag Number"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_license_number"}
+                    placeholder={hidePlaceholders ? " " : "123456789"}
+                    type="text"
+                  />
+                </div>
+              </div>
+            </section>
+            <hr />
+            <section className="petIdentification  w-full flex flex-col gap-4">
+              <div className="sectionTitle">
+                <h2 className="text-lg font-bold">Pet Health and Habits</h2>
+              </div>
+              <div className="flex flex-col w-full gap-4">
+                <Textarea
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="Medical History"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_medical_history"}
+                  placeholder={
+                    hidePlaceholders
+                      ? ""
+                      : "Any specific information relative to the pet’s health history"
+                  }
+                />
+                <Textarea
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  key={"pet" + index + "_special_needs"}
+                  label="Special Needs"
+                  labelPlacement="outside"
+                  placeholder={
+                    hidePlaceholders
+                      ? ""
+                      : "Permanent medical condition or special exercise routine"
+                  }
+                />
+                <Textarea
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  key={"pet" + index + "_special_diet"}
+                  label="Special Diet Requirements"
+                  labelPlacement="outside"
+                  placeholder={
+                    hidePlaceholders
+                      ? ""
+                      : "Any specific dietary requirements or restrictions"
+                  }
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="Please note verbal/nonverbal commands your pet responds to and body language used to communicate:"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_commands"}
+                  placeholder={hidePlaceholders ? " " : "sit, stay, paw, etc."}
+                  type="text"
+                />
+                <div className="row1 flex flex-row w-full gap-6">
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Is your pet allowed outside?"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_allowed_outside"}
+                    placeholder={hidePlaceholders ? " " : "Brand name"}
+                    type="text"
+                  />
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Where does your pet sleep?"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_sleep_location"}
+                    placeholder={
+                      hidePlaceholders ? " " : "Inside, outside, etc."
+                    }
+                    type="text"
+                  />
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Does your pet like children?"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_likes_children"}
+                    placeholder={hidePlaceholders ? " " : "City/Country"}
+                    type="text"
+                  />
+                </div>
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="What access does your pet have to your home and furniture?"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_home_access"}
+                  placeholder={
+                    hidePlaceholders
+                      ? " "
+                      : "Has access to the couch, bed, etc."
+                  }
+                  type="text"
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="If your pet has any favorite games, toys or possessions, please note where they are located"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_favorite_items"}
+                  placeholder={
+                    hidePlaceholders
+                      ? ""
+                      : "Stuffies in the living room, ball in the backyard, etc."
+                  }
+                  type="text"
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="Type of flea/heartworm preventative and when administered"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_flea_prevention"}
+                  placeholder={
+                    hidePlaceholders ? " " : "Brand name, once a month, etc."
+                  }
+                  type="text"
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="Allergies"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_allergies"}
+                  placeholder={
+                    hidePlaceholders
+                      ? ""
+                      : "Foods, medications, fleas, flea control products, etc."
+                  }
+                  type="text"
+                />
+                <Textarea
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  key={"pet" + index + "_special_care_instructions"}
+                  label="Special care instruction"
+                  labelPlacement="outside"
+                  placeholder={
+                    hidePlaceholders
+                      ? ""
+                      : "Instructions for grooming, bathing, etc."
+                  }
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="Where is your pet’s medical history located?"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_medical_history_location"}
+                  placeholder={hidePlaceholders ? " " : "Location of records"}
+                  type="text"
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="What brand of food do you feed this pet?"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_food_brand"}
+                  placeholder={hidePlaceholders ? " " : "Brand Name"}
+                  type="text"
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="Approximately how much food per day?"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_food_amount"}
+                  placeholder={
+                    hidePlaceholders ? " " : "for example: 3 cups/day"
+                  }
+                  type="text"
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  key={"pet" + index + "_feeding_schedule"}
+                  label="When are the typical feeding times and amounts?"
+                  labelPlacement="outside"
+                  placeholder={
+                    hidePlaceholders ? " " : "8am and 6pm, 1 cup each time"
+                  }
+                  type="text"
+                />
+                <Textarea
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  key={"pet" + index + "_medications"}
+                  label="List any medications and/or supplements"
+                  labelPlacement="outside"
+                  placeholder={
+                    hidePlaceholders
+                      ? " "
+                      : "Medication name, dosage, frequency"
+                  }
+                />
+                <Textarea
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  key={"pet" + index + "_emergency_supplies"}
+                  label="Emergency supplies for my pet"
+                  labelPlacement="outside"
+                  placeholder={
+                    hidePlaceholders
+                      ? ""
+                      : "Location of leashes and harnesses, food, food bowls, medicine, and veterinarian records"
+                  }
+                />
+              </div>
+            </section>
+            <hr />
+            <section className="petHealthInsurance w-full flex flex-col gap-4">
+              <div className="sectionTitle">
+                <h2 className="text-lg font-bold">Pet Health Insurance</h2>
+              </div>
+              <div className="flex flex-col w-full gap-4">
+                <div className="row3 flex flex-row w-full gap-6">
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Name of Provider"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_health_insurance_provider"}
+                    placeholder={hidePlaceholders ? " " : "Name"}
+                    type="text"
+                  />
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Phone"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_health_insurance_phone"}
+                    placeholder={hidePlaceholders ? " " : "(123) 456 7890"}
+                    type="text"
+                  />
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Policy Number"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_health_insurance_policy_number"}
+                    placeholder={hidePlaceholders ? " " : "123456789"}
+                    type="text"
+                  />
+                  <Input
+                    classNames={{
+                      label: "font-bold",
+                      inputWrapper: [
+                        "border-[#AF94D3]",
+                        "hover:border-[#D7BEF7]",
+                        "focus-within:border-[#5E3593]",
+                      ],
+                    }}
+                    variant="bordered"
+                    label="Cost per year"
+                    labelPlacement="outside"
+                    key={"pet" + index + "_health_insurance_cost"}
+                    placeholder={hidePlaceholders ? " " : "USD 1,234.56"}
+                    type="text"
+                  />
+                </div>
+              </div>
+            </section>
 
-        <hr />
+            <hr />
 
-        <section className="trustFundInfo w-full flex flex-col gap-4">
-          <div className="sectionTitle">
-            <h2 className="text-lg font-bold">In Case of Serious Illness</h2>
-          </div>
-          <div className="flex flex-col w-full gap-4">
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Should my pet become seriously ill, who will make the decision if my pet should be euthanized?"
-              labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "Name and Surname"}
-              type="text"
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="When your pet dies, how do you want the pet’s remains to be cared for?"
-              labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "Cremation, burial, etc."}
-              type="text"
-            />
-            <Input
-              classNames={{
-                label: "font-bold",
-                inputWrapper: [
-                  "border-[#AF94D3]",
-                  "hover:border-[#D7BEF7]",
-                  "focus-within:border-[#5E3593]",
-                ],
-              }}
-              variant="bordered"
-              label="Money allocated for the cost of caring for my pet’s remains"
-              labelPlacement="outside"
-              placeholder={hidePlaceholders ? "" : "e.g: USD 1000.00"}
-              type="text"
-            />
-          </div>
-        </section>
-      </section>
+            <section className="trustFundInfo w-full flex flex-col gap-4">
+              <div className="sectionTitle">
+                <h2 className="text-lg font-bold">
+                  In Case of Serious Illness
+                </h2>
+              </div>
+              <div className="flex flex-col w-full gap-4">
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="Should my pet become seriously ill, who will make the decision if my pet should be euthanized?"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_euthanasia_decision"}
+                  placeholder={hidePlaceholders ? " " : "Name and Surname"}
+                  type="text"
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  key={"pet" + index + "_remains_care"}
+                  label="When your pet dies, how do you want the pet’s remains to be cared for?"
+                  labelPlacement="outside"
+                  placeholder={
+                    hidePlaceholders ? " " : "Cremation, burial, etc."
+                  }
+                  type="text"
+                />
+                <Input
+                  classNames={{
+                    label: "font-bold",
+                    inputWrapper: [
+                      "border-[#AF94D3]",
+                      "hover:border-[#D7BEF7]",
+                      "focus-within:border-[#5E3593]",
+                    ],
+                  }}
+                  variant="bordered"
+                  label="Money allocated for the cost of caring for my pet’s remains"
+                  labelPlacement="outside"
+                  key={"pet" + index + "_allocated_remains_fund"}
+                  placeholder={hidePlaceholders ? " " : "e.g: USD 1000.00"}
+                  type="text"
+                />
+              </div>
+            </section>
+            <hr className="border-[#e5e7eb] h-px w-full" />
+          </section>
+        ))}
+        <div className="addMorePets flex flex-row justify-start align-center">
+          <Button
+            onClick={addPetSection}
+            className="bg-[#5E3593] text-white font-medium justify-start"
+          >
+            Add Pet
+          </Button>
+        </div>
+      </div>
+
+      <hr className="border-[#e5e7eb] h-px w-full" />
 
       <div className="submitForms w-full flex flex-row gap-4">
         <Button className="bg-[#A377DC] text-white font-medium">Print</Button>
