@@ -13,7 +13,6 @@ import Profile from "./pages/Profile";
 import Caregivers from "./pages/Caregivers";
 import Trustee from "./pages/Trustee";
 import EmergencyContacts from "./pages/EmergencyContact";
-import { NextUIProvider, createTheme } from "@nextui-org/react";
 import PetInfo from "./pages/PetInfo";
 
 export const App: React.FC = () => {

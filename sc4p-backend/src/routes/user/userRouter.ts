@@ -1,7 +1,10 @@
 import express from "express";
 import * as UserService from "./userService";
-import { CreateUser, UpdateUser } from "../../types/user";
+import { PrismaClient } from "@prisma/client";
+import { User } from "../../types/user";
+import Joi from "joi";
 
+const prisma = new PrismaClient();
 const userRouter = express.Router();
 
 // GET all users
@@ -10,19 +13,32 @@ userRouter.get("/", async (req, res) => {
     const users = await UserService.getAllUsers();
     res.status(200).json(users);
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({ message: "Error fetching users" });
   }
 });
 
-// GET user by email or ID
-userRouter.get("/:type/:value", async (req, res) => {
-  const { type, value } = req.params;
+// GET user by email
+userRouter.get("/email/:email", async (req, res) => {
+  const { email } = req.params;
   try {
-    const user =
-      type === "email"
-        ? await UserService.getUserByEmail(value)
-        : await UserService.getUserById(Number(value));
+    const user = await UserService.getUserByEmail(email);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user" });
+  }
+});
 
+// GET user by ID
+userRouter.get("/id/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await UserService.getUserById(Number(id));
     if (user) {
       res.status(200).json(user);
     } else {
@@ -35,77 +51,56 @@ userRouter.get("/:type/:value", async (req, res) => {
 
 // POST: Create a new user
 userRouter.post("/", async (req, res) => {
+  // Define validation schema without `created_at`
+  const schema = Joi.object({
+    name: Joi.string(),
+    email: Joi.string().email().required(),
+    address: Joi.string(),
+    city: Joi.string(),
+    state: Joi.string(),
+    zip: Joi.string(),
+    home_phone: Joi.string(),
+    cell_phone: Joi.string(),
+    work_phone: Joi.string(),
+  });
+
   try {
-    const userData: CreateUser = {
-      email: req.body.email,
-      name: req.body.name,
-      address: req.body.address,
-      city: req.body.city,
-      state: req.body.state,
-      zip: req.body.zip,
-      home_phone: req.body.home_phone || null,
-      cell_phone: req.body.cell_phone || null,
-      work_phone: req.body.work_phone || null,
-    };
-    const user = await UserService.createUser(userData);
-    res.status(201).json(user);
+    console.log("hello");
+    // Validate user information against schema
+    const data = await schema.validateAsync(req.body);
+
+    // Pass validated data to UserService for creation in database
+    const newUser = await UserService.createUser(data);
+
+    console.log(newUser);
+
+    res.status(201).json(newUser); // Respond with created user data
   } catch (error) {
-    res.status(400).json({ error: (error as Error).message });
+    res.status(500).json({ message: "Error creating user", error });
   }
 });
 
-// PUT update a user by email
-userRouter.put("/email/:email", async (req, res) => {
-  const { email } = req.params;
-  try {
-    const updatedUser = await UserService.updateUser(email, {
-      name: req.body.name,
-      address: req.body.address,
-      city: req.body.city,
-      state: req.body.state,
-      zip: req.body.zip,
-      home_phone: req.body.home_phone || null,
-      cell_phone: req.body.cell_phone || null,
-      work_phone: req.body.work_phone || null,
-    });
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    res.status(500).json({ message: "Error updating user" });
-  }
-});
-
-// PUT update a user by ID
-userRouter.put("/id/:id", async (req, res) => {
+// PUT update a user
+userRouter.put("/:id", async (req, res) => {
+  const schema = Joi.object({
+    name: Joi.string(),
+    email: Joi.string().email().required(),
+    address: Joi.string(),
+    city: Joi.string(),
+    state: Joi.string(),
+    zip: Joi.string(),
+    home_phone: Joi.string(),
+    cell_phone: Joi.string(),
+    work_phone: Joi.string(),
+    created_at: Joi.date(),
+  });
   const { id } = req.params;
+  const data = (await schema.validateAsync(req.body)) as User;
   try {
-    const updatedUser = await UserService.updateUserById(Number(id), {
-      name: req.body.name,
-      address: req.body.address,
-      city: req.body.city,
-      state: req.body.state,
-      zip: req.body.zip,
-      home_phone: req.body.home_phone || null,
-      cell_phone: req.body.cell_phone || null,
-      work_phone: req.body.work_phone || null,
-    });
+    const updatedUser = await UserService.updateUserById(Number(id), data);
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(500).json({ message: "Error updating user" });
-  }
-});
-
-// DELETE a user by email
-userRouter.delete("/email/:email", async (req, res) => {
-  const { email } = req.params;
-  try {
-    const user = await UserService.getUserByEmail(email);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-    await UserService.deleteUser(user.id);
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ message: "Error deleting user" });
   }
 });
 
@@ -113,7 +108,18 @@ userRouter.delete("/email/:email", async (req, res) => {
 userRouter.delete("/id/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    await UserService.deleteUser(Number(id));
+    await UserService.deleteUserById(Number(id));
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting user" });
+  }
+});
+
+// DELETE a user by email
+userRouter.delete("/email/:email", async (req, res) => {
+  const { email } = req.params;
+  try {
+    await UserService.deleteUserByEmail(email);
     res.status(204).send();
   } catch (error) {
     res.status(500).json({ message: "Error deleting user" });

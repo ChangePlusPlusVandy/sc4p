@@ -7,185 +7,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
-  name          String
-  address       String
-  city          String
-  state         String
-  zip           String
-  home_phone    String?
-  cell_phone    String
-  work_phone    String?
-  created_at    DateTime  @default(now())
-  
-  // Relationships
-  pets                  Pet[]    
-  caregivers           Caregiver[]
-  boarding_facilities   BoardingFac[]
-  emergency_contacts    EmergencyContact[]
-  remaining_funds      RemainingFunds[]
-  veterinarians       Veterinarian[]
-  trust_fund_info      TrustFundInfo?
-}
-
-model Caregiver {
-  id            Int       @id @default(autoincrement())
-  owner_id      Int
-  name          String
-  care_type     String    // 'short-term', 'long-term', 'both'
-  primary       Boolean
-  accepted      Boolean   
-  address       String
-  city          String
-  state         String
-  zip           String
-  phone         String
-  email         String
-  created_at    DateTime  @default(now())
-  
-  // Relationships
-  user          User      @relation(fields: [owner_id], references: [id])
-}
-
-model BoardingFac {
-  id            Int       @id @default(autoincrement())
-  owner_id      Int
-  contact_name  String
-  daily_charge  Decimal?
-  address       String
-  city          String
-  state         String
-  zip           String
-  home_phone    String?
-  cell_phone    String
-  email         String?
-  created_at    DateTime  @default(now())
-
-  // Relationships
-  owner         User      @relation(fields: [owner_id], references: [id])
-}
-
-model EmergencyContact {
-  id            Int       @id @default(autoincrement())
-  owner_id      Int
-  name          String
-  address       String
-  city          String
-  state         String
-  zip           String
-  phone         String
-  email         String
-  created_at    DateTime  @default(now())
-
-  // Relationships
-  owner         User      @relation(fields: [owner_id], references: [id])
+model User  {
+    id Int @id @default(autoincrement())
+    name String
+    email String @unique
+    address String
+    city String
+    state String
+    zip String
+    home_phone String
+    cell_phone String
+    work_phone String
+    created_at DateTime @default(now())
 }
 
 model Pet {
-  id                              Int       @id @default(autoincrement())
-  owner_id                        Int
-  name                            String
-  sex                             String  // 'Male' or 'Female'
-  date_of_birth                   DateTime? @db.Date
-  spayed_neutered                 Boolean
-  type                            String   // e.g. Cat, Dog, Bird, Horse, etc.
-  microchip_id                    String?
-  license_number                  String?
-  medical_history                 String?   @db.Text
-  special_needs                   String?   @db.Text
-  special_diet                    String?   @db.Text
-  behavioral_habits               String?   @db.Text
-  commands                        String?   @db.Text
-  daily_routine                   String?   @db.Text
-  allowed_outside                 Boolean?
-  sleep_location                  String?
-  likes_children                  Boolean?
-  home_access                     String?   @db.Text
-  favorite_items                  String?   @db.Text
-  flea_prevention                 String?
-  allergies                       String?   @db.Text
-  special_care_instructions       String?   @db.Text
-  medical_history_location        String?
-  food_brand                      String?
-  food_amount                     String?
-  feeding_schedule                String?   @db.Text
-  medications                     String?   @db.Text
-  emergency_supplies              String?   @db.Text
-  health_insurance_provider       String?
-  health_insurance_policy_number  String?
-  health_insurance_cost           Decimal?
-  euthanasia_decision             String?   // veterinarian, caregiver, emergency_contacts
-  remains_care                    String?   // burial, cremation, cemetery, caregiver decides
-  allocated_remains_fund          Decimal?
-  created_at                      DateTime  @default(now())
-
-  // Relationships
-  owner                           User      @relation(fields: [owner_id], references: [id])
-}
-
-model RemainingFunds {
-  id                    Int       @id @default(autoincrement())
-  owner_id              Int
-  beneficiary_name      String
-  allocation_percentage Decimal
-  created_at            DateTime  @default(now())
-
-  // Relationships
-  owner                 User      @relation(fields: [owner_id], references: [id])
-}
-
-model Veterinarian {
-  id              Int      @id @default(autoincrement())
-  owner_id              Int
-  name            String
-  address         String
-  city            String
-  state           String
-  zip             String
-  cell_phone      String?
-  office_phone    String?
-  emergency_phone String?
-  created_at      DateTime @default(now())
-
-  // Relationships
-  owner                 User      @relation(fields: [owner_id], references: [id])
-}
-
-model TrustFundInfo {
-  id                           Int       @id @default(autoincrement())
-  owner_id                     Int       @unique
-  funding_plan                 String?   @db.Text
-  bank_account_details         String?   @db.Text
-  life_insurance_policy_number String?
-  other_funding_details        String?   @db.Text
-  created_at                   DateTime  @default(now())
-
-  // Relationships
-  owner                        User      @relation(fields: [owner_id], references: [id])
-  trustees                     Trustee[]
-
-  @@map("trust_fund_info")
-}
-
-model Trustee {
-  id                Int       @id @default(autoincrement())
-  trust_fund_id     Int
-  trustee_name      String
-  address           String
-  city              String
-  state             String
-  zip               String
-  home_phone        String?
-  cell_phone        String
-  emergency_phone   String?
-  email             String
-  allocated_amount  Decimal?
-  created_at        DateTime  @default(now())
-
-  // Relationships
-  trust_fund        TrustFundInfo @relation(fields: [trust_fund_id], references: [id])
-
-  @@map("trustees")
+  id                     Int      @id @default(autoincrement())
+  name                   String
+  sex                    String
+  dateOfBirth            DateTime
+  spayedNeutered         Boolean
+  type                   String
+  microchipId            String?  
+  licenseNumber          String?  
+  medicalHistory         String?  
+  specialNeeds           String?  
+  specialDiet            String?  
+  behavioralHabits       String?  
+  commands               String?  
+  dailyRoutine           String?  
+  allowedOutside         Boolean? 
+  sleepLocation          String?  
+  likesChildren          Boolean? 
+  homeAccess             String?  
+  favoriteItems          String?  
+  fleaPrevention         String?  
+  allergies              String?  
+  specialCareInstructions String?  
+  medicalHistoryLocation String?  
+  foodBrand              String?  
+  foodAmount             String?  
+  feedingSchedule        String?  
+  medications            String?  
+  emergencySupplies      String?  
+  healthInsuranceProvider String?  
+  healthInsurancePolicyNumber String?  
+  healthInsuranceCost    Int? 
+  euthanasiaDecision     String
+  remainsCare            String
+  allocatedRemainsFund   Int?
 }

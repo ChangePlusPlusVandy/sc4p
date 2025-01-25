@@ -6,13 +6,8 @@ import helmet from "helmet";
 import { exampleRoute } from "./routes/exampleRoute";
 import userRouter from "./routes/user/userRouter";
 import petRouter from "./routes/pet/petRouter";
-import boardingFacilityRouter from "./routes/boarding_fac/boardingFacRouter";
-import adminRouter from "./routes/admin/adminRouter";
 import { verifyToken } from "./middlewares/verifyToken";
 import { notFound, errorHandler } from "./middlewares/errors";
-import caregiverRouter from "./routes/caregiver/caregiverRouter";
-import emergencyContactRouter from "./routes/emergency_contact/emergencyContactRouter";
-import vetRouter from "./routes/vet/vetRouter";
 
 dotenv.config();
 
@@ -32,12 +27,7 @@ app.use(helmet());
  */
 app.use("/example", verifyToken, exampleRoute);
 app.use("/user", userRouter);
-app.use("/pet", petRouter);
-app.use("/boarding-fac", boardingFacilityRouter);
-app.use("/admin", adminRouter);
-app.use("/caregiver", caregiverRouter);
-app.use("/emergency-contacts", emergencyContactRouter);
-app.use("/vet", vetRouter);
+app.use("/pets", petRouter);
 
 // Default route: Unprotected
 app.get("/", (_req: Request, res: Response) => {

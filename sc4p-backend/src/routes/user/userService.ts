@@ -1,71 +1,52 @@
 import { PrismaClient } from "@prisma/client";
-import { CreateUser, UpdateUser, User } from "../../types/user";
+import { User } from "../../types/user";
 
 const prisma = new PrismaClient();
 
-export async function getAllUsers(): Promise<User[]> {
-  return await prisma.user.findMany();
-}
-
-export async function createUser(user: CreateUser): Promise<User> {
+export const createUser = async (user: User): Promise<User> => {
   return await prisma.user.create({
-    data: user,
+    data: { ...user },
   });
-}
+};
 
-export async function getUserByEmail(email: string): Promise<User | null> {
+export const getAllUsers = async () => {
+  return await prisma.user.findMany();
+};
+
+export const getUserByEmail = async (email: string) => {
   return await prisma.user.findUnique({
     where: { email },
   });
-}
+};
 
-export async function getUserById(id: number): Promise<User | null> {
+export const getUserById = async (id: number) => {
   return await prisma.user.findUnique({
     where: { id },
   });
-}
+};
 
-export async function updateUser(
-  email: string,
-  data: UpdateUser,
-): Promise<User> {
-  return await prisma.user.update({
-    where: { email },
-    data,
-  });
-}
-
-export async function updateUserById(
-  id: number,
-  data: UpdateUser,
-): Promise<User> {
+export const updateUserById = async (id: number, user: User) => {
   return await prisma.user.update({
     where: { id },
-    data,
+    data: { ...user },
   });
-}
+};
 
-export const deleteUser = async (id: number): Promise<void> => {
-  const prisma = new PrismaClient();
+export const updateUserByEmail = async (email: string, user: User) => {
+  return await prisma.user.update({
+    where: { email },
+    data: { ...user },
+  });
+};
 
-  try {
-    await prisma.$transaction([
-      prisma.pet.deleteMany({ where: { owner_id: id } }),
-      prisma.emergencyContact.deleteMany({ where: { owner_id: id } }),
-      prisma.boardingFac.deleteMany({ where: { owner_id: id } }),
-      prisma.caregiver.deleteMany({ where: { owner_id: id } }),
-      prisma.remainingFunds.deleteMany({ where: { owner_id: id } }),
-      prisma.veterinarian.deleteMany({ where: { owner_id: id } }),
-      prisma.trustee.deleteMany({
-        where: { trust_fund: { owner_id: id } },
-      }),
-      prisma.trustFundInfo.deleteMany({ where: { owner_id: id } }),
-      prisma.user.delete({ where: { id } }),
-    ]);
-  } catch (error) {
-    console.error("Error deleting user:", error);
-    throw error;
-  } finally {
-    await prisma.$disconnect();
-  }
+export const deleteUserById = async (id: number) => {
+  return await prisma.user.delete({
+    where: { id },
+  });
+};
+
+export const deleteUserByEmail = async (email: string) => {
+  return await prisma.user.delete({
+    where: { email },
+  });
 };
