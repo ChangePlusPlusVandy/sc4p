@@ -6,9 +6,9 @@ import {
   SelectItem,
   Textarea,
 } from "@nextui-org/react";
-
+import { Link } from "react-router-dom";
 import { CalendarDate } from "@internationalized/date";
-
+import { useState } from "react";
 export const states = [
   { key: "AL", label: "AL" },
   { key: "AK", label: "AK" },
@@ -62,9 +62,11 @@ export const states = [
   { key: "WY", label: "WY" },
 ];
 
+const [hidePlaceholders, setHidePlaceholders] = useState(false);
+
 const InitialForm = () => {
   return (
-    <div className="w-full px-[100px] py-[60px] h-auto flex flex-col items-center justify-center gap-[30px]">
+    <form className="w-full px-[100px] py-[60px] h-auto flex flex-col items-center justify-center gap-[30px]">
       <section className="ownerInfo w-full flex flex-col gap-4  ">
         <h2 className="text-3xl font-bold">Pet Owner Information</h2>
         <div className="flex flex-col w-full gap-4">
@@ -81,7 +83,7 @@ const InitialForm = () => {
               variant="bordered"
               label="First and Last Name"
               labelPlacement="outside"
-              placeholder="Your Name"
+              placeholder={hidePlaceholders ? "" : "Your Name"}
               type="text"
             />
             <Input
@@ -96,7 +98,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Cell Phone"
               labelPlacement="outside"
-              placeholder="(123) 456 7890"
+              placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
               type="text"
             />
             <Input
@@ -111,7 +113,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Email"
               labelPlacement="outside"
-              placeholder="your.email@email.com"
+              placeholder={hidePlaceholders ? "" : "your.email@email.com"}
               type="email"
             />
           </div>
@@ -128,7 +130,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Address"
               labelPlacement="outside"
-              placeholder="123 Street name"
+              placeholder={hidePlaceholders ? "" : "123 Street name"}
               type="text"
             />
             <Input
@@ -143,7 +145,7 @@ const InitialForm = () => {
               variant="bordered"
               label="City"
               labelPlacement="outside"
-              placeholder="City name"
+              placeholder={hidePlaceholders ? "" : "City name"}
               type="text"
             />
           </div>
@@ -165,7 +167,7 @@ const InitialForm = () => {
               variant="bordered"
               label="State"
               labelPlacement="outside"
-              placeholder="Select your state"
+              placeholder={hidePlaceholders ? "" : "Select your state"}
             >
               {states.map((state) => (
                 <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -183,7 +185,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Zip Code"
               labelPlacement="outside"
-              placeholder="12345"
+              placeholder={hidePlaceholders ? "" : "12345"}
               type="text"
             />
             <Select
@@ -203,7 +205,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Care-giving Length"
               labelPlacement="outside"
-              placeholder="Select"
+              placeholder={hidePlaceholders ? "" : "Select"}
             >
               <SelectItem key="">Option</SelectItem>
             </Select>
@@ -250,7 +252,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder="Your Name"
+                placeholder={hidePlaceholders ? "" : "Your Name"}
                 type="text"
               />
               <Input
@@ -265,7 +267,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -280,7 +282,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Email"
                 labelPlacement="outside"
-                placeholder="your.email@email.com"
+                placeholder={hidePlaceholders ? "" : "your.email@email.com"}
                 type="email"
               />
             </div>
@@ -297,7 +299,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder="123 Street name"
+                placeholder={hidePlaceholders ? "" : "123 Street name"}
                 type="text"
               />
               <Input
@@ -312,7 +314,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder="City name"
+                placeholder={hidePlaceholders ? "" : "City name"}
                 type="text"
               />
             </div>
@@ -334,7 +336,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder="Select your state"
+                placeholder={hidePlaceholders ? "" : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -352,7 +354,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder="12345"
+                placeholder={hidePlaceholders ? "" : "12345"}
                 type="text"
               />
               <Select
@@ -372,7 +374,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Care-giving Length"
                 labelPlacement="outside"
-                placeholder="Select"
+                placeholder={hidePlaceholders ? "" : "Select"}
               >
                 <SelectItem key="">Option</SelectItem>
               </Select>
@@ -404,7 +406,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder="Your Name"
+                placeholder={hidePlaceholders ? "" : "Your Name"}
                 type="text"
               />
               <Input
@@ -419,7 +421,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -434,7 +436,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Email"
                 labelPlacement="outside"
-                placeholder="your.email@email.com"
+                placeholder={hidePlaceholders ? "" : "your.email@email.com"}
                 type="email"
               />
             </div>
@@ -451,7 +453,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder="123 Street name"
+                placeholder={hidePlaceholders ? "" : "123 Street name"}
                 type="text"
               />
               <Input
@@ -466,7 +468,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder="City name"
+                placeholder={hidePlaceholders ? "" : "City name"}
                 type="text"
               />
             </div>
@@ -488,7 +490,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder="Select your state"
+                placeholder={hidePlaceholders ? "" : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -506,7 +508,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder="12345"
+                placeholder={hidePlaceholders ? "" : "12345"}
                 type="text"
               />
               <Select
@@ -526,7 +528,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Care-giving Length"
                 labelPlacement="outside"
-                placeholder="Select"
+                placeholder={hidePlaceholders ? "" : "Select"}
               >
                 <SelectItem key="">Option</SelectItem>
               </Select>
@@ -560,7 +562,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder="Your Name"
+                placeholder={hidePlaceholders ? "" : "Your Name"}
                 type="text"
               />
               <Input
@@ -575,7 +577,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -590,7 +592,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Email"
                 labelPlacement="outside"
-                placeholder="your.email@email.com"
+                placeholder={hidePlaceholders ? "" : "your.email@email.com"}
                 type="email"
               />
             </div>
@@ -607,7 +609,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder="123 Street name"
+                placeholder={hidePlaceholders ? "" : "123 Street name"}
                 type="text"
               />
               <Input
@@ -622,7 +624,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder="City name"
+                placeholder={hidePlaceholders ? "" : "City name"}
                 type="text"
               />
             </div>
@@ -644,7 +646,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder="Select your state"
+                placeholder={hidePlaceholders ? "" : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -662,7 +664,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder="12345"
+                placeholder={hidePlaceholders ? "" : "12345"}
                 type="text"
               />
               <Input
@@ -677,7 +679,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Average Daily Charge"
                 labelPlacement="outside"
-                placeholder="USD 123.00"
+                placeholder={hidePlaceholders ? "" : "USD 123.00"}
                 type="text"
               />
             </div>
@@ -717,7 +719,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder="Your Name"
+                placeholder={hidePlaceholders ? "" : "Your Name"}
                 type="text"
               />
               <Input
@@ -732,7 +734,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -747,7 +749,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Email"
                 labelPlacement="outside"
-                placeholder="your.email@email.com"
+                placeholder={hidePlaceholders ? "" : "your.email@email.com"}
                 type="email"
               />
             </div>
@@ -764,7 +766,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder="123 Street name"
+                placeholder={hidePlaceholders ? "" : "123 Street name"}
                 type="text"
               />
               <Input
@@ -779,7 +781,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder="City name"
+                placeholder={hidePlaceholders ? "" : "City name"}
                 type="text"
               />
             </div>
@@ -801,7 +803,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder="Select your state"
+                placeholder={hidePlaceholders ? "" : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -819,7 +821,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder="12345"
+                placeholder={hidePlaceholders ? "" : "12345"}
                 type="text"
               />
             </div>
@@ -862,7 +864,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="First and Last Name"
                 labelPlacement="outside"
-                placeholder="Your Name"
+                placeholder={hidePlaceholders ? "" : "Your Name"}
                 type="text"
               />
               <Input
@@ -877,7 +879,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -892,7 +894,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Emergency Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
             </div>
@@ -909,7 +911,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder="123 Street name"
+                placeholder={hidePlaceholders ? "" : "123 Street name"}
                 type="text"
               />
               <Input
@@ -924,7 +926,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder="City name"
+                placeholder={hidePlaceholders ? "" : "City name"}
                 type="text"
               />
             </div>
@@ -946,7 +948,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder="Select your state"
+                placeholder={hidePlaceholders ? "" : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -964,7 +966,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder="12345"
+                placeholder={hidePlaceholders ? "" : "12345"}
                 type="text"
               />
             </div>
@@ -1009,7 +1011,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder="123 Street name"
+                placeholder={hidePlaceholders ? "" : "123 Street name"}
                 type="text"
               />
               <Input
@@ -1024,7 +1026,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder="City name"
+                placeholder={hidePlaceholders ? "" : "City name"}
                 type="text"
               />
             </div>
@@ -1046,7 +1048,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder="Select your state"
+                placeholder={hidePlaceholders ? "" : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -1064,7 +1066,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder="12345"
+                placeholder={hidePlaceholders ? "" : "12345"}
                 type="text"
               />
               <Input
@@ -1079,7 +1081,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cell Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -1094,7 +1096,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Emergency Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
             </div>
@@ -1111,7 +1113,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Money allocated per year to Trustee to provide for caregiver"
                 labelPlacement="outside"
-                placeholder="USD 1000.00"
+                placeholder={hidePlaceholders ? "" : "USD 1000.00"}
                 type="text"
               />
             </div>
@@ -1143,7 +1145,11 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Funding plan"
                 labelPlacement="outside"
-                placeholder="Please indicate how you plan to provide funds for the care of your pet"
+                placeholder={
+                  hidePlaceholders
+                    ? ""
+                    : "Please indicate how you plan to provide funds for the care of your pet"
+                }
                 type="text"
               />
             </div>
@@ -1177,7 +1183,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="2nd Chance 4 Pets"
                 labelPlacement="outside"
-                placeholder="e.g: 50%"
+                placeholder={hidePlaceholders ? "" : "e.g: 50%"}
                 type="text"
               />
               <Input
@@ -1192,7 +1198,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Other pet welfare organization"
                 labelPlacement="outside"
-                placeholder="e.g: 30%"
+                placeholder={hidePlaceholders ? "" : "e.g: 30%"}
                 type="text"
               />
             </div>
@@ -1209,7 +1215,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Address"
                 labelPlacement="outside"
-                placeholder="123 Street name"
+                placeholder={hidePlaceholders ? "" : "123 Street name"}
                 type="text"
               />
               <Input
@@ -1224,7 +1230,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="City"
                 labelPlacement="outside"
-                placeholder="City name"
+                placeholder={hidePlaceholders ? "" : "City name"}
                 type="text"
               />
             </div>
@@ -1246,7 +1252,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="State"
                 labelPlacement="outside"
-                placeholder="Select your state"
+                placeholder={hidePlaceholders ? "" : "Select your state"}
               >
                 {states.map((state) => (
                   <SelectItem key={state.key}>{state.label}</SelectItem>
@@ -1264,7 +1270,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Zip Code"
                 labelPlacement="outside"
-                placeholder="12345"
+                placeholder={hidePlaceholders ? "" : "12345"}
                 type="text"
               />
               <Input
@@ -1279,7 +1285,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Other Beneficiary"
                 labelPlacement="outside"
-                placeholder="e.g: 20%"
+                placeholder={hidePlaceholders ? "" : "e.g: 20%"}
                 type="text"
               />
             </div>
@@ -1306,7 +1312,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Pet's Name"
                 labelPlacement="outside"
-                placeholder="Your Name"
+                placeholder={hidePlaceholders ? "" : "Your Name"}
                 type="text"
               />
               <Select
@@ -1326,7 +1332,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Sex"
                 labelPlacement="outside"
-                placeholder="Select"
+                placeholder={hidePlaceholders ? "" : "Select"}
               >
                 <SelectItem key="M">Male</SelectItem>
                 <SelectItem key="F">Female</SelectItem>
@@ -1349,7 +1355,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Spayed or Neutered"
                 labelPlacement="outside"
-                placeholder="Select"
+                placeholder={hidePlaceholders ? "" : "Select"}
               >
                 <SelectItem key="Y">Yes</SelectItem>
                 <SelectItem key="N">No</SelectItem>
@@ -1357,11 +1363,24 @@ const InitialForm = () => {
             </div>
             <div className="row2 flex flex-row w-full gap-6">
               <DateInput
+                classNames={{
+                  label: "font-bold",
+                  innerWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                  inputWrapper: [
+                    "border-[#AF94D3]",
+                    "hover:border-[#D7BEF7]",
+                    "focus-within:border-[#5E3593]",
+                  ],
+                }}
                 variant="bordered"
-                label="Address"
+                label="Birth date"
                 labelPlacement="outside"
-                placeholder="123 Street name"
-                placeholderValue={new CalendarDate(1995, 11, 6)}
+                placeholder={hidePlaceholders ? "" : "123 Street name"}
+                placeholderValue={new CalendarDate(1995, 16, 6)}
               />
               <Select
                 classNames={{
@@ -1380,7 +1399,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Type"
                 labelPlacement="outside"
-                placeholder="Select"
+                placeholder={hidePlaceholders ? "" : "Select"}
               >
                 <SelectItem key="1">1</SelectItem>
                 <SelectItem key="2">2</SelectItem>
@@ -1408,7 +1427,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Microchip ID"
                 labelPlacement="outside"
-                placeholder="Brand name"
+                placeholder={hidePlaceholders ? "" : "Brand name"}
                 type="text"
               />
               <Input
@@ -1423,7 +1442,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="ID Number"
                 labelPlacement="outside"
-                placeholder="123456789"
+                placeholder={hidePlaceholders ? "" : "123456789"}
                 type="text"
               />
               <Input
@@ -1438,7 +1457,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="License Tag"
                 labelPlacement="outside"
-                placeholder="City/Country"
+                placeholder={hidePlaceholders ? "" : "City/Country"}
                 type="text"
               />
               <Input
@@ -1453,7 +1472,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Tag Number"
                 labelPlacement="outside"
-                placeholder="123456789"
+                placeholder={hidePlaceholders ? "" : "123456789"}
                 type="text"
               />
             </div>
@@ -1477,7 +1496,11 @@ const InitialForm = () => {
               variant="bordered"
               label="Medical History"
               labelPlacement="outside"
-              placeholder="Any specific information relative to the pet’s health history"
+              placeholder={
+                hidePlaceholders
+                  ? ""
+                  : "Any specific information relative to the pet’s health history"
+              }
             />
             <Textarea
               classNames={{
@@ -1491,7 +1514,11 @@ const InitialForm = () => {
               variant="bordered"
               label="Special Needs"
               labelPlacement="outside"
-              placeholder="Permanent medical condition or special exercise routine"
+              placeholder={
+                hidePlaceholders
+                  ? ""
+                  : "Permanent medical condition or special exercise routine"
+              }
             />
             <Textarea
               classNames={{
@@ -1505,7 +1532,11 @@ const InitialForm = () => {
               variant="bordered"
               label="Special Diet Requirements"
               labelPlacement="outside"
-              placeholder="Any specific dietary requirements or restrictions"
+              placeholder={
+                hidePlaceholders
+                  ? ""
+                  : "Any specific dietary requirements or restrictions"
+              }
             />
             <Input
               classNames={{
@@ -1519,7 +1550,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Please note verbal/nonverbal commands your pet responds to and body language used to communicate:"
               labelPlacement="outside"
-              placeholder="sit, stay, paw, etc."
+              placeholder={hidePlaceholders ? "" : "sit, stay, paw, etc."}
               type="text"
             />
             <div className="row1 flex flex-row w-full gap-6">
@@ -1535,7 +1566,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Is your pet allowed outside?"
                 labelPlacement="outside"
-                placeholder="Brand name"
+                placeholder={hidePlaceholders ? "" : "Brand name"}
                 type="text"
               />
               <Input
@@ -1550,7 +1581,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Where does your pet sleep?"
                 labelPlacement="outside"
-                placeholder="Inside, outside, etc."
+                placeholder={hidePlaceholders ? "" : "Inside, outside, etc."}
                 type="text"
               />
               <Input
@@ -1565,7 +1596,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Does your pet like children?"
                 labelPlacement="outside"
-                placeholder="City/Country"
+                placeholder={hidePlaceholders ? "" : "City/Country"}
                 type="text"
               />
             </div>
@@ -1581,7 +1612,9 @@ const InitialForm = () => {
               variant="bordered"
               label="What access does your pet have to your home and furniture?"
               labelPlacement="outside"
-              placeholder="Has access to the couch, bed, etc."
+              placeholder={
+                hidePlaceholders ? "" : "Has access to the couch, bed, etc."
+              }
               type="text"
             />
             <Input
@@ -1596,7 +1629,11 @@ const InitialForm = () => {
               variant="bordered"
               label="If your pet has any favorite games, toys or possessions, please note where they are located"
               labelPlacement="outside"
-              placeholder="Stuffies in the living room, ball in the backyard, etc."
+              placeholder={
+                hidePlaceholders
+                  ? ""
+                  : "Stuffies in the living room, ball in the backyard, etc."
+              }
               type="text"
             />
             <Input
@@ -1611,7 +1648,9 @@ const InitialForm = () => {
               variant="bordered"
               label="Type of flea/heartworm preventative and when administered"
               labelPlacement="outside"
-              placeholder="Brand name, once a month, etc."
+              placeholder={
+                hidePlaceholders ? "" : "Brand name, once a month, etc."
+              }
               type="text"
             />
             <Input
@@ -1626,7 +1665,11 @@ const InitialForm = () => {
               variant="bordered"
               label="Allergies"
               labelPlacement="outside"
-              placeholder="Foods, medications, fleas, flea control products, etc."
+              placeholder={
+                hidePlaceholders
+                  ? ""
+                  : "Foods, medications, fleas, flea control products, etc."
+              }
               type="text"
             />
             <Textarea
@@ -1641,7 +1684,11 @@ const InitialForm = () => {
               variant="bordered"
               label="Special care instruction"
               labelPlacement="outside"
-              placeholder="Instructions for grooming, bathing, etc."
+              placeholder={
+                hidePlaceholders
+                  ? ""
+                  : "Instructions for grooming, bathing, etc."
+              }
             />
             <Input
               classNames={{
@@ -1655,7 +1702,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Where is your pet’s medical history located?"
               labelPlacement="outside"
-              placeholder="Location of records"
+              placeholder={hidePlaceholders ? "" : "Location of records"}
               type="text"
             />
             <Input
@@ -1670,7 +1717,7 @@ const InitialForm = () => {
               variant="bordered"
               label="What brand of food do you feed this pet?"
               labelPlacement="outside"
-              placeholder="Brand Name"
+              placeholder={hidePlaceholders ? "" : "Brand Name"}
               type="text"
             />
             <Input
@@ -1685,7 +1732,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Approximately how much food per day?"
               labelPlacement="outside"
-              placeholder="for example: 3 cups/day"
+              placeholder={hidePlaceholders ? "" : "for example: 3 cups/day"}
               type="text"
             />
             <Input
@@ -1700,7 +1747,9 @@ const InitialForm = () => {
               variant="bordered"
               label="When are the typical feeding times and amounts?"
               labelPlacement="outside"
-              placeholder="8am and 6pm, 1 cup each time"
+              placeholder={
+                hidePlaceholders ? "" : "8am and 6pm, 1 cup each time"
+              }
               type="text"
             />
             <Textarea
@@ -1715,7 +1764,9 @@ const InitialForm = () => {
               variant="bordered"
               label="List any medications and/or supplements"
               labelPlacement="outside"
-              placeholder="Medication name, dosage, frequency"
+              placeholder={
+                hidePlaceholders ? "" : "Medication name, dosage, frequency"
+              }
             />
             <Textarea
               classNames={{
@@ -1729,7 +1780,11 @@ const InitialForm = () => {
               variant="bordered"
               label="Emergency supplies for my pet"
               labelPlacement="outside"
-              placeholder="Location of leashes and harnesses, food, food bowls, medicine, and veterinarian records"
+              placeholder={
+                hidePlaceholders
+                  ? ""
+                  : "Location of leashes and harnesses, food, food bowls, medicine, and veterinarian records"
+              }
             />
           </div>
         </section>
@@ -1752,7 +1807,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Name of Provider"
                 labelPlacement="outside"
-                placeholder="Name"
+                placeholder={hidePlaceholders ? "" : "Name"}
                 type="text"
               />
               <Input
@@ -1767,7 +1822,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Phone"
                 labelPlacement="outside"
-                placeholder="(123) 456 7890"
+                placeholder={hidePlaceholders ? "" : "(123) 456 7890"}
                 type="text"
               />
               <Input
@@ -1782,7 +1837,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Policy Number"
                 labelPlacement="outside"
-                placeholder="123456789"
+                placeholder={hidePlaceholders ? "" : "123456789"}
                 type="text"
               />
               <Input
@@ -1797,7 +1852,7 @@ const InitialForm = () => {
                 variant="bordered"
                 label="Cost per year"
                 labelPlacement="outside"
-                placeholder="USD 1,234.56"
+                placeholder={hidePlaceholders ? "" : "USD 1,234.56"}
                 type="text"
               />
             </div>
@@ -1823,7 +1878,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Should my pet become seriously ill, who will make the decision if my pet should be euthanized?"
               labelPlacement="outside"
-              placeholder="Name and Surname"
+              placeholder={hidePlaceholders ? "" : "Name and Surname"}
               type="text"
             />
             <Input
@@ -1838,7 +1893,7 @@ const InitialForm = () => {
               variant="bordered"
               label="When your pet dies, how do you want the pet’s remains to be cared for?"
               labelPlacement="outside"
-              placeholder="Cremation, burial, etc."
+              placeholder={hidePlaceholders ? "" : "Cremation, burial, etc."}
               type="text"
             />
             <Input
@@ -1853,7 +1908,7 @@ const InitialForm = () => {
               variant="bordered"
               label="Money allocated for the cost of caring for my pet’s remains"
               labelPlacement="outside"
-              placeholder="e.g: USD 1000.00"
+              placeholder={hidePlaceholders ? "" : "e.g: USD 1000.00"}
               type="text"
             />
           </div>
@@ -1861,10 +1916,12 @@ const InitialForm = () => {
       </section>
 
       <div className="submitForms w-full flex flex-row gap-4">
-        <Button>Print</Button>
-        <Button isDisabled>Create an account</Button>
+        <Button className="bg-[#A377DC] text-white font-medium">Print</Button>
+        <Button className="bg-[#5E3593] text-white font-medium">
+          <Link to="/register">Create an account</Link>
+        </Button>
       </div>
-    </div>
+    </form>
   );
 };
 export default InitialForm;
