@@ -494,24 +494,11 @@ const Caregivers = () => {
           <h2 className="text-2xl font-semibold mb-4">Caregivers</h2>
           <div className="grid gap-4">
             {caregivers.map((caregiver) => (
-              <div
-                key={caregiver.id}
-                className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center"
-              >
+              <div key={caregiver.id}>
                 <InformationCard
-                purpose="caregiver"
-                name = {caregiver.name}
-                phone= {caregiver.phone}
-                email= {caregiver.email}
-                relation= {caregiver.primary ? "Primary" : "Secondary"}
-                care_type= {caregiver.care_type}
-                accepted= {caregiver.accepted ? "Yes" : "No"}
-                address= {caregiver.address}
-                city= {caregiver.city}
-                state={caregiver.state}
-                zip={caregiver.zip}
-                id={caregiver.id}
-                deleteItem={handleDelete}
+                  type="caregiver"
+                  data={caregiver}
+                  onDelete={handleDelete}
                 />
               </div>
             ))}
@@ -527,23 +514,11 @@ const Caregivers = () => {
           <h2 className="text-2xl font-semibold mb-4">Boarding Facilities</h2>
           <div className="grid gap-4">
             {boardingFacilities.map((facility) => (
-              <div
-                key={facility.id}
-                className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center"
-              >
+              <div key={facility.id}>
                 <InformationCard
-                purpose="boarding_facilities"
-                name= {facility.contact_name}
-                phone= {facility.cell_phone}
-                home_phone = {facility.home_phone}
-                daily_charge={facility.daily_charge}
-                email= {facility.email}
-                address= {facility.address}
-                city= {facility.city}
-                state={facility.state}
-                zip={facility.zip}
-                id = {facility.id}
-                deleteItem={handleDeleteFacility}
+                  type="boarding_facilities"
+                  data={facility}
+                  onDelete={handleDeleteFacility}
                 />
               </div>
             ))}

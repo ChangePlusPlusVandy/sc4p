@@ -24,8 +24,8 @@ import type {
   EmergencyContact,
   CreateEmergencyContact,
 } from "../types/emergencyContact";
-
 import InformationCard from "../components/InformationCard";
+
 const contactSchema = yup.object().shape({
   name: yup
     .string()
@@ -60,27 +60,6 @@ const contactSchema = yup.object().shape({
     .matches(/^[0-9]{5}(-[0-9]{4})?$/, "Must be a valid ZIP code"),
 });
 
-const ContactCard: React.FC<{
-  contact: EmergencyContact;
-  onDelete: (id: number) => Promise<void>;
-}> = ({ contact, onDelete }) => (
-  <div className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center">
-    <div className="flex flex-col gap-1">
-      <h3 className="text-lg font-semibold">{contact.name}</h3>
-      <div className="text-sm text-gray-600">
-        <p>Phone: {contact.phone}</p>
-        <p>Email: {contact.email}</p>
-        <p className="text-xs text-gray-500">
-          {contact.address}, {contact.city}, {contact.state} {contact.zip}
-        </p>
-      </div>
-    </div>
-    <Button color="danger" variant="light" onPress={() => onDelete(contact.id)}>
-      Delete
-    </Button>
-  </div>
-);
-
 const formatPhoneNumber = (phone: string) => {
   const cleaned = ("" + phone).replace(/\D/g, "");
   const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
@@ -88,11 +67,8 @@ const formatPhoneNumber = (phone: string) => {
 };
 
 const EmergencyContactPage: React.FC = () => {
-  const [emergencyContacts, setEmergencyContacts] = useState<
-    EmergencyContact[]
-  >([]);
+  const [contacts, setContacts] = useState<EmergencyContact[]>([]);
   const [loading, setLoading] = useState(true);
-
   const { currentUser, userData } = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -106,23 +82,26 @@ const EmergencyContactPage: React.FC = () => {
     mode: "onBlur",
   });
 
-  const fetchEmergencyContacts = async () => {
+  const fetchContacts = async () => {
     if (!currentUser?.email || !userData?.id) return;
 
     const token = await currentUser.getIdToken();
     try {
-      const contactsResponse = await getEmergencyContacts(token, userData.id);
-      const contactsData = await contactsResponse.json();
-      setEmergencyContacts(contactsData);
+      const response = await getEmergencyContacts(token, userData.id);
+      const data = await response.json();
+      setContacts(data || []);
     } catch (error) {
       console.error("Error fetching emergency contacts:", error);
+      setContacts([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchEmergencyContacts();
+    if (currentUser && userData) {
+      fetchContacts();
+    }
   }, [currentUser, userData]);
 
   const onSubmit = async (
@@ -144,7 +123,7 @@ const EmergencyContactPage: React.FC = () => {
       });
 
       if (response.ok) {
-        await fetchEmergencyContacts();
+        await fetchContacts();
         reset();
         onClose();
       } else {
@@ -164,8 +143,8 @@ const EmergencyContactPage: React.FC = () => {
     const token = await currentUser.getIdToken();
     try {
       await deleteEmergencyContact(token, contactId);
-      setEmergencyContacts((contacts) =>
-        contacts.filter((contact) => contact.id !== contactId),
+      setContacts((prevContacts) =>
+        prevContacts.filter((contact) => contact.id !== contactId),
       );
     } catch (error) {
       console.error("Error deleting contact:", error);
@@ -182,6 +161,25 @@ const EmergencyContactPage: React.FC = () => {
       <Button onPress={onOpen} className="mb-6 bg-base text-white">
         Add Emergency Contact
       </Button>
+      <div className="w-full grid grid-cols-1 gap-4">
+        {contacts.map((contact) => (
+          <InformationCard
+            key={contact.id}
+            type="emergency_contact"
+            data={contact}
+            onUpdate={async (id, updatedData) => {
+              // TODO: Implement contact update logic
+              console.log("Updating contact:", id, updatedData);
+            }}
+            onDelete={handleDelete}
+          />
+        ))}
+        {contacts.length === 0 && (
+          <div className="text-center text-gray-500 py-8">
+            No emergency contacts added yet.
+          </div>
+        )}
+      </div>
 
       <Modal
         isOpen={isOpen}
@@ -308,28 +306,6 @@ const EmergencyContactPage: React.FC = () => {
           )}
         </ModalContent>
       </Modal>
-
-      <div className="w-full mt-6 grid gap-4">
-        {emergencyContacts.map((contact) => (
-          <InformationCard
-                purpose="emergency_contact"
-                name = {contact.name}
-                phone= {contact.phone}
-                email= {contact.email}
-                address= {contact.address}
-                city= {contact.city}
-                state={contact.state}
-                zip={contact.zip}
-                id={contact.id}
-                deleteItem={handleDelete}
-            />
-        ))}
-        {emergencyContacts.length === 0 && (
-          <div className="text-center text-gray-500 py-8">
-            No emergency contacts added yet.
-          </div>
-        )}
-      </div>
     </div>
   );
 };
