@@ -19,6 +19,7 @@ import {
 import { UserType, UpdateUser } from "../types/user";
 import { Caregiver, UpdateCaregiver } from "../types/caregiver";
 import { BoardingFac, UpdateBoardingFac } from "../types/boardingFac";
+import { Trustee, UpdateTrustee } from "../types/trustee";
 
 type CardType = {
   type:
@@ -26,8 +27,9 @@ type CardType = {
     | "emergency_contact"
     | "user"
     | "caregiver"
-    | "boarding_facilities";
-  data?: Pet | EmergencyContact | UserType | Caregiver | BoardingFac;
+    | "boarding_facilities"
+    | "trustee";
+  data?: Pet | EmergencyContact | UserType | Caregiver | BoardingFac | Trustee;
   onDelete?: (id: number) => void;
   onUpdate?: (
     id: number,
@@ -36,11 +38,18 @@ type CardType = {
       | UpdateEmergencyContact
       | UpdateUser
       | UpdateCaregiver
-      | UpdateBoardingFac,
+      | UpdateBoardingFac
+      | UpdateTrustee,
   ) => void;
 };
 
-type FormDataType = Pet | EmergencyContact | UserType | Caregiver | BoardingFac;
+type FormDataType =
+  | Pet
+  | EmergencyContact
+  | UserType
+  | Caregiver
+  | BoardingFac
+  | Trustee;
 
 const InformationCard: React.FC<CardType> = ({
   type,
@@ -89,6 +98,9 @@ const InformationCard: React.FC<CardType> = ({
     if (type === "boarding_facilities") {
       return (data as BoardingFac).contact_name;
     }
+    if (type === "trustee") {
+      return (data as Trustee).trustee_name;
+    }
     return "name" in data ? data.name : "";
   };
 
@@ -128,6 +140,8 @@ const InformationCard: React.FC<CardType> = ({
                         ? (data as Caregiver).phone
                         : type === "emergency_contact"
                         ? (data as EmergencyContact).phone
+                        : type === "trustee"
+                        ? (data as Trustee).cell_phone
                         : ""}
                     </span>
                   </div>
@@ -140,6 +154,8 @@ const InformationCard: React.FC<CardType> = ({
                         ? (data as Caregiver).email
                         : type === "emergency_contact"
                         ? (data as EmergencyContact).email
+                        : type === "trustee"
+                        ? (data as Trustee).email
                         : ""}
                     </span>
                   </div>
@@ -378,6 +394,29 @@ const InformationCard: React.FC<CardType> = ({
                 label="Email"
                 name="email"
                 value={boardingFac.email || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+          </>
+        );
+      case "trustee":
+        const trustee = formData as Trustee;
+        return (
+          <>
+            {commonFields}
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Cell Phone"
+                name="cell_phone"
+                value={trustee.cell_phone}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Email"
+                name="email"
+                value={trustee.email}
                 onChange={handleInputChange}
                 className="mb-4"
               />
