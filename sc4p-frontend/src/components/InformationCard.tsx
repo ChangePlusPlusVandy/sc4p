@@ -21,27 +21,13 @@ import { Caregiver, UpdateCaregiver } from "../types/caregiver";
 import { BoardingFac, UpdateBoardingFac } from "../types/boardingFac";
 import { Trustee, UpdateTrustee } from "../types/trustee";
 
-type CardType = {
-  type:
-    | "pet"
-    | "emergency_contact"
-    | "user"
-    | "caregiver"
-    | "boarding_facilities"
-    | "trustee";
-  data?: Pet | EmergencyContact | UserType | Caregiver | BoardingFac | Trustee;
-  onDelete?: (id: number) => void;
-  onUpdate?: (
-    id: number,
-    data:
-      | UpdatePet
-      | UpdateEmergencyContact
-      | UpdateUser
-      | UpdateCaregiver
-      | UpdateBoardingFac
-      | UpdateTrustee,
-  ) => void;
-};
+interface CardType {
+  type: string;
+  data: Pet | EmergencyContact | UserType | Caregiver | BoardingFac | Trustee;
+  onUpdate: (id: number, updatedData: any) => Promise<void>;
+  onDelete: (id: number) => Promise<void>;
+  onSeeMore?: () => void;
+}
 
 type FormDataType =
   | Pet
@@ -56,6 +42,7 @@ const InformationCard: React.FC<CardType> = ({
   data,
   onDelete,
   onUpdate,
+  onSeeMore,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = React.useState<FormDataType | undefined>(
@@ -165,7 +152,7 @@ const InformationCard: React.FC<CardType> = ({
           </div>
           <Button
             className="bg-[#FFC53D] text-black font-bold text-[20px] rounded-3xl px-8 py-7 hover:bg-[#FFC53D]/90"
-            onClick={onOpen}
+            onClick={type === "pet" ? onSeeMore : onOpen}
           >
             See more
           </Button>

@@ -26,6 +26,7 @@ import {
 import InformationCard from "../components/InformationCard";
 import { CalendarDate } from "@internationalized/date";
 import { Pet } from "../types/pet";
+import { useNavigate } from "react-router-dom";
 
 const Pets: React.FC = () => {
   const [pets, setPets] = useState<Pet[]>([]);
@@ -37,6 +38,7 @@ const Pets: React.FC = () => {
   const [hasAdditionalInstructions, setHasAdditionalInstructions] =
     useState(false);
   const [showOtherInput, setShowOtherInput] = useState(false);
+  const navigate = useNavigate();
 
   const fetchPets = async () => {
     if (!currentUser?.email || !userData?.id) return;
@@ -109,6 +111,7 @@ const Pets: React.FC = () => {
               // TODO: Implement pet delete logic
               console.log("Deleting pet:", id);
             }}
+            onSeeMore={() => navigate(`/pets/${pet.id}`)}
           />
         ))}
       </div>

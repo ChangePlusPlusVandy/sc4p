@@ -15,6 +15,7 @@ import Trustee from "./pages/Trustee";
 import EmergencyContacts from "./pages/EmergencyContact";
 import InitialForm from "./pages/InitialForm";
 import Landing from "./pages/Landing";
+import PetInfo from "./pages/PetInfo";
 
 export const App: React.FC = () => {
   return (
@@ -33,6 +34,10 @@ export const App: React.FC = () => {
             <Route
               path="/dashboard"
               element={<PrivateRoute element={<Home />} />}
+            />
+            <Route
+              path="/pets/:id"
+              element={<PrivateRoute element={<PetInfo />} />}
             />
             <Route
               path="/profile"
