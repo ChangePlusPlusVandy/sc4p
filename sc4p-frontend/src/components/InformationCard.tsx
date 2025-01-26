@@ -1,573 +1,416 @@
 import React from "react";
-import { Card, 
-  Button, 
-  Modal, 
+import {
+  Card,
+  Button,
   Input,
-  ButtonGroup,
-  CardBody,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Radio,
-  RadioGroup,
   useDisclosure,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Spinner,
 } from "@nextui-org/react";
-import { useState } from "react";
-import petTemplate from "../images/petTemplate.png";
+import { Pet, UpdatePet } from "../types/pet";
+import {
+  EmergencyContact,
+  UpdateEmergencyContact,
+} from "../types/emergencyContact";
+import { UserType, UpdateUser } from "../types/user";
+import { Caregiver, UpdateCaregiver } from "../types/caregiver";
+import { BoardingFac, UpdateBoardingFac } from "../types/boardingFac";
 
-type CardProps = {
-  purpose: "pet" | "caregiver" | "boarding_facilities" | "trust" | "emergency_contact"; // Defines the purpose of the card
-  name: string; // Name (e.g., pet's name or caregiver's name)
-  petType?: string; // Pet's type (if purpose is "pet")
-  phone?: string; // Caregiver's phone number (if purpose is "caregiver")
-  email?: string | null; // Caregiver's email (if purpose is "caregiver")
-  relation?: string; // Relationship (e.g., Primary for caregiver)
-  care_type?: string;// long or short term
-  accepted?: string; // whether or not they accept
-  address?: string; 
-  city?: string;
-  state?: string;
-  zip?: string;
-  home_phone?: string | null;
-  daily_charge?: number;
-  id?: number;
-  deleteItem?: (id: number) => void;
+type CardType = {
+  type:
+    | "pet"
+    | "emergency_contact"
+    | "user"
+    | "caregiver"
+    | "boarding_facilities";
+  data?: Pet | EmergencyContact | UserType | Caregiver | BoardingFac;
+  onDelete?: (id: number) => void;
+  onUpdate?: (
+    id: number,
+    data:
+      | UpdatePet
+      | UpdateEmergencyContact
+      | UpdateUser
+      | UpdateCaregiver
+      | UpdateBoardingFac,
+  ) => void;
 };
 
-const PurposeCard: React.FC<CardProps> = ({
-  purpose,
-  name,
-  petType,
-  phone,
-  email,
-  relation,
-  care_type,
-  accepted,
-  address,
-  city,
-  state,
-  zip,
-  home_phone,
-  daily_charge,
-  id,
-  deleteItem,
+type FormDataType = Pet | EmergencyContact | UserType | Caregiver | BoardingFac;
+
+const InformationCard: React.FC<CardType> = ({
+  type,
+  data,
+  onDelete,
+  onUpdate,
 }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [formData, setFormData] = React.useState<FormDataType | undefined>(
+    data,
+  );
 
-  const [showPopup, setShowPopup] = useState(false);
+  if (!data) {
+    return (
+      <Card className="flex items-center justify-center p-4 bg-[#e6d1ff] bg-opacity-25 shadow-sm shadow-[#AF94D3] rounded-lg w-full mb-4 h-32">
+        <Spinner color="secondary" />
+      </Card>
+    );
+  }
 
-  const togglePopup = () => setShowPopup((prev) => !prev);
-
-  const handleSave = () => {
-    setShowPopup(false); // Close the popup after saving
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => {
+      if (!prev) return undefined;
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
 
-
-  const [editableData, setEditableData] = useState({
-    name,
-    petType,
-    phone,
-    email,
-    relation,
-    care_type,
-    accepted,
-    address,
-    city,
-    state,
-    zip,
-    home_phone,
-    daily_charge,
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setEditableData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleSave = () => {
+    if (onUpdate && formData) {
+      onUpdate(data.id, formData);
+    }
+    onClose();
   };
 
   const handleDelete = () => {
-    if (id && deleteItem) {
-      deleteItem(id); // Call the delete function passed from parent with the id
+    if (onDelete) {
+      onDelete(data.id);
     }
   };
 
+  const getDisplayName = () => {
+    if (type === "boarding_facilities") {
+      return (data as BoardingFac).contact_name;
+    }
+    return "name" in data ? data.name : "";
+  };
+
+  const renderCardContent = () => {
+    const displayName = getDisplayName();
+
+    return (
+      <div className="px-8 py-10">
+        <div className="flex justify-between items-center">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-[32px] font-bold font-inter">
+                {displayName}
+              </span>
+              {type === "caregiver" && (
+                <span className="text-lg">
+                  ({(data as Caregiver).primary ? "Primary" : "Secondary"})
+                </span>
+              )}
+            </div>
+            <div className="flex gap-16">
+              {type === "pet" ? (
+                <div>
+                  <span className="font-bold mr-2 text-[20px]">Type</span>
+                  <span className="text-[18px]">
+                    {(data as Pet).type || "Not specified"}
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <span className="font-bold mr-2 text-[20px]">Phone</span>
+                    <span className="text-[18px]">
+                      {type === "boarding_facilities"
+                        ? (data as BoardingFac).cell_phone
+                        : type === "caregiver"
+                        ? (data as Caregiver).phone
+                        : type === "emergency_contact"
+                        ? (data as EmergencyContact).phone
+                        : ""}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="font-bold mr-2 text-[20px]">Email</span>
+                    <span className="text-[18px]">
+                      {type === "boarding_facilities"
+                        ? (data as BoardingFac).email
+                        : type === "caregiver"
+                        ? (data as Caregiver).email
+                        : type === "emergency_contact"
+                        ? (data as EmergencyContact).email
+                        : ""}
+                    </span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          <Button
+            className="bg-[#FFC53D] text-black font-bold text-[20px] rounded-3xl px-8 py-7 hover:bg-[#FFC53D]/90"
+            onClick={onOpen}
+          >
+            See more
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
+  const renderFormFields = () => {
+    if (!formData) return null;
+
+    const commonFields = (
+      <>
+        <div className="grid grid-cols-2 gap-4">
+          {"name" in formData && (
+            <Input
+              label="Name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              className="mb-4"
+            />
+          )}
+          {"contact_name" in formData && (
+            <Input
+              label="Contact Name"
+              name="contact_name"
+              value={(formData as BoardingFac).contact_name}
+              onChange={handleInputChange}
+              className="mb-4"
+            />
+          )}
+          {"address" in formData && (
+            <>
+              <Input
+                label="Address"
+                name="address"
+                value={formData.address || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="City"
+                name="city"
+                value={formData.city || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="State"
+                name="state"
+                value={formData.state || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="ZIP"
+                name="zip"
+                value={formData.zip || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </>
+          )}
+        </div>
+      </>
+    );
+
+    switch (type) {
+      case "pet":
+        const pet = formData as Pet;
+        return (
+          <>
+            {commonFields}
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Type"
+                name="type"
+                value={pet.type}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Sex"
+                name="sex"
+                value={pet.sex}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Microchip ID"
+                name="microchip_id"
+                value={pet.microchip_id || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="License Number"
+                name="license_number"
+                value={pet.license_number || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+          </>
+        );
+      case "emergency_contact":
+        const contact = formData as EmergencyContact;
+        return (
+          <>
+            {commonFields}
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Phone"
+                name="phone"
+                value={contact.phone || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Email"
+                name="email"
+                value={contact.email || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+          </>
+        );
+      case "user":
+        const user = formData as UserType;
+        return (
+          <>
+            {commonFields}
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Cell Phone"
+                name="cell_phone"
+                value={user.cell_phone}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Home Phone"
+                name="home_phone"
+                value={user.home_phone || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Work Phone"
+                name="work_phone"
+                value={user.work_phone || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Email"
+                name="email"
+                value={user.email}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+          </>
+        );
+      case "caregiver":
+        const caregiver = formData as Caregiver;
+        return (
+          <>
+            {commonFields}
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Phone"
+                name="phone"
+                value={caregiver.phone}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Email"
+                name="email"
+                value={caregiver.email}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Care Type"
+                name="care_type"
+                value={caregiver.care_type}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+          </>
+        );
+      case "boarding_facilities":
+        const boardingFac = formData as BoardingFac;
+        return (
+          <>
+            {commonFields}
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Daily Charge"
+                name="daily_charge"
+                type="number"
+                value={String(boardingFac.daily_charge || "")}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Cell Phone"
+                name="cell_phone"
+                value={boardingFac.cell_phone}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Home Phone"
+                name="home_phone"
+                value={boardingFac.home_phone || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Email"
+                name="email"
+                value={boardingFac.email || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+          </>
+        );
+      default:
+        return commonFields;
+    }
+  };
 
   return (
+    <>
+      <Card className="bg-[#F8F0FF] border-2 border-[#8B5CF6] shadow-md shadow-purple-200 rounded-2xl w-full mb-4">
+        {renderCardContent()}
+      </Card>
 
-    <Card
-      className={`flex items-center justify-between p-4 bg-[#e6d1ff] bg-opacity-25 shadow-sm shadow-[#AF94D3] rounded-lg w-full mb-4`}
-    >
-      {purpose === "pet" && (
-        <div className="flex items-center justify-between w-full">
-          {/* Pet Layout */}
-          <div className="flex items-center gap-8">
-            
-            {/* Pet Info */}
-            <div>
-              <h4 className="text-xl font-semibold text-black mb-1">{name}</h4>
-              <p className="text-sm font-semibold text-gray-600">{petType}</p>
-            </div>
-          </div>
-          {/* Button */}
-          <Button
-            className="bg-white text-purple-600 border border-purple-500 hover:bg-purple-200"
-            radius="md"
-            onClick={togglePopup}
-          >
-            {showPopup ? "See Less" : "See More"}
-          </Button>
-        </div>
-      )}
-      
-      {purpose == "caregiver" && (
-        <div className="flex items-center justify-between w-full">
-          {/* Caregiver Layout */}
-          <div className="flex items-center gap-8">
-            {/* Caregiver Info */}
-            <div>
-              <div className="flex gap-8 items-center">
-                <h4 className="text-xl font-semibold text-black mb-1">
-                  {name}
-                </h4>
-                <p className="text-sm text-black font-semibold">
-                  {"("}
-                  {relation}
-                  {")"}
-                </p>
-              </div>
-              <div className="flex gap-8">
-                <p className="text-sm text-black font-semibold">
-                  Phone <span className="text-gray-500 ml-1">{phone}</span>
-                </p>
-                <p className="text-sm text-black font-semibold">
-                  Email <span className="text-gray-500 ml-1">{email}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-    {/* Button Container */}
-    <div className="flex gap-4">
-      {/* See More Button */}
-      <Button
-        className="bg-white text-purple-600 border border-purple-500 hover:bg-purple-200 mt-4"
-        radius="md"
-        onClick={togglePopup}
-      >
-        {showPopup ? "See Less" : "See More"}
-      </Button>
-      {/* Delete Button */}
-      <Button
-        className="bg-red-500 text-white mt-4"
-        onClick={handleDelete}
-        radius="md"
-      >
-        Delete
-      </Button>
-        </div>
-      </div>
-      )}
+      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+        <ModalContent>
+          <ModalHeader>Edit {getDisplayName()}</ModalHeader>
+          <ModalBody>{renderFormFields()}</ModalBody>
+          <ModalFooter>
+            <Button color="danger" variant="light" onPress={onClose}>
+              Cancel
+            </Button>
+            <Button color="primary" onPress={handleSave}>
+              Save Changes
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+};
 
-      {purpose == "boarding_facilities" && (
-        <div className="flex items-center justify-between w-full">
-          {/* Facility Layout */}
-          <div className="flex items-center gap-8">
-            {/* Facility Info */}
-            <div>
-              <div className="flex gap-8 items-center">
-                <h4 className="text-xl font-semibold text-black mb-1">
-                  {name}
-                </h4>
-              </div>
-              <div className="flex gap-8">
-                <p className="text-sm text-black font-semibold">
-                  Phone <span className="text-gray-500 ml-1">{phone}</span>
-                </p>
-                <p className="text-sm text-black font-semibold">
-                  Email <span className="text-gray-500 ml-1">{email}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          {/* Button Container */}
-    <div className="flex gap-4">
-      {/* See More Button */}
-      <Button
-        className="bg-white text-purple-600 border border-purple-500 hover:bg-purple-200 mt-4"
-        radius="md"
-        onClick={togglePopup}
-      >
-        {showPopup ? "See Less" : "See More"}
-      </Button>
-      {/* Delete Button */}
-      <Button
-        className="bg-red-500 text-white mt-4"
-        onClick={handleDelete}
-        radius="md"
-      >
-        Delete
-      </Button>
-          </div>
-        </div>
-      )}
-
-      {purpose == "trust" && (
-        <div className="flex items-center justify-between w-full">
-          {/* Trust Layout */}
-          <div className="flex items-center gap-8">
-            {/* Trust Info */}
-            <div>
-              <div className="flex gap-8 items-center">
-                <h4 className="text-xl font-semibold text-black mb-1">
-                  {name}
-                </h4>
-              </div>
-              <div className="flex gap-8">
-                <p className="text-sm text-black font-semibold">
-                  Phone <span className="text-gray-500 ml-1">{phone}</span>
-                </p>
-                <p className="text-sm text-black font-semibold">
-                  Email <span className="text-gray-500 ml-1">{email}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          {/* Button */}
-          <Button
-            className="bg-white text-purple-600 border border-purple-500 hover:bg-purple-200"
-            radius="md"
-          >
-            See More
-          </Button>
-        </div>
-      )}
-
-{purpose == "emergency_contact" && (
-        <div className="flex items-center justify-between w-full">
-          {/* emergency Layout */}
-          <div className="flex items-center gap-8">
-            {/* emergency Info */}
-            <div>
-              <div className="flex gap-8 items-center">
-                <h4 className="text-xl font-semibold text-black mb-1">
-                  {name}
-                </h4>
-              </div>
-              <div className="flex gap-8">
-                <p className="text-sm text-black font-semibold">
-                  Phone <span className="text-gray-500 ml-1">{phone}</span>
-                </p>
-                <p className="text-sm text-black font-semibold">
-                  Email <span className="text-gray-500 ml-1">{email}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-          {/* Button Container */}
-    <div className="flex gap-4">
-      {/* See More Button */}
-      <Button
-        className="bg-white text-purple-600 border border-purple-500 hover:bg-purple-200 mt-4"
-        radius="md"
-        onClick={togglePopup}
-      >
-        {showPopup ? "See Less" : "See More"}
-      </Button>
-      {/* Delete Button */}
-      <Button
-        className="bg-red-500 text-white mt-4"
-        onClick={handleDelete}
-        radius="md"
-      >
-        Delete
-      </Button>
-          </div>
-        </div>
-      )}
-
-
-
-    {showPopup && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-          <div className="flex flex-col space-y-4">
-
-          {purpose === "caregiver" && (
-          <div>
-            <h3 className="text-lg font-semibold mb-4">{editableData.name}</h3>
-            <div className="text-sm text-gray-600">
-              {/* Flex row for fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="mb-4">
-                  <label className="block">Phone Number</label>
-                  <Input
-                    fullWidth
-                    name="phone"
-                    value={editableData.phone || ""}
-                    onChange={handleChange}
-                    placeholder="Phone"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Email</label>
-                  <Input
-                    fullWidth
-                    name="email"
-                    value={editableData.email || ""}
-                    onChange={handleChange}
-                    placeholder="Email"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Care Type</label>
-                  <Input
-                    fullWidth
-                    name="care_type"
-                    value={editableData.care_type || ""}
-                    onChange={handleChange}
-                    placeholder="Care Type"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Relation</label>
-                  <Input
-                    fullWidth
-                    name="relation"
-                    value={editableData.relation || ""}
-                    onChange={handleChange}
-                    placeholder="Relation"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Accepted</label>
-                  <Input
-                    fullWidth
-                    name="accepted"
-                    value={editableData.accepted || ""}
-                    onChange={handleChange}
-                    placeholder="Accepted"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Address</label>
-                  <Input
-                    fullWidth
-                    name="address"
-                    value={editableData.address || ""}
-                    onChange={handleChange}
-                    placeholder="Address"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">City</label>
-                  <Input
-                    fullWidth
-                    name="city"
-                    value={editableData.city || ""}
-                    onChange={handleChange}
-                    placeholder="City"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">State</label>
-                  <Input
-                    fullWidth
-                    name="state"
-                    value={editableData.state || ""}
-                    onChange={handleChange}
-                    placeholder="State"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Zip</label>
-                  <Input
-                    fullWidth
-                    name="zip"
-                    value={editableData.zip || ""}
-                    onChange={handleChange}
-                    placeholder="Zip"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {purpose === "boarding_facilities" && (
-          <div>
-            <h3 className="text-lg font-semibold mb-4">{editableData.name}</h3>
-            <div className="text-sm text-gray-600">
-              {/* Flex row for fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="mb-4">
-                  <label className="block">Phone Number</label>
-                  <Input
-                    fullWidth
-                    name="phone"
-                    value={editableData.phone || ""}
-                    onChange={handleChange}
-                    placeholder="Phone"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Home Number</label>
-                  <Input
-                    fullWidth
-                    name="Home phone"
-                    value={editableData.home_phone|| ""}
-                    onChange={handleChange}
-                    placeholder="Home Phone"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Daily Charge</label>
-                  <Input
-                    label="Average Daily Charge"
-                    placeholder="Enter average daily charge"
-                    type="number"
-                    isRequired
-                    labelPlacement="outside"
-                   />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Email</label>
-                  <Input
-                    fullWidth
-                    name="email"
-                    value={editableData.email || ""}
-                    onChange={handleChange}
-                    placeholder="Email"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Address</label>
-                  <Input
-                    fullWidth
-                    name="address"
-                    value={editableData.address || ""}
-                    onChange={handleChange}
-                    placeholder="Address"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">City</label>
-                  <Input
-                    fullWidth
-                    name="city"
-                    value={editableData.city || ""}
-                    onChange={handleChange}
-                    placeholder="City"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">State</label>
-                  <Input
-                    fullWidth
-                    name="state"
-                    value={editableData.state || ""}
-                    onChange={handleChange}
-                    placeholder="State"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Zip</label>
-                  <Input
-                    fullWidth
-                    name="zip"
-                    value={editableData.zip || ""}
-                    onChange={handleChange}
-                    placeholder="Zip"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {purpose === "emergency_contact" && (
-          <div>
-            <h3 className="text-lg font-semibold mb-4">{editableData.name}</h3>
-            <div className="text-sm text-gray-600">
-              {/* Flex row for fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="mb-4">
-                  <label className="block">Phone Number</label>
-                  <Input
-                    fullWidth
-                    name="phone"
-                    value={editableData.phone || ""}
-                    onChange={handleChange}
-                    placeholder="Phone"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Email</label>
-                  <Input
-                    fullWidth
-                    name="email"
-                    value={editableData.email || ""}
-                    onChange={handleChange}
-                    placeholder="Email"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Address</label>
-                  <Input
-                    fullWidth
-                    name="address"
-                    value={editableData.address || ""}
-                    onChange={handleChange}
-                    placeholder="Address"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">City</label>
-                  <Input
-                    fullWidth
-                    name="city"
-                    value={editableData.city || ""}
-                    onChange={handleChange}
-                    placeholder="City"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">State</label>
-                  <Input
-                    fullWidth
-                    name="state"
-                    value={editableData.state || ""}
-                    onChange={handleChange}
-                    placeholder="State"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block">Zip</label>
-                  <Input
-                    fullWidth
-                    name="zip"
-                    value={editableData.zip || ""}
-                    onChange={handleChange}
-                    placeholder="Zip"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <Button
-          className="bg-purple-600 text-white mt-4"
-          radius="md"
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </div>
-    </div>
-  </div>
-)}
-        </Card>
-  )};
-
-export default PurposeCard;
+export default InformationCard;
