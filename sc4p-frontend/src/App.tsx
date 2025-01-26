@@ -14,7 +14,6 @@ import Caregivers from "./pages/Caregivers";
 import Trustee from "./pages/Trustee";
 import EmergencyContacts from "./pages/EmergencyContact";
 import InitialForm from "./pages/InitialForm";
-import { NextUIProvider, createTheme } from "@nextui-org/react";
 
 export const App: React.FC = () => {
   return (

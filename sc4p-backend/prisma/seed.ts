@@ -14,7 +14,7 @@ const main = async () => {
   const users: CreateUser[] = [
     {
       name: "todd gates",
-      email: "todd@gmail.com",
+      email: "test@test.com",
       address: "1234 Elm St",
       city: "Springfield",
       state: "IL",

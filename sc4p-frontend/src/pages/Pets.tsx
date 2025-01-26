@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
-import { getUserData } from "../lib/Services";
+import { getPets } from "../lib/Services";
 import {
   Modal,
   ModalContent,
@@ -21,20 +21,44 @@ import {
   SelectItem,
   Textarea,
   SharedSelection,
+  Spinner,
 } from "@nextui-org/react";
 import InformationCard from "../components/InformationCard";
 import { CalendarDate } from "@internationalized/date";
+import { Pet } from "../types/pet";
 
 const Pets: React.FC = () => {
-  const [userData, setUserData] = useState<any[]>([]);
+  const [pets, setPets] = useState<Pet[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { currentUser } = useAuth();
+  const { currentUser, userData } = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selected, setSelected] = React.useState("petsForm1");
   const [selectedCommands, setSelectedCommands] = useState<string[]>([]);
   const [hasAdditionalInstructions, setHasAdditionalInstructions] =
     useState(false);
   const [showOtherInput, setShowOtherInput] = useState(false);
+
+  const fetchPets = async () => {
+    if (!currentUser?.email || !userData?.id) return;
+
+    const token = await currentUser.getIdToken();
+    try {
+      const response = await getPets(token, userData.id);
+      const data = await response.json();
+      setPets(data || []);
+    } catch (error) {
+      console.error("Error fetching pets:", error);
+      setPets([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (currentUser && userData) {
+      fetchPets();
+    }
+  }, [currentUser, userData]);
 
   const handleCommandSelection = (keys: SharedSelection) => {
     const selectedValues = Array.from(keys) as string[];
@@ -57,27 +81,12 @@ const Pets: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (currentUser) {
-        const token = await currentUser.getIdToken();
-        try {
-          const response = await getUserData(token);
-          const data = JSON.parse(await response.text());
-          setUserData(data);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, [currentUser]);
-
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return (
@@ -86,6 +95,23 @@ const Pets: React.FC = () => {
       <Button onPress={onOpen} className="mb-6 bg-base text-white">
         Add Pet
       </Button>
+      <div className="w-full grid grid-cols-1 gap-4">
+        {pets.map((pet) => (
+          <InformationCard
+            key={pet.id}
+            type="pet"
+            data={pet}
+            onUpdate={async (id, updatedData) => {
+              // TODO: Implement pet update logic
+              console.log("Updating pet:", id, updatedData);
+            }}
+            onDelete={async (id) => {
+              // TODO: Implement pet delete logic
+              console.log("Deleting pet:", id);
+            }}
+          />
+        ))}
+      </div>
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
@@ -127,7 +153,7 @@ const Pets: React.FC = () => {
                       <CardBody className="flex flex-col gap-4">
                         <Input
                           type="text"
-                          label="Pet’s Name"
+                          label="Pet's Name"
                           placeholder="Enter your pet's name"
                           isRequired
                           labelPlacement="outside"
@@ -470,29 +496,7 @@ const Pets: React.FC = () => {
           )}
         </ModalContent>
       </Modal>
-      <div className="w-full mt-6">
-        {/* First Pet */}
-        <InformationCard
-          purpose="pet"
-          imageSrc="https://via.placeholder.com/64"
-          name="Oreo"
-          petType="Dog"
-        />
-        {/* Second Pet */}
-        <InformationCard
-          purpose="pet"
-          imageSrc="https://via.placeholder.com/64"
-          name="Whiskers"
-          petType="Cat"
-        />
-        {/* Third Pet */}
-        <InformationCard
-          purpose="pet"
-          imageSrc="https://via.placeholder.com/64"
-          name="Chirpy"
-          petType="Bird"
-        />
-      </div>
+      <div className="w-full mt-6">{/* Remove old hardcoded cards */}</div>
     </div>
   );
 };

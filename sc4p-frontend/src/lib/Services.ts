@@ -40,3 +40,169 @@ export const deleteEmergencyContact = async (
     },
   });
 };
+
+export const getCaregivers = async (token: string, ownerId: number) => {
+  return await fetch(`${backendUrl}/caregiver/owner/${ownerId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createCaregiver = async (token: string, data: any) => {
+  return await fetch(`${backendUrl}/caregiver`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteCaregiver = async (token: string, caregiverId: number) => {
+  return await fetch(`${backendUrl}/caregiver/${caregiverId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getBoardingFacilities = async (token: string, ownerId: number) => {
+  return await fetch(`${backendUrl}/boarding-fac/owner/${ownerId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createBoardingFacility = async (token: string, data: any) => {
+  return await fetch(`${backendUrl}/boarding-fac`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteBoardingFacility = async (
+  token: string,
+  facilityId: number,
+) => {
+  return await fetch(`${backendUrl}/boarding-fac/${facilityId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getPets = async (token: string, ownerId: number) => {
+  return await fetch(`${backendUrl}/pet/owner/${ownerId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createPet = async (token: string, data: any) => {
+  return await fetch(`${backendUrl}/pet`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const deletePet = async (token: string, petId: number) => {
+  return await fetch(`${backendUrl}/pet/${petId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+// Trust Fund Info Services
+export const getTrustFundInfo = async (token: string, ownerId: number) => {
+  return await fetch(`${backendUrl}/trust/fund/${ownerId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createTrustFundInfo = async (token: string, data: any) => {
+  return await fetch(`${backendUrl}/trust/fund`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const updateTrustFundInfo = async (
+  token: string,
+  ownerId: number,
+  data: any,
+) => {
+  return await fetch(`${backendUrl}/trust/fund/${ownerId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+// Trustee Services
+export const getTrustees = async (token: string, trustFundId: number) => {
+  return await fetch(`${backendUrl}/trust/trustees/fund/${trustFundId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createTrustee = async (token: string, data: any) => {
+  return await fetch(`${backendUrl}/trust/trustees`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const updateTrustee = async (
+  token: string,
+  trusteeId: number,
+  data: any,
+) => {
+  return await fetch(`${backendUrl}/trust/trustees/${trusteeId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteTrustee = async (token: string, trusteeId: number) => {
+  return await fetch(`${backendUrl}/trust/trustees/${trusteeId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

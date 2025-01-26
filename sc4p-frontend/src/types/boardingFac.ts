@@ -16,7 +16,6 @@ export interface BoardingFac {
 }
 
 export interface CreateBoardingFac {
-  owner_id: number;
   contact_name: string;
   daily_charge?: number;
   address: string;
