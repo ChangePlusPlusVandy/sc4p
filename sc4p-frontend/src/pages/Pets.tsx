@@ -474,21 +474,18 @@ const Pets: React.FC = () => {
         {/* First Pet */}
         <InformationCard
           purpose="pet"
-          imageSrc="https://via.placeholder.com/64"
           name="Oreo"
           petType="Dog"
         />
         {/* Second Pet */}
         <InformationCard
           purpose="pet"
-          imageSrc="https://via.placeholder.com/64"
           name="Whiskers"
           petType="Cat"
         />
         {/* Third Pet */}
         <InformationCard
           purpose="pet"
-          imageSrc="https://via.placeholder.com/64"
           name="Chirpy"
           petType="Bird"
         />

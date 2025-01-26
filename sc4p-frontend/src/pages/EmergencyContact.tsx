@@ -25,6 +25,7 @@ import type {
   CreateEmergencyContact,
 } from "../types/emergencyContact";
 
+import InformationCard from "../components/InformationCard";
 const contactSchema = yup.object().shape({
   name: yup
     .string()
@@ -310,11 +311,18 @@ const EmergencyContactPage: React.FC = () => {
 
       <div className="w-full mt-6 grid gap-4">
         {emergencyContacts.map((contact) => (
-          <ContactCard
-            key={contact.id}
-            contact={contact}
-            onDelete={handleDelete}
-          />
+          <InformationCard
+                purpose="emergency_contact"
+                name = {contact.name}
+                phone= {contact.phone}
+                email= {contact.email}
+                address= {contact.address}
+                city= {contact.city}
+                state={contact.state}
+                zip={contact.zip}
+                id={contact.id}
+                deleteItem={handleDelete}
+            />
         ))}
         {emergencyContacts.length === 0 && (
           <div className="text-center text-gray-500 py-8">
