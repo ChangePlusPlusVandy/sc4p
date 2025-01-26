@@ -1,36 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { getUserData } from "../lib/Services";
+import { Spinner } from "@nextui-org/react";
 
 const Home: React.FC = () => {
-  const [userData, setUserData] = useState<any[]>([]);
+  const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const { currentUser } = useAuth();
   const image =
     "https://images.unsplash.com/photo-1682407186023-12c70a4a35e0?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=2832&amp;q=80";
 
-//   useEffect(() => {
-//     const fetchUserData = async () => {
-//       if (currentUser) {
-//         const token = await currentUser.getIdToken();
-//         try {
-//           const response = await getUserData(token);
-//           const data = JSON.parse(await response.text());
-//           setUserData(data);
-//         } catch (error) {
-//           console.error("Error fetching user data:", error);
-//         } finally {
-//           setLoading(false);
-//         }
-//       }
-//     };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (currentUser) {
+        const token = await currentUser.getIdToken();
+        try {
+          const response = await getUserData(token, userData.id);
+          const data = JSON.parse(await response.text());
+          setUserData(data);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
 
-//     fetchUserData();
-//   }, [currentUser]);
+    fetchUserData();
+  }, [currentUser]);
 
-//     if (loading) {
-//       return <div>Loading...</div>;
-//     }
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">

@@ -16,10 +16,12 @@ import {
   Radio,
   RadioGroup,
   useDisclosure,
+  Spinner,
 } from "@nextui-org/react";
 import { useAuth } from "../AuthContext";
 import { CreateCaregiver, Caregiver } from "~/types/caregiver";
 import { BoardingFac, CreateBoardingFac } from "~/types/boardingFac";
+import InformationCard from "../components/InformationCard";
 import {
   getCaregivers,
   createCaregiver,
@@ -224,6 +226,14 @@ const Caregivers = () => {
       console.error("Error submitting form:", error);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-start w-full pl-6 pt-6 h-full">
@@ -493,31 +503,12 @@ const Caregivers = () => {
           <h2 className="text-2xl font-semibold mb-4">Caregivers</h2>
           <div className="grid gap-4">
             {caregivers.map((caregiver) => (
-              <div
-                key={caregiver.id}
-                className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center"
-              >
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-lg font-semibold">{caregiver.name}</h3>
-                  <div className="text-sm text-gray-600">
-                    <p>Phone: {caregiver.phone}</p>
-                    <p>Email: {caregiver.email}</p>
-                    <p>Care Type: {caregiver.care_type}</p>
-                    <p>Role: {caregiver.primary ? "Primary" : "Secondary"}</p>
-                    <p>Accepted: {caregiver.accepted ? "Yes" : "No"}</p>
-                    <p className="text-xs text-gray-500">
-                      {caregiver.address}, {caregiver.city}, {caregiver.state}{" "}
-                      {caregiver.zip}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  color="danger"
-                  variant="light"
-                  onPress={() => handleDelete(caregiver.id)}
-                >
-                  Delete
-                </Button>
+              <div key={caregiver.id}>
+                <InformationCard
+                  type="caregiver"
+                  data={caregiver}
+                  onDelete={handleDelete}
+                />
               </div>
             ))}
             {caregivers.length === 0 && (
@@ -532,34 +523,12 @@ const Caregivers = () => {
           <h2 className="text-2xl font-semibold mb-4">Boarding Facilities</h2>
           <div className="grid gap-4">
             {boardingFacilities.map((facility) => (
-              <div
-                key={facility.id}
-                className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center"
-              >
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-lg font-semibold">
-                    {facility.contact_name}
-                  </h3>
-                  <div className="text-sm text-gray-600">
-                    <p>Daily Charge: ${facility.daily_charge}</p>
-                    <p>Cell Phone: {facility.cell_phone}</p>
-                    {facility.home_phone && (
-                      <p>Home Phone: {facility.home_phone}</p>
-                    )}
-                    {facility.email && <p>Email: {facility.email}</p>}
-                    <p className="text-xs text-gray-500">
-                      {facility.address}, {facility.city}, {facility.state}{" "}
-                      {facility.zip}
-                    </p>
-                  </div>
-                </div>
-                <Button
-                  color="danger"
-                  variant="light"
-                  onPress={() => handleDeleteFacility(facility.id)}
-                >
-                  Delete
-                </Button>
+              <div key={facility.id}>
+                <InformationCard
+                  type="boarding_facilities"
+                  data={facility}
+                  onDelete={handleDeleteFacility}
+                />
               </div>
             ))}
             {boardingFacilities.length === 0 && (

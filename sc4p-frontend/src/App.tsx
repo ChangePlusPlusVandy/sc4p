@@ -14,19 +14,32 @@ import Caregivers from "./pages/Caregivers";
 import Trustee from "./pages/Trustee";
 import EmergencyContacts from "./pages/EmergencyContact";
 import Vets from "./pages/Vets";
-import { NextUIProvider, createTheme } from "@nextui-org/react";
+import InitialForm from "./pages/InitialForm";
+import Landing from "./pages/Landing";
+import PetInfo from "./pages/PetInfo";
 
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          {/* Public routes */}
+          <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/initialForm" element={<InitialForm />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="*" element={<NotFound />} />
+
+          {/* Protected routes */}
           <Route element={<Layout />}>
-            <Route path="/" element={<PrivateRoute element={<Home />} />} />
+            <Route
+              path="/dashboard"
+              element={<PrivateRoute element={<Home />} />}
+            />
+            <Route
+              path="/pets/:id"
+              element={<PrivateRoute element={<PetInfo />} />}
+            />
             <Route
               path="/profile"
               element={<PrivateRoute element={<Profile />} />}
@@ -36,7 +49,6 @@ export const App: React.FC = () => {
               path="/caregivers"
               element={<PrivateRoute element={<Caregivers />} />}
             />
-
             <Route
               path="/trustees"
               element={<PrivateRoute element={<Trustee />} />}
@@ -46,8 +58,10 @@ export const App: React.FC = () => {
               element={<PrivateRoute element={<EmergencyContacts />} />}
             />
             <Route path="/vets" element={<PrivateRoute element={<Vets />} />} />
-            <Route path="*" element={<NotFound />} />
           </Route>
+
+          {/* Catch all route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

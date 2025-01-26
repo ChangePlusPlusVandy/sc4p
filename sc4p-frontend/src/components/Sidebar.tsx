@@ -53,7 +53,7 @@ const CustomSidebar = () => {
         </Menu>
         <Menu>
           <MenuItem
-            component={<Link to="/" />}
+            component={<Link to="/dashboard" />}
             icon={
               <img src={HomeIcon} alt="Dashboard" className="mr-2 w-5 h-5" />
             }
