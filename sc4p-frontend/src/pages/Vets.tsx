@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
-import { getVets, createVets, deleteVets } from "../lib/Services";
+import { getVets, createVets, deleteVets, updateVets } from "../lib/Services";
 import {
   Modal,
   ModalContent,
@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import type { Veterinarian, CreateVeterinarian } from "../types/veterinarian";
+import InformationCard from "../components/InformationCard";
 
 const contactSchema = yup.object().shape({
   name: yup
@@ -47,26 +48,6 @@ const contactSchema = yup.object().shape({
     .required("ZIP code is required")
     .matches(/^[0-9]{5}(-[0-9]{4})?$/, "Must be a valid ZIP code"),
 });
-
-const ContactCard: React.FC<{
-  contact: Veterinarian;
-  onDelete: (id: number) => Promise<void>;
-}> = ({ contact, onDelete }) => (
-  <div className="p-4 border rounded-lg bg-white shadow-sm flex justify-between items-center">
-    <div className="flex flex-col gap-1">
-      <h3 className="text-lg font-semibold">{contact.name}</h3>
-      <div className="text-sm text-gray-600">
-        <p>Phone: {contact.cell_phone}</p>
-        <p className="text-xs text-gray-500">
-          {contact.address}, {contact.city}, {contact.state} {contact.zip}
-        </p>
-      </div>
-    </div>
-    <Button color="danger" variant="light" onPress={() => onDelete(contact.id)}>
-      Delete
-    </Button>
-  </div>
-);
 
 const formatPhoneNumber = (phone: string) => {
   const cleaned = ("" + phone).replace(/\D/g, "");
@@ -148,6 +129,20 @@ const vetpage: React.FC = () => {
       );
     } catch (error) {
       console.error("Error deleting vet:", error);
+    }
+  };
+
+  const handleUpdate = async (id: number, updatedData: Veterinarian) => {
+    if (!currentUser) return;
+
+    const token = await currentUser.getIdToken();
+    try {
+      const response = await updateVets(token, id, updatedData);
+      if (response.ok) {
+        await fetchVeterinarians();
+      }
+    } catch (error) {
+      console.error("Error updating vet:", error);
     }
   };
 
@@ -278,10 +273,12 @@ const vetpage: React.FC = () => {
       </Modal>
 
       <div className="w-full mt-6 grid gap-4">
-        {veterinarian.map((contact) => (
-          <ContactCard
-            key={contact.id}
-            contact={contact}
+        {veterinarian.map((vet) => (
+          <InformationCard
+            key={vet.id}
+            type="veterinarian"
+            data={vet}
+            onUpdate={handleUpdate}
             onDelete={handleDelete}
           />
         ))}

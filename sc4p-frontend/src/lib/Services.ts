@@ -242,3 +242,14 @@ export const deleteVets = async (token: string, contactId: number) => {
     },
   });
 };
+
+export const updateVets = async (token: string, id: number, data: any) => {
+  return await fetch(`${backendUrl}/veterinarians/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};

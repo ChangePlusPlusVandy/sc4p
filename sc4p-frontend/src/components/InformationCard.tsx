@@ -20,10 +20,18 @@ import { UserType, UpdateUser } from "../types/user";
 import { Caregiver, UpdateCaregiver } from "../types/caregiver";
 import { BoardingFac, UpdateBoardingFac } from "../types/boardingFac";
 import { Trustee, UpdateTrustee } from "../types/trustee";
+import { Veterinarian, UpdateVeterinarian } from "../types/veterinarian";
 
 interface CardType {
   type: string;
-  data: Pet | EmergencyContact | UserType | Caregiver | BoardingFac | Trustee;
+  data:
+    | Pet
+    | EmergencyContact
+    | UserType
+    | Caregiver
+    | BoardingFac
+    | Trustee
+    | Veterinarian;
   onUpdate: (id: number, updatedData: any) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
   onSeeMore?: () => void;
@@ -35,7 +43,8 @@ type FormDataType =
   | UserType
   | Caregiver
   | BoardingFac
-  | Trustee;
+  | Trustee
+  | Veterinarian;
 
 const InformationCard: React.FC<CardType> = ({
   type,
@@ -88,6 +97,9 @@ const InformationCard: React.FC<CardType> = ({
     if (type === "trustee") {
       return (data as Trustee).trustee_name;
     }
+    if (type === "veterinarian") {
+      return (data as Veterinarian).name;
+    }
     return "name" in data ? data.name : "";
   };
 
@@ -114,6 +126,17 @@ const InformationCard: React.FC<CardType> = ({
                   <span className="font-bold mr-2 text-[20px]">Type</span>
                   <span className="text-[18px]">
                     {(data as Pet).type || "Not specified"}
+                  </span>
+                </div>
+              ) : type === "veterinarian" ? (
+                <div>
+                  <span className="font-bold mr-2 text-[20px]">Address</span>
+                  <span className="text-[18px]">
+                    {`${(data as Veterinarian).address}, ${
+                      (data as Veterinarian).city
+                    }, ${(data as Veterinarian).state} ${
+                      (data as Veterinarian).zip
+                    }`}
                   </span>
                 </div>
               ) : (
@@ -404,6 +427,50 @@ const InformationCard: React.FC<CardType> = ({
                 label="Email"
                 name="email"
                 value={trustee.email}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+          </>
+        );
+      case "veterinarian":
+        const vet = formData as Veterinarian;
+        return (
+          <>
+            {commonFields}
+            <div className="grid grid-cols-2 gap-4">
+              <Input
+                label="Cell Phone"
+                name="cell_phone"
+                value={vet.cell_phone ?? ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Address"
+                name="address"
+                value={vet.address ?? ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="City"
+                name="city"
+                value={vet.city ?? ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="State"
+                name="state"
+                value={vet.state ?? ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="ZIP"
+                name="zip"
+                value={vet.zip ?? ""}
                 onChange={handleInputChange}
                 className="mb-4"
               />
