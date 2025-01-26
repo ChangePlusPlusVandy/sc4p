@@ -21,6 +21,7 @@ import {
   SelectItem,
   Textarea,
   SharedSelection,
+  Spinner,
 } from "@nextui-org/react";
 import InformationCard from "../components/InformationCard";
 import { CalendarDate } from "@internationalized/date";
@@ -81,7 +82,11 @@ const Pets: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return (

@@ -16,6 +16,7 @@ import {
   Radio,
   RadioGroup,
   useDisclosure,
+  Spinner,
 } from "@nextui-org/react";
 import { useAuth } from "../AuthContext";
 import { CreateCaregiver, Caregiver } from "~/types/caregiver";
@@ -225,6 +226,14 @@ const Caregivers = () => {
       console.error("Error submitting form:", error);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-start w-full pl-6 pt-6 h-full">

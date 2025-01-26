@@ -16,6 +16,7 @@ import {
   Input,
   Card,
   CardBody,
+  Spinner,
 } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -152,7 +153,11 @@ const EmergencyContactPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   return (
