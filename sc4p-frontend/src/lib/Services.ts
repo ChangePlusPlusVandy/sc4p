@@ -108,6 +108,14 @@ export const getPets = async (token: string, ownerId: number) => {
   });
 };
 
+export const getPetById = async (token: string, petId: number) => {
+  return await fetch(`${backendUrl}/pet/id/${petId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
 export const createPet = async (token: string, data: any) => {
   return await fetch(`${backendUrl}/pet`, {
     method: "POST",
