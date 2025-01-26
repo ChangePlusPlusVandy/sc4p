@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import Caregivers from "./pages/Caregivers";
 import Trustee from "./pages/Trustee";
 import EmergencyContacts from "./pages/EmergencyContact";
+import Vets from "./pages/Vets";
 import InitialForm from "./pages/InitialForm";
 import Landing from "./pages/Landing";
 import PetInfo from "./pages/PetInfo";
@@ -56,6 +57,7 @@ export const App: React.FC = () => {
               path="/contacts"
               element={<PrivateRoute element={<EmergencyContacts />} />}
             />
+            <Route path="/vets" element={<PrivateRoute element={<Vets />} />} />
           </Route>
 
           {/* Catch all route */}

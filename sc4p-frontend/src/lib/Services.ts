@@ -214,3 +214,42 @@ export const deleteTrustee = async (token: string, trusteeId: number) => {
     },
   });
 };
+
+export const getVets = async (token: string, ownerId: number) => {
+  return await fetch(`${backendUrl}/vet/owner/${ownerId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const createVets = async (token: string, data: any) => {
+  return await fetch(`${backendUrl}/vet`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const deleteVets = async (token: string, contactId: number) => {
+  return await fetch(`${backendUrl}/vet/${contactId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const updateVets = async (token: string, id: number, data: any) => {
+  return await fetch(`${backendUrl}/veterinarians/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
