@@ -1,4 +1,4 @@
-<h1 align="center">Second Chance 4 Pets Repository</h1>
+<h1 align="center">2nd Chance 4 Pets Repository</h1>
 
 ### Running the backend
 
