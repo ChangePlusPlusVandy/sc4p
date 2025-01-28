@@ -22,7 +22,7 @@ npm start
 
 ### Running the frontend (React)
 
-- Navigate to the frontend directory
+Navigate to the frontend directory
 
 ```
 sc4p-Frontend
