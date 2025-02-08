@@ -6,6 +6,7 @@ import Layout from "./components/Layout";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import Login from "./pages/Auth/Login";
 import PrivateRoute from "./pages/Auth/PrivateRoute";
+import AdminRoute from "./pages/Auth/AdminRoute";
 import Register from "./pages/Auth/Register";
 import Home from "./pages/Home";
 import Pets from "./pages/Pets";
@@ -17,6 +18,9 @@ import Vets from "./pages/Vets";
 import InitialForm from "./pages/InitialForm";
 import Landing from "./pages/Landing";
 import PetInfo from "./pages/PetInfo";
+
+// admin routes
+import ManageAdmins from "./pages/admin/ManageAdmins";
 
 export const App: React.FC = () => {
   return (
@@ -58,6 +62,12 @@ export const App: React.FC = () => {
               element={<PrivateRoute element={<EmergencyContacts />} />}
             />
             <Route path="/vets" element={<PrivateRoute element={<Vets />} />} />
+
+            {/* Admin routes */}
+            <Route
+              path="/admin/manage-admins"
+              element={<AdminRoute element={<ManageAdmins />} />}
+            />
           </Route>
 
           {/* Catch all route */}

@@ -6,9 +6,16 @@ import PetsIcon from "../images/pet-profile.png";
 import FormsIcon from "../images/Forms.png";
 import MoreIcon from "../images/more.png";
 import ProfileIcon from "../images/owner-profile.png";
-import { FaAngleDoubleLeft, FaAngleDoubleRight } from "react-icons/fa";
+import {
+  FaAngleDoubleLeft,
+  FaAngleDoubleRight,
+  FaUserShield,
+} from "react-icons/fa";
+import { useAuth } from "../AuthContext";
+
 const CustomSidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const { isAdmin } = useAuth();
 
   const handleToggleSidebar = () => {
     setCollapsed((prevState) => !prevState);
@@ -113,6 +120,26 @@ const CustomSidebar = () => {
           >
             <span className="font-bold text-black">More</span>
           </MenuItem>
+
+          {isAdmin && (
+            <SubMenu
+              label={<span className="font-bold text-black">Admin</span>}
+              icon={<FaUserShield className="mr-2 w-5 h-5 text-purple-700" />}
+            >
+              <MenuItem
+                component={<Link to="/admin/statistics" />}
+                className="bg-[#E6D1FF]"
+              >
+                <span className="font-bold text-black">Statistics</span>
+              </MenuItem>
+              <MenuItem
+                component={<Link to="/admin/manage-admins" />}
+                className="bg-[#E6D1FF]"
+              >
+                <span className="font-bold text-black">Manage Admins</span>
+              </MenuItem>
+            </SubMenu>
+          )}
         </Menu>
       </Sidebar>
     </div>
