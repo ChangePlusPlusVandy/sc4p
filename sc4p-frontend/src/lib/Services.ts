@@ -244,7 +244,33 @@ export const deleteVets = async (token: string, contactId: number) => {
 };
 
 export const updateVets = async (token: string, id: number, data: any) => {
-  return await fetch(`${backendUrl}/veterinarians/${id}`, {
+  return await fetch(`${backendUrl}/vet/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const updateCaregiver = async (token: string, id: number, data: any) => {
+  return await fetch(`${backendUrl}/caregiver/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
+
+export const updateBoardingFacility = async (
+  token: string,
+  id: number,
+  data: any,
+) => {
+  return await fetch(`${backendUrl}/boarding-fac/id/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

@@ -19,8 +19,12 @@ import {
   Spinner,
 } from "@nextui-org/react";
 import { useAuth } from "../AuthContext";
-import { CreateCaregiver, Caregiver } from "~/types/caregiver";
-import { BoardingFac, CreateBoardingFac } from "~/types/boardingFac";
+import { CreateCaregiver, Caregiver, UpdateCaregiver } from "~/types/caregiver";
+import {
+  BoardingFac,
+  CreateBoardingFac,
+  UpdateBoardingFac,
+} from "~/types/boardingFac";
 import InformationCard from "../components/InformationCard";
 import {
   getCaregivers,
@@ -29,6 +33,8 @@ import {
   getBoardingFacilities,
   createBoardingFacility,
   deleteBoardingFacility,
+  updateCaregiver,
+  updateBoardingFacility,
 } from "../lib/Services";
 
 const caregiverSchema = yup.object().shape({
@@ -224,6 +230,68 @@ const Caregivers = () => {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+    }
+  };
+
+  const handleUpdateCaregiver = async (
+    id: number,
+    updatedData: UpdateCaregiver,
+  ) => {
+    if (!currentUser) return;
+
+    const token = await currentUser.getIdToken();
+    try {
+      const response = await updateCaregiver(token, id, updatedData);
+      if (response.ok) {
+        setCaregivers((prevCaregivers) =>
+          prevCaregivers.map((caregiver) =>
+            caregiver.id === id
+              ? {
+                  ...caregiver,
+                  ...updatedData,
+                  primary:
+                    typeof updatedData.primary === "string"
+                      ? updatedData.primary === "true"
+                      : updatedData.primary ?? caregiver.primary,
+                  accepted:
+                    typeof updatedData.accepted === "string"
+                      ? updatedData.accepted === "true"
+                      : updatedData.accepted ?? caregiver.accepted,
+                }
+              : caregiver,
+          ),
+        );
+      } else {
+        console.error("Failed to update caregiver:", await response.text());
+      }
+    } catch (error) {
+      console.error("Error updating caregiver:", error);
+    }
+  };
+
+  const handleUpdateBoardingFacility = async (
+    id: number,
+    updatedData: UpdateBoardingFac,
+  ) => {
+    if (!currentUser) return;
+
+    const token = await currentUser.getIdToken();
+    try {
+      const response = await updateBoardingFacility(token, id, updatedData);
+      if (response.ok) {
+        setBoardingFacilities((prevFacilities) =>
+          prevFacilities.map((facility) =>
+            facility.id === id ? { ...facility, ...updatedData } : facility,
+          ),
+        );
+      } else {
+        console.error(
+          "Failed to update boarding facility:",
+          await response.text(),
+        );
+      }
+    } catch (error) {
+      console.error("Error updating boarding facility:", error);
     }
   };
 
@@ -508,6 +576,7 @@ const Caregivers = () => {
                   type="caregiver"
                   data={caregiver}
                   onDelete={handleDelete}
+                  onUpdate={handleUpdateCaregiver}
                 />
               </div>
             ))}
@@ -528,6 +597,7 @@ const Caregivers = () => {
                   type="boarding_facilities"
                   data={facility}
                   onDelete={handleDeleteFacility}
+                  onUpdate={handleUpdateBoardingFacility}
                 />
               </div>
             ))}
