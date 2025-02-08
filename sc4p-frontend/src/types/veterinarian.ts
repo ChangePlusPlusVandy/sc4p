@@ -13,13 +13,12 @@ export interface Veterinarian {
 }
 
 export interface CreateVeterinarian {
-  owner_id: number;
   name: string;
   address: string;
   city: string;
   state: string;
   zip: string;
-  cell_phone?: string;
+  cell_phone: string;
   office_phone?: string;
   emergency_phone?: string;
 }

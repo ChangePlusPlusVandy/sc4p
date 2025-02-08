@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
-import {
-  getEmergencyContacts,
-  createEmergencyContact,
-  deleteEmergencyContact,
-} from "../lib/Services";
+import { getVets, createVets, deleteVets, updateVets } from "../lib/Services";
 import {
   Modal,
   ModalContent,
@@ -16,15 +12,11 @@ import {
   Input,
   Card,
   CardBody,
-  Spinner,
 } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import type {
-  EmergencyContact,
-  CreateEmergencyContact,
-} from "../types/emergencyContact";
+import type { Veterinarian, CreateVeterinarian } from "../types/veterinarian";
 import InformationCard from "../components/InformationCard";
 
 const contactSchema = yup.object().shape({
@@ -32,11 +24,7 @@ const contactSchema = yup.object().shape({
     .string()
     .required("Name is required")
     .min(2, "Name must be at least 2 characters"),
-  email: yup
-    .string()
-    .email("Must be a valid email")
-    .required("Email is required"),
-  phone: yup
+  cell_phone: yup
     .string()
     .required("Cell phone is required")
     .matches(
@@ -67,9 +55,10 @@ const formatPhoneNumber = (phone: string) => {
   return match ? `${match[1]}-${match[2]}-${match[3]}` : phone;
 };
 
-const EmergencyContactPage: React.FC = () => {
-  const [contacts, setContacts] = useState<EmergencyContact[]>([]);
+const vetpage: React.FC = () => {
+  const [veterinarian, setVeterinarian] = useState<Veterinarian[]>([]);
   const [loading, setLoading] = useState(true);
+
   const { currentUser, userData } = useAuth();
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -78,60 +67,51 @@ const EmergencyContactPage: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<CreateEmergencyContact>({
+  } = useForm<CreateVeterinarian>({
     resolver: yupResolver(contactSchema),
     mode: "onBlur",
   });
 
-  const fetchContacts = async () => {
+  const fetchVeterinarians = async () => {
     if (!currentUser?.email || !userData?.id) return;
 
     const token = await currentUser.getIdToken();
     try {
-      const response = await getEmergencyContacts(token, userData.id);
-      const data = await response.json();
-      setContacts(data || []);
+      const contactsResponse = await getVets(token, userData.id);
+      const contactsData = await contactsResponse.json();
+      setVeterinarian(contactsData);
     } catch (error) {
-      console.error("Error fetching emergency contacts:", error);
-      setContacts([]);
+      console.error("Error fetching vets:", error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    if (currentUser && userData) {
-      fetchContacts();
-    }
+    fetchVeterinarians();
   }, [currentUser, userData]);
 
-  const onSubmit = async (
-    data: CreateEmergencyContact,
-    onClose: () => void,
-  ) => {
+  const onSubmit = async (data: CreateVeterinarian, onClose: () => void) => {
     try {
       if (!currentUser?.email || !userData?.id) return;
 
       const formattedData = {
         ...data,
-        phone: formatPhoneNumber(data.phone),
+        phone: formatPhoneNumber(data.cell_phone),
       };
 
       const token = await currentUser.getIdToken();
-      const response = await createEmergencyContact(token, {
+      const response = await createVets(token, {
         ...formattedData,
         owner_id: userData.id,
       });
 
       if (response.ok) {
-        await fetchContacts();
+        await fetchVeterinarians();
         reset();
         onClose();
       } else {
-        console.error(
-          "Failed to create emergency contact:",
-          await response.text(),
-        );
+        console.error("Failed to create vet:", await response.text());
       }
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -143,48 +123,39 @@ const EmergencyContactPage: React.FC = () => {
 
     const token = await currentUser.getIdToken();
     try {
-      await deleteEmergencyContact(token, contactId);
-      setContacts((prevContacts) =>
-        prevContacts.filter((contact) => contact.id !== contactId),
+      await deleteVets(token, contactId);
+      setVeterinarian((contacts) =>
+        contacts.filter((contact) => contact.id !== contactId),
       );
     } catch (error) {
-      console.error("Error deleting contact:", error);
+      console.error("Error deleting vet:", error);
+    }
+  };
+
+  const handleUpdate = async (id: number, updatedData: Veterinarian) => {
+    if (!currentUser) return;
+
+    const token = await currentUser.getIdToken();
+    try {
+      const response = await updateVets(token, id, updatedData);
+      if (response.ok) {
+        await fetchVeterinarians();
+      }
+    } catch (error) {
+      console.error("Error updating vet:", error);
     }
   };
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner size="lg" />
-      </div>
-    );
+    return <div>Loading...</div>;
   }
 
   return (
     <div className="flex flex-col items-start w-full pl-6 pt-6 h-full">
-      <h1 className="text-6xl font-bold mb-8">Emergency Contacts</h1>
+      <h1 className="text-6xl font-bold mb-8">Veterinarians</h1>
       <Button onPress={onOpen} className="mb-6 bg-base text-white">
-        Add Emergency Contact
+        Add Vet
       </Button>
-      <div className="w-full grid grid-cols-1 gap-4">
-        {contacts.map((contact) => (
-          <InformationCard
-            key={contact.id}
-            type="emergency_contact"
-            data={contact}
-            onUpdate={async (id, updatedData) => {
-              // TODO: Implement contact update logic
-              console.log("Updating contact:", id, updatedData);
-            }}
-            onDelete={handleDelete}
-          />
-        ))}
-        {contacts.length === 0 && (
-          <div className="text-center text-gray-500 py-8">
-            No emergency contacts added yet.
-          </div>
-        )}
-      </div>
 
       <Modal
         isOpen={isOpen}
@@ -199,7 +170,7 @@ const EmergencyContactPage: React.FC = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader>Add Emergency Contact</ModalHeader>
+              <ModalHeader>Add Veterinarian</ModalHeader>
               <ModalBody>
                 <form
                   onSubmit={handleSubmit((data) => onSubmit(data, onClose))}
@@ -218,25 +189,14 @@ const EmergencyContactPage: React.FC = () => {
                       />
 
                       <Input
-                        type="email"
-                        label="Email"
-                        placeholder="Enter email address"
-                        isRequired
-                        labelPlacement="outside"
-                        {...register("email")}
-                        isInvalid={!!errors.email}
-                        errorMessage={errors.email?.message}
-                      />
-
-                      <Input
                         type="tel"
                         label="Phone"
                         placeholder="Enter phone number (e.g., 123-456-7890)"
                         isRequired
                         labelPlacement="outside"
-                        {...register("phone")}
-                        isInvalid={!!errors.phone}
-                        errorMessage={errors.phone?.message}
+                        {...register("cell_phone")}
+                        isInvalid={!!errors.cell_phone}
+                        errorMessage={errors.cell_phone?.message}
                       />
 
                       <Input
@@ -311,8 +271,25 @@ const EmergencyContactPage: React.FC = () => {
           )}
         </ModalContent>
       </Modal>
+
+      <div className="w-full mt-6 grid gap-4">
+        {veterinarian.map((vet) => (
+          <InformationCard
+            key={vet.id}
+            type="veterinarian"
+            data={vet}
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+          />
+        ))}
+        {veterinarian.length === 0 && (
+          <div className="text-center text-gray-500 py-8">
+            No veterinarians added yet.
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default EmergencyContactPage;
+export default vetpage;

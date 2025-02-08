@@ -1,4 +1,4 @@
-<h1 align="center">Second Chance 4 Pets Repository</h1>
+<h1 align="center">2nd Chance 4 Pets Repository</h1>
 
 ### Running the backend
 
@@ -22,7 +22,7 @@ npm start
 
 ### Running the frontend (React)
 
-- Navigate to the frontend directory
+Navigate to the frontend directory
 
 ```
 sc4p-Frontend

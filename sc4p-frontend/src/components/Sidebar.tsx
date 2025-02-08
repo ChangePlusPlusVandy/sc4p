@@ -53,7 +53,7 @@ const CustomSidebar = () => {
         </Menu>
         <Menu>
           <MenuItem
-            component={<Link to="/" />}
+            component={<Link to="/dashboard" />}
             icon={
               <img src={HomeIcon} alt="Dashboard" className="mr-2 w-5 h-5" />
             }
@@ -84,6 +84,9 @@ const CustomSidebar = () => {
               className="bg-[#E6D1FF]"
             >
               <span className="font-bold text-black">Emergency Contacts</span>
+            </MenuItem>
+            <MenuItem component={<Link to="/vets" />} className="bg-[#E6D1FF]">
+              <span className="font-bold text-black">Vets</span>
             </MenuItem>
           </SubMenu>
           <MenuItem
