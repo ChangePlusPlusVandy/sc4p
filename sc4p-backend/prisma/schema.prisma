@@ -189,3 +189,8 @@ model Trustee {
 
   @@map("trustees")
 }
+
+model Statistics {
+  id                    Int @id @default(autoincrement())
+  user_form_submissions Int 
+}
