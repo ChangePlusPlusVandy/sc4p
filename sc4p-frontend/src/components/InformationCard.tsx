@@ -1,4 +1,6 @@
 import React from "react";
+import { ToastContainer, toast } from "react-toastify";
+
 import {
   Card,
   Button,
@@ -81,6 +83,7 @@ const InformationCard: React.FC<CardType> = ({
     if (onUpdate && formData) {
       onUpdate(data.id, formData);
     }
+    notify();
     onClose();
   };
 
@@ -89,6 +92,8 @@ const InformationCard: React.FC<CardType> = ({
       onDelete(data.id);
     }
   };
+
+  const notify = () => toast("Succesfully saved!");
 
   const getDisplayName = () => {
     if (type === "boarding_facilities") {
@@ -502,6 +507,7 @@ const InformationCard: React.FC<CardType> = ({
           </ModalFooter>
         </ModalContent>
       </Modal>
+      <ToastContainer />
     </>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Input, Button, Spacer } from "@nextui-org/react";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Contact {
   id: string;
@@ -34,9 +35,11 @@ export function ContactForm({ onSubmit, onCancel }: ContactFormProps) {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
+    notify();
     e.preventDefault();
     onSubmit({ ...formData, id: Date.now().toString() });
   };
+  const notify = () => toast("Succesfully saved!");
 
   return (
     <form onSubmit={handleSubmit}>
@@ -110,6 +113,7 @@ export function ContactForm({ onSubmit, onCancel }: ContactFormProps) {
         <Button onClick={onCancel}>Cancel</Button>
         <Button type="submit">Submit</Button>
       </div>
+      <ToastContainer />
     </form>
   );
 }

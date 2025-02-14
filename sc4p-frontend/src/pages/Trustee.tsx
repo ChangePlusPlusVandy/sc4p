@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { TrusteeForm } from "../components/TrusteeForm";
 import { Button, Card, Spinner, Input } from "@nextui-org/react";
 import { useAuth } from "../AuthContext";
+import { ToastContainer, toast } from "react-toastify";
+
 import {
   getTrustFundInfo,
   getTrustees,
@@ -98,6 +100,7 @@ const Trustee: React.FC = () => {
       }
 
       setShowEditTrustFund(false);
+      notifyUpdate();
     } catch (error) {
       console.error("Error updating trust fund:", error);
     }
@@ -130,6 +133,7 @@ const Trustee: React.FC = () => {
       const createdTrustee = await res.json();
       setTrustees((prev) => [...prev, createdTrustee]);
       setShowTrusteeForm(false);
+      notify();
     } catch (error) {
       console.error("Error creating trustee:", error);
     }
@@ -145,6 +149,7 @@ const Trustee: React.FC = () => {
         throw new Error("Failed to delete trustee");
       }
       setTrustees((prev) => prev.filter((trustee) => trustee.id !== id));
+      notifyDel();
     } catch (error) {
       console.error("Error deleting trustee:", error);
     }
@@ -155,6 +160,7 @@ const Trustee: React.FC = () => {
       onSubmit={trustFundId ? handleUpdateTrustFund : handleCreateTrustFund}
       className="space-y-4"
     >
+      <ToastContainer />
       <Input
         label="Funding Plan"
         name="funding_plan"
@@ -199,6 +205,10 @@ const Trustee: React.FC = () => {
       </div>
     </form>
   );
+
+  const notify = () => toast("Succesfully added trustee!");
+  const notifyDel = () => toast("Succesfully removed trustee!");
+  const notifyUpdate = () => toast("Succesfully updated trust fund!");
 
   if (loading) {
     return (

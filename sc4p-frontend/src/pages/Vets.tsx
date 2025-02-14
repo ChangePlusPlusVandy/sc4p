@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { getVets, createVets, deleteVets, updateVets } from "../lib/Services";
+import { ToastContainer, toast } from "react-toastify";
+
 import {
   Modal,
   ModalContent,
@@ -110,6 +112,7 @@ const vetpage: React.FC = () => {
         await fetchVeterinarians();
         reset();
         onClose();
+        notifyAdd();
       } else {
         console.error("Failed to create vet:", await response.text());
       }
@@ -127,6 +130,7 @@ const vetpage: React.FC = () => {
       setVeterinarian((contacts) =>
         contacts.filter((contact) => contact.id !== contactId),
       );
+      notifyDel();
     } catch (error) {
       console.error("Error deleting vet:", error);
     }
@@ -145,6 +149,8 @@ const vetpage: React.FC = () => {
       console.error("Error updating vet:", error);
     }
   };
+  const notifyAdd = () => toast("Succesfully added vet!");
+  const notifyDel = () => toast("Succesfully removed vet!");
 
   if (loading) {
     return <div>Loading...</div>;
@@ -156,7 +162,6 @@ const vetpage: React.FC = () => {
       <Button onPress={onOpen} className="mb-6 bg-base text-white">
         Add Vet
       </Button>
-
       <Modal
         isOpen={isOpen}
         onOpenChange={() => {
@@ -167,6 +172,8 @@ const vetpage: React.FC = () => {
         placement="center"
         size="3xl"
       >
+        <ToastContainer />
+
         <ModalContent>
           {(onClose) => (
             <>

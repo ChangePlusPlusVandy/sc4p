@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { getPets } from "../lib/Services";
+import { ToastContainer, toast } from "react-toastify";
 import {
   Modal,
   ModalContent,
@@ -73,6 +74,7 @@ const Pets: React.FC = () => {
     if (selectedTab < 7) {
       setSelectedTab(selectedTab + 1);
     } else {
+      notify();
       onClose();
     }
   };
@@ -82,6 +84,8 @@ const Pets: React.FC = () => {
       setSelectedTab(selectedTab - 1);
     }
   };
+
+  const notify = () => toast("Succesfully added pet!");
 
   if (loading) {
     return (
@@ -499,6 +503,7 @@ const Pets: React.FC = () => {
           )}
         </ModalContent>
       </Modal>
+
       <div className="w-full mt-6">{/* Remove old hardcoded cards */}</div>
     </div>
   );

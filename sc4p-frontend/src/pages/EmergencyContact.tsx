@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
+import { ToastContainer, toast } from "react-toastify";
+
 import {
   getEmergencyContacts,
   createEmergencyContact,
@@ -127,6 +129,7 @@ const EmergencyContactPage: React.FC = () => {
         await fetchContacts();
         reset();
         onClose();
+        notifyAdd();
       } else {
         console.error(
           "Failed to create emergency contact:",
@@ -147,10 +150,13 @@ const EmergencyContactPage: React.FC = () => {
       setContacts((prevContacts) =>
         prevContacts.filter((contact) => contact.id !== contactId),
       );
+      notifyDel();
     } catch (error) {
       console.error("Error deleting contact:", error);
     }
   };
+  const notifyAdd = () => toast("Succesfully added emergency contact!");
+  const notifyDel = () => toast("Succesfully removed emergency contact!");
 
   if (loading) {
     return (
@@ -185,7 +191,7 @@ const EmergencyContactPage: React.FC = () => {
           </div>
         )}
       </div>
-
+      <ToastContainer />
       <Modal
         isOpen={isOpen}
         onOpenChange={() => {

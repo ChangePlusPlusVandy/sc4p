@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+
 import {
   Button,
   ButtonGroup,
@@ -168,6 +170,7 @@ const Caregivers = () => {
         await fetchCaregivers();
         resetCaregiver();
         onClose();
+        notifyAddCaregiver();
       } else {
         console.error("Failed to create caregiver:", await response.text());
       }
@@ -185,6 +188,7 @@ const Caregivers = () => {
       setCaregivers((prevCaregivers) =>
         prevCaregivers.filter((caregiver) => caregiver.id !== caregiverId),
       );
+      notifyDelCaregiver();
     } catch (error) {
       console.error("Error deleting caregiver:", error);
     }
@@ -199,6 +203,7 @@ const Caregivers = () => {
       setBoardingFacilities((prevFacilities) =>
         prevFacilities.filter((facility) => facility.id !== facilityId),
       );
+      notifyDelBoarding();
     } catch (error) {
       console.error("Error deleting boarding facility:", error);
     }
@@ -222,6 +227,7 @@ const Caregivers = () => {
         await fetchBoardingFacilities();
         resetBoardingFac();
         onClose();
+        notifyAddBoarding();
       } else {
         console.error(
           "Failed to create boarding facility:",
@@ -294,6 +300,12 @@ const Caregivers = () => {
       console.error("Error updating boarding facility:", error);
     }
   };
+
+  const notifyAddCaregiver = () => toast("Succesfully added caregiver!");
+  const notifyAddBoarding = () => toast("Succesfully added boarding facility!");
+  const notifyDelCaregiver = () => toast("Succesfully removed caregiver!");
+  const notifyDelBoarding = () =>
+    toast("Succesfully removed boarding facility!");
 
   if (loading) {
     return (
@@ -565,6 +577,7 @@ const Caregivers = () => {
           )}
         </ModalContent>
       </Modal>
+      <ToastContainer />
 
       <div className="w-full mt-6 space-y-8">
         <div>
