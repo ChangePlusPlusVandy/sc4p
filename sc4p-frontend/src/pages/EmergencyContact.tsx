@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
+import { toast } from "react-toastify";
 import {
   getEmergencyContacts,
   createEmergencyContact,
@@ -127,14 +128,17 @@ const EmergencyContactPage: React.FC = () => {
         await fetchContacts();
         reset();
         onClose();
+        toast.success("Succesfully added a new emergency contact!");
       } else {
         console.error(
           "Failed to create emergency contact:",
           await response.text(),
+          toast.error("Failed to create emergency contact"),
         );
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast.error("An error occured while adding emergency contact");
     }
   };
 
@@ -147,8 +151,10 @@ const EmergencyContactPage: React.FC = () => {
       setContacts((prevContacts) =>
         prevContacts.filter((contact) => contact.id !== contactId),
       );
+      toast.success("Succesfully removed emergency contact!");
     } catch (error) {
       console.error("Error deleting contact:", error);
+      toast.error("Failed to remove emergency contact");
     }
   };
 

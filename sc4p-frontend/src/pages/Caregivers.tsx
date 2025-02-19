@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 import {
   Button,
@@ -168,11 +169,14 @@ const Caregivers = () => {
         await fetchCaregivers();
         resetCaregiver();
         onClose();
+        toast.success("Succesfully added a new caregiver!");
       } else {
         console.error("Failed to create caregiver:", await response.text());
+        toast.error("Failed to create caregiver");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast.error("An error occured while adding caregiver");
     }
   };
 
@@ -185,8 +189,10 @@ const Caregivers = () => {
       setCaregivers((prevCaregivers) =>
         prevCaregivers.filter((caregiver) => caregiver.id !== caregiverId),
       );
+      toast.success("Succesfully removed caregiver!");
     } catch (error) {
       console.error("Error deleting caregiver:", error);
+      toast.error("An error occured while removing caregiver");
     }
   };
 
@@ -199,8 +205,10 @@ const Caregivers = () => {
       setBoardingFacilities((prevFacilities) =>
         prevFacilities.filter((facility) => facility.id !== facilityId),
       );
+      toast.success("Succesfully removed boarding facility!");
     } catch (error) {
       console.error("Error deleting boarding facility:", error);
+      toast.error("An error occured while removing boarding facility");
     }
   };
 
@@ -222,14 +230,17 @@ const Caregivers = () => {
         await fetchBoardingFacilities();
         resetBoardingFac();
         onClose();
+        toast.success("Succesfully added a new boarding facility!");
       } else {
         console.error(
           "Failed to create boarding facility:",
           await response.text(),
+          toast.error("Failed to create boarding facility"),
         );
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast.error("An error occured while adding boarding facility");
     }
   };
 
@@ -261,11 +272,14 @@ const Caregivers = () => {
               : caregiver,
           ),
         );
+        toast.success("Succesfully updated caregiver!");
       } else {
         console.error("Failed to update caregiver:", await response.text());
+        toast.error("Failed to update caregiver");
       }
     } catch (error) {
       console.error("Error updating caregiver:", error);
+      toast.error("An error occured while updating caregiver");
     }
   };
 
@@ -284,14 +298,17 @@ const Caregivers = () => {
             facility.id === id ? { ...facility, ...updatedData } : facility,
           ),
         );
+        toast.success("Succesfully updated boarding facility!");
       } else {
         console.error(
           "Failed to update boarding facility:",
           await response.text(),
+          toast.error("Failed to update boarding facility"),
         );
       }
     } catch (error) {
       console.error("Error updating boarding facility:", error);
+      toast.error("An error occured while updating boarding facility");
     }
   };
 

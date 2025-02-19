@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { getPets } from "../lib/Services";
+import { toast } from "react-toastify";
 import {
   Modal,
   ModalContent,
@@ -74,6 +75,7 @@ const Pets: React.FC = () => {
       setSelectedTab(selectedTab + 1);
     } else {
       onClose();
+      toast.success("Succesfully added a new pet!");
     }
   };
 
