@@ -72,6 +72,7 @@ const InformationCard: React.FC<CardType> = ({
     const { name, value } = e.target;
     setFormData((prev) => {
       if (!prev) return undefined;
+
       return {
         ...prev,
         [name]: value,
@@ -422,9 +423,9 @@ const InformationCard: React.FC<CardType> = ({
             {commonFields}
             <div className="grid grid-cols-2 gap-4">
               <Input
-                label="Cell Phone"
-                name="cell_phone"
-                value={trustee.cell_phone}
+                label="Trustee Name"
+                name="trustee_name"
+                value={trustee.trustee_name}
                 onChange={handleInputChange}
                 className="mb-4"
               />
@@ -432,6 +433,63 @@ const InformationCard: React.FC<CardType> = ({
                 label="Email"
                 name="email"
                 value={trustee.email}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Cell Phone"
+                name="cell_phone"
+                value={trustee.cell_phone}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Home Phone"
+                name="home_phone"
+                value={trustee.home_phone || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Emergency Phone"
+                name="emergency_phone"
+                value={trustee.emergency_phone || ""}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Address"
+                name="address"
+                value={trustee.address}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="City"
+                name="city"
+                value={trustee.city}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="State"
+                name="state"
+                value={trustee.state}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="ZIP"
+                name="zip"
+                value={trustee.zip}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+              <Input
+                label="Allocated Amount"
+                name="allocated_amount"
+                type="number"
+                value={String(trustee.allocated_amount || "")}
                 onChange={handleInputChange}
                 className="mb-4"
               />
