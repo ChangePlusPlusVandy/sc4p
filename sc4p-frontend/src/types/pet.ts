@@ -1,5 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/library";
-
 export interface Pet {
   id: number;
   name: string;
@@ -31,10 +29,10 @@ export interface Pet {
   emergency_supplies: string | null;
   health_insurance_provider: string | null;
   health_insurance_policy_number: string | null;
-  health_insurance_cost: Decimal | null;
+  health_insurance_cost: number | null;
   euthanasia_decision: string | null;
   remains_care: string | null;
-  allocated_remains_fund: Decimal | null;
+  allocated_remains_fund: number | null;
   created_at: Date;
   owner_id: number;
 }

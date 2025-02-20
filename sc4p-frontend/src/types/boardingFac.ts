@@ -1,10 +1,8 @@
-import { Decimal } from "@prisma/client/runtime/library";
-
 export interface BoardingFac {
   id: number;
   owner_id: number;
   contact_name: string;
-  daily_charge: Decimal | null;
+  daily_charge: number | null;
   address: string;
   city: string;
   state: string;
@@ -16,6 +14,7 @@ export interface BoardingFac {
 }
 
 export interface CreateBoardingFac {
+  owner_id: number;
   contact_name: string;
   daily_charge?: number;
   address: string;
