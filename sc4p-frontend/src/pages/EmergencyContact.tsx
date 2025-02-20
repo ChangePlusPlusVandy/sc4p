@@ -6,6 +6,7 @@ import {
   getEmergencyContacts,
   createEmergencyContact,
   deleteEmergencyContact,
+  updateEmergencyContact,
 } from "../lib/Services";
 import {
   Modal,
@@ -155,6 +156,29 @@ const EmergencyContactPage: React.FC = () => {
       console.error("Error deleting contact:", error);
     }
   };
+
+  const handleUpdate = async (id: number, updatedData: any) => {
+    if (!currentUser) return;
+
+    const token = await currentUser.getIdToken();
+    try {
+      const response = await updateEmergencyContact(token, id, updatedData);
+      if (response.ok) {
+        await fetchContacts();
+        toast("Successfully updated emergency contact!");
+      } else {
+        console.error(
+          "Failed to update emergency contact:",
+          await response.text(),
+        );
+        toast.error("Failed to update emergency contact");
+      }
+    } catch (error) {
+      console.error("Error updating contact:", error);
+      toast.error("Error updating contact");
+    }
+  };
+
   const notifyAdd = () => toast("Succesfully added emergency contact!");
   const notifyDel = () => toast("Succesfully removed emergency contact!");
 
@@ -178,10 +202,7 @@ const EmergencyContactPage: React.FC = () => {
             key={contact.id}
             type="emergency_contact"
             data={contact}
-            onUpdate={async (id, updatedData) => {
-              // TODO: Implement contact update logic
-              console.log("Updating contact:", id, updatedData);
-            }}
+            onUpdate={handleUpdate}
             onDelete={handleDelete}
           />
         ))}

@@ -279,3 +279,18 @@ export const updateBoardingFacility = async (
     body: JSON.stringify(data),
   });
 };
+
+export const updateEmergencyContact = async (
+  token: string,
+  id: number,
+  data: any,
+) => {
+  return await fetch(`${backendUrl}/emergency-contacts/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  });
+};
