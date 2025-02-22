@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { getPets } from "../lib/Services";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import {
   Modal,
   ModalContent,
@@ -76,6 +76,7 @@ const Pets: React.FC = () => {
     } else {
       notify();
       onClose();
+      toast.success("Succesfully added a new pet!");
     }
   };
 

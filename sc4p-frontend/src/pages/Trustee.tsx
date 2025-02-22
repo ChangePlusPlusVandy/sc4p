@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { ToastContainer, toast } from "react-toastify";
+import { TrusteeForm } from "../components/TrusteeForm";
+import { toast } from "react-toastify";
 import {
   Button,
   Card,
-  CardBody,
   Spinner,
   Input,
   Modal,
@@ -16,7 +13,6 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@nextui-org/react";
-
 import { useAuth } from "../AuthContext";
 import {
   getTrustFundInfo,
@@ -164,8 +160,10 @@ const Trustee: React.FC = () => {
 
       const trustFund = await res.json();
       setTrustFundId(trustFund.id);
+      toast.success("Succesfully created trust fund!");
     } catch (error) {
       console.error("Error creating trust fund:", error);
+      toast.error("An error occured while creating trust fund");
     }
   };
 
@@ -193,15 +191,34 @@ const Trustee: React.FC = () => {
 
       if (!res.ok) throw new Error("Failed to update trust fund");
 
-      setTrustFundForm(tempTrustFundForm);
-      toast("Successfully updated trust fund!");
-      onClose();
+      setShowEditTrustFund(false);
+      toast.success("Succesfully updated trust fund!");
     } catch (error) {
       console.error("Error updating trust fund:", error);
+      toast.error("An error occured while updating trust fund");
     }
   };
 
-  const handleAddTrustee = async (data: any, onClose: () => void) => {
+  const handleTrusteeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    toast.success("Succesfully updated trustee");
+  };
+
+  const handleTrustFundInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { name, value } = e.target;
+    setTrustFundForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleAddTrustee = async () => {
     if (!trustFundId || !user) return;
 
     try {
@@ -215,10 +232,11 @@ const Trustee: React.FC = () => {
 
       const createdTrustee = await res.json();
       setTrustees((prev) => [...prev, createdTrustee]);
-      onClose();
-      toast("Successfully added trustee!");
+      onOpenChange(); // Close the modal after saving
+      toast.success("Succesfully added a trustee!");
     } catch (error) {
       console.error("Error creating trustee:", error);
+      toast.error("An error occured while adding a trustee");
     }
   };
 
@@ -232,30 +250,62 @@ const Trustee: React.FC = () => {
       if (!res.ok) throw new Error("Failed to delete trustee");
 
       setTrustees((prev) => prev.filter((trustee) => trustee.id !== id));
-      toast("Successfully removed trustee!");
+      toast.success("Succesfully removed trustee!");
     } catch (error) {
       console.error("Error deleting trustee:", error);
+      toast.error("An error occured while removing trustee");
     }
   };
 
-  const handleUpdateTrustee = async (id: number, data: any) => {
-    if (!user) return;
-
-    try {
-      const token = await user.getIdToken();
-      const res = await updateTrustee(token, id, data);
-
-      if (!res.ok) throw new Error("Failed to update trustee");
-
-      const updatedTrustee = await res.json();
-      setTrustees((prev) =>
-        prev.map((t) => (t.id === id ? updatedTrustee : t)),
-      );
-      toast("Successfully updated trustee!");
-    } catch (error) {
-      console.error("Error updating trustee:", error);
-    }
-  };
+  const renderTrustFundForm = () => (
+    <form
+      onSubmit={trustFundId ? handleUpdateTrustFund : handleCreateTrustFund}
+      className="space-y-4"
+    >
+      <Input
+        label="Funding Plan"
+        name="funding_plan"
+        value={trustFundForm.funding_plan}
+        onChange={handleTrustFundInputChange}
+        placeholder="Describe how the trust will be funded"
+      />
+      <Input
+        label="Bank Account Details"
+        name="bank_account_details"
+        value={trustFundForm.bank_account_details}
+        onChange={handleTrustFundInputChange}
+        placeholder="Enter bank account information"
+      />
+      <Input
+        label="Life Insurance Policy Number"
+        name="life_insurance_policy_number"
+        value={trustFundForm.life_insurance_policy_number}
+        onChange={handleTrustFundInputChange}
+        placeholder="Enter life insurance policy number if applicable"
+      />
+      <Input
+        label="Other Funding Details"
+        name="other_funding_details"
+        value={trustFundForm.other_funding_details}
+        onChange={handleTrustFundInputChange}
+        placeholder="Any additional funding information"
+      />
+      <div className="flex justify-end gap-2">
+        {trustFundId && (
+          <Button
+            color="danger"
+            variant="light"
+            onClick={() => setShowEditTrustFund(false)}
+          >
+            Cancel
+          </Button>
+        )}
+        <Button color="primary" type="submit">
+          {trustFundId ? "Update Trust Fund" : "Create Trust Fund"}
+        </Button>
+      </div>
+    </form>
+  );
 
   if (loading) {
     return (
@@ -422,6 +472,107 @@ const Trustee: React.FC = () => {
           <Button onPress={onOpen} className="mb-6 bg-base text-white">
             Add Trustee
           </Button>
+
+          {/* Modal for Adding Trustee */}
+          <Modal
+            isOpen={isOpen}
+            onOpenChange={onOpenChange}
+            size="sm"
+            placement="center"
+          >
+            <ModalContent>
+              <ModalHeader>Add Trustee Information</ModalHeader>
+              <ModalBody>
+                <div className="flex w-full flex-col gap-4">
+                  <Input
+                    label="Trustee Name"
+                    name="trustee_name"
+                    value={formData.trustee_name}
+                    onChange={handleTrusteeInputChange}
+                    required
+                  />
+                  <Input
+                    label="Email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleTrusteeInputChange}
+                    required
+                    type="email"
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      label="Cell Phone"
+                      name="cell_phone"
+                      value={formData.cell_phone}
+                      onChange={handleTrusteeInputChange}
+                      required
+                    />
+                    <Input
+                      label="Home Phone"
+                      name="home_phone"
+                      value={formData.home_phone || ""}
+                      onChange={handleTrusteeInputChange}
+                    />
+                  </div>
+                  <Input
+                    label="Emergency Phone"
+                    name="emergency_phone"
+                    value={formData.emergency_phone || ""}
+                    onChange={handleTrusteeInputChange}
+                  />
+                  <Input
+                    label="Address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleTrusteeInputChange}
+                    required
+                  />
+                  <div className="grid grid-cols-3 gap-4">
+                    <Input
+                      label="City"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleTrusteeInputChange}
+                      required
+                    />
+                    <Input
+                      label="State"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleTrusteeInputChange}
+                      required
+                    />
+                    <Input
+                      label="ZIP"
+                      name="zip"
+                      value={formData.zip}
+                      onChange={handleTrusteeInputChange}
+                      required
+                    />
+                  </div>
+                  <Input
+                    label="Allocated Amount"
+                    name="allocated_amount"
+                    type="number"
+                    value={formData.allocated_amount?.toString() || ""}
+                    onChange={handleTrusteeInputChange}
+                  />
+                </div>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                  color="secondary"
+                  variant="flat"
+                  onPress={() => onOpenChange()}
+                >
+                  Cancel
+                </Button>
+                <Button color="primary" onPress={handleAddTrustee}>
+                  Save
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
         </div>
 
         <div className="space-y-4">

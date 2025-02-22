@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
 import { getVets, createVets, deleteVets, updateVets } from "../lib/Services";
-import { ToastContainer, toast } from "react-toastify";
-
+import { toast } from "react-toastify";
 import {
   Modal,
   ModalContent,
@@ -112,12 +111,14 @@ const vetpage: React.FC = () => {
         await fetchVeterinarians();
         reset();
         onClose();
-        notifyAdd();
+        toast.success("Succesfully added new veterinarian!");
       } else {
         console.error("Failed to create vet:", await response.text());
+        toast.error("Failed to create veterinarian");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast.error("An error occured while adding veterinarian");
     }
   };
 
@@ -130,9 +131,10 @@ const vetpage: React.FC = () => {
       setVeterinarian((contacts) =>
         contacts.filter((contact) => contact.id !== contactId),
       );
-      notifyDel();
+      toast.success("Succesfully removed veterinarian!");
     } catch (error) {
       console.error("Error deleting vet:", error);
+      toast.error("Failed to remove veterinarian");
     }
   };
 
@@ -144,9 +146,13 @@ const vetpage: React.FC = () => {
       const response = await updateVets(token, id, updatedData);
       if (response.ok) {
         await fetchVeterinarians();
+        toast.success("Succesfully updated veterinarian!");
+      } else {
+        toast.error("Failed to update veterinarian!");
       }
     } catch (error) {
       console.error("Error updating vet:", error);
+      toast.error("An error occured while updating veterinarian");
     }
   };
   const notifyAdd = () => toast("Succesfully added vet!");
