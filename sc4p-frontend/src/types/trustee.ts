@@ -1,5 +1,3 @@
-import { Decimal } from "@prisma/client/runtime/library";
-
 export interface Trustee {
   id: number;
   trust_fund_id: number;
@@ -12,7 +10,7 @@ export interface Trustee {
   cell_phone: string;
   emergency_phone: string | null;
   email: string;
-  allocated_amount: Decimal | null;
+  allocated_amount: number | null;
   created_at: Date;
 }
 

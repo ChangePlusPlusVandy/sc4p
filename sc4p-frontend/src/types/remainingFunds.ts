@@ -1,10 +1,8 @@
-import { Decimal } from "@prisma/client/runtime/library";
-
 export interface RemainingFunds {
   id: number;
   owner_id: number;
   beneficiary_name: string;
-  allocation_percentage: Decimal;
+  allocation_percentage: number;
   created_at: Date;
 }
 

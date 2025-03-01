@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { FiEdit2 } from "react-icons/fi";
+import { ToastContainer, toast } from "react-toastify";
+
 import {
   Card,
   CardHeader,
@@ -72,7 +74,11 @@ const FormDisplayCard: React.FC<FormDisplayCardProps> = ({
   const handleSave = () => {
     // Logic to save the updated data if needed
     setModalOpen(false);
+    notifySave();
   };
+
+  const notifySave = () => toast("Succesfully saved!");
+
   return (
     <>
       <Card
@@ -121,7 +127,7 @@ const FormDisplayCard: React.FC<FormDisplayCardProps> = ({
           ))}
         </CardBody>
       </Card>
-
+      <ToastContainer />
       <Modal isOpen={isModalOpen} onOpenChange={setModalOpen}>
         <ModalContent>
           {(onClose) => (

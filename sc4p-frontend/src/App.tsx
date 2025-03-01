@@ -18,6 +18,7 @@ import Vets from "./pages/Vets";
 import InitialForm from "./pages/InitialForm";
 import Landing from "./pages/Landing";
 import PetInfo from "./pages/PetInfo";
+import { ToastContainer } from "react-toastify";
 
 // admin routes
 import ManageAdmins from "./pages/admin/ManageAdmins";
@@ -25,6 +26,7 @@ import ManageAdmins from "./pages/admin/ManageAdmins";
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
+      <ToastContainer />
       <AuthProvider>
         <Routes>
           {/* Public routes */}

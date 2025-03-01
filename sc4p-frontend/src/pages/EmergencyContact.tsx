@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../AuthContext";
+import { toast } from "react-toastify";
 import {
   getEmergencyContacts,
   createEmergencyContact,
   deleteEmergencyContact,
+  updateEmergencyContact,
 } from "../lib/Services";
 import {
   Modal,
@@ -127,14 +129,17 @@ const EmergencyContactPage: React.FC = () => {
         await fetchContacts();
         reset();
         onClose();
+        toast.success("Succesfully added a new emergency contact!");
       } else {
         console.error(
           "Failed to create emergency contact:",
           await response.text(),
+          toast.error("Failed to create emergency contact"),
         );
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast.error("An error occured while adding emergency contact");
     }
   };
 
@@ -147,8 +152,32 @@ const EmergencyContactPage: React.FC = () => {
       setContacts((prevContacts) =>
         prevContacts.filter((contact) => contact.id !== contactId),
       );
+      toast.success("Succesfully removed emergency contact!");
     } catch (error) {
       console.error("Error deleting contact:", error);
+      toast.error("Failed to remove emergency contact");
+    }
+  };
+
+  const handleUpdate = async (id: number, updatedData: any) => {
+    if (!currentUser) return;
+
+    const token = await currentUser.getIdToken();
+    try {
+      const response = await updateEmergencyContact(token, id, updatedData);
+      if (response.ok) {
+        await fetchContacts();
+        toast("Successfully updated emergency contact!");
+      } else {
+        console.error(
+          "Failed to update emergency contact:",
+          await response.text(),
+        );
+        toast.error("Failed to update emergency contact");
+      }
+    } catch (error) {
+      console.error("Error updating contact:", error);
+      toast.error("Error updating contact");
     }
   };
 
@@ -172,10 +201,7 @@ const EmergencyContactPage: React.FC = () => {
             key={contact.id}
             type="emergency_contact"
             data={contact}
-            onUpdate={async (id, updatedData) => {
-              // TODO: Implement contact update logic
-              console.log("Updating contact:", id, updatedData);
-            }}
+            onUpdate={handleUpdate}
             onDelete={handleDelete}
           />
         ))}
@@ -185,7 +211,6 @@ const EmergencyContactPage: React.FC = () => {
           </div>
         )}
       </div>
-
       <Modal
         isOpen={isOpen}
         onOpenChange={() => {

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Input, Card, CardBody, Spinner } from "@nextui-org/react";
 import { useAuth } from "../../AuthContext";
 import { AdminService } from "../../lib/AdminService";
+import { ToastContainer, toast } from "react-toastify";
 
 interface Admin {
   uid: string;
@@ -49,6 +50,7 @@ const ManageAdmins = () => {
       setNewAdminEmail("");
       setError("");
       await fetchAdmins();
+      notifyAdd();
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -63,6 +65,7 @@ const ManageAdmins = () => {
       await AdminService.removeAdmin(uid, currentUser);
       setError("");
       await fetchAdmins();
+      notifyDelete();
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -84,6 +87,9 @@ const ManageAdmins = () => {
     );
   }
 
+  const notifyAdd = () => toast("Succesfully added admin!");
+  const notifyDelete = () => toast("Succesfully removed admin!");
+
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
@@ -95,7 +101,7 @@ const ManageAdmins = () => {
           {error}
         </div>
       )}
-
+      <ToastContainer />
       <Card className="bg-white">
         <CardBody>
           <h2 className="text-xl font-semibold mb-4">Add New Administrator</h2>
