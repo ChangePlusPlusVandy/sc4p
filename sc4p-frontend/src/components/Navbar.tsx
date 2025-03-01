@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import BellIcon from "../images/bell-icon.png";
+import AdminBadge from "./AdminBadge";
+
 
 const Navbar: React.FC = () => {
   const [isToggled, setIsToggled] = useState(false);
@@ -34,14 +36,13 @@ const Navbar: React.FC = () => {
         2nd Chance for Pets
       </div>
 
-      {/* Right-side Buttons */}
       <div className="flex items-center space-x-4">
         <button
           className="p-2 focus:outline-none"
-          onClick={handleBellClick} 
+          onClick={handleBellClick}
           style={{
-            backgroundColor: "rgba(230, 209, 255, 0.35)", 
-            width: "50px", 
+            backgroundColor: "rgba(230, 209, 255, 0.35)",
+            width: "50px",
             height: "50px",
             borderRadius: "12px",
             display: "flex",
@@ -53,36 +54,7 @@ const Navbar: React.FC = () => {
           <img src={BellIcon} alt="Notification" className="w-6 h-6" />
         </button>
 
-        {/* Toggle Button */}
-        <div
-          onClick={handleToggle}
-          style={{
-            backgroundColor: "rgba(230, 209, 255, 0.35)",
-            width: "125px", 
-            height: "50px",
-            borderRadius: "12px",
-            display: "flex",
-            alignItems: "center",
-            position: "relative",
-            cursor: "pointer",
-          }}
-        >
-          {/* Sliding Circle */}
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: isToggled ? "calc(100% - 38px)" : "6px", // Position the circle based on toggle state
-              transform: "translateY(-50%)", // Center vertically
-              width: "30px", // Set the circle width
-              height: "30px", // Set the circle height
-              backgroundColor: "white", // Circle color
-              borderRadius: "50%", 
-              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)", // Add some shadow for depth
-              transition: "left 0.3s ease", // Animate the sliding effect
-            }}
-          ></div>
-        </div>
+        <AdminBadge />
       </div>
     </nav>
   );
