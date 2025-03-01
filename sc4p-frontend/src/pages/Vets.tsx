@@ -155,8 +155,6 @@ const vetpage: React.FC = () => {
       toast.error("An error occured while updating veterinarian");
     }
   };
-  const notifyAdd = () => toast("Succesfully added vet!");
-  const notifyDel = () => toast("Succesfully removed vet!");
 
   if (loading) {
     return <div>Loading...</div>;
@@ -178,8 +176,6 @@ const vetpage: React.FC = () => {
         placement="center"
         size="3xl"
       >
-        <ToastContainer />
-
         <ModalContent>
           {(onClose) => (
             <>

@@ -3,8 +3,6 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
 import * as yup from "yup";
-import { ToastContainer, toast } from "react-toastify";
-
 import {
   Button,
   ButtonGroup,
@@ -314,12 +312,6 @@ const Caregivers = () => {
     }
   };
 
-  const notifyAddCaregiver = () => toast("Succesfully added caregiver!");
-  const notifyAddBoarding = () => toast("Succesfully added boarding facility!");
-  const notifyDelCaregiver = () => toast("Succesfully removed caregiver!");
-  const notifyDelBoarding = () =>
-    toast("Succesfully removed boarding facility!");
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -590,7 +582,6 @@ const Caregivers = () => {
           )}
         </ModalContent>
       </Modal>
-      <ToastContainer />
 
       <div className="w-full mt-6 space-y-8">
         <div>

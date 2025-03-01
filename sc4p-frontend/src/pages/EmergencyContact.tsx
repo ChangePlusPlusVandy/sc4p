@@ -181,9 +181,6 @@ const EmergencyContactPage: React.FC = () => {
     }
   };
 
-  const notifyAdd = () => toast("Succesfully added emergency contact!");
-  const notifyDel = () => toast("Succesfully removed emergency contact!");
-
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -214,7 +211,6 @@ const EmergencyContactPage: React.FC = () => {
           </div>
         )}
       </div>
-      <ToastContainer />
       <Modal
         isOpen={isOpen}
         onOpenChange={() => {

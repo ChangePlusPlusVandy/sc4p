@@ -74,7 +74,6 @@ const Pets: React.FC = () => {
     if (selectedTab < 7) {
       setSelectedTab(selectedTab + 1);
     } else {
-      notify();
       onClose();
       toast.success("Succesfully added a new pet!");
     }
@@ -85,8 +84,6 @@ const Pets: React.FC = () => {
       setSelectedTab(selectedTab - 1);
     }
   };
-
-  const notify = () => toast("Succesfully added pet!");
 
   if (loading) {
     return (

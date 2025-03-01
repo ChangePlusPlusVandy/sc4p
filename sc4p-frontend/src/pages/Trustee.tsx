@@ -742,7 +742,6 @@ const Trustee: React.FC = () => {
           </ModalContent>
         </Modal>
       </div>
-      <ToastContainer />
     </div>
   );
 };
