@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@nextui-org/react";
-import Logo from "../images/logo.png";
+import Logo from "../../public/logo.png";
 
 const Landing: React.FC = () => {
   return (
@@ -29,22 +29,10 @@ const Landing: React.FC = () => {
         </p>
 
         <div className="flex flex-col gap-6 w-[450px]">
-          {/* Existing User Login */}
-          <div className="bg-white p-6 rounded-[20px] border-2 border-[#AF94D3] shadow-md">
-            <h2 className="font-[Inter] text-[24px] font-bold text-[#5E3593] mb-4 text-center">
-              Returning User?
-            </h2>
-            <Link to="/login" className="w-full">
-              <Button className="w-full h-[56px] bg-[#A377DC] text-white rounded-[15px] font-[Inter] font-semibold text-[20px]">
-                Login to Your Account
-              </Button>
-            </Link>
-          </div>
-
           {/* New User Options */}
           <div className="bg-white p-6 rounded-[20px] border-2 border-[#AF94D3] shadow-md">
             <h2 className="font-[Inter] text-[24px] font-bold text-[#5E3593] mb-4 text-center">
-              New User?
+              Online Form
             </h2>
             <div className="flex flex-col gap-4">
               <Link to="/initialForm" className="w-full">
