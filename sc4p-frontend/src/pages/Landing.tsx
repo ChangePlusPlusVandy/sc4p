@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@nextui-org/react";
-import Logo from "../../public/logo.png";
+import Logo from "../assets/logo.png";
 
 const Landing: React.FC = () => {
   return (
