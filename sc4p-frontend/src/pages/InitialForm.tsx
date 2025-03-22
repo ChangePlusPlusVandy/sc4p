@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, Controller, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -9,11 +9,24 @@ import {
   Checkbox,
   Select,
   SelectItem,
+  useDisclosure,
+  Modal,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
 } from "@nextui-org/react";
 import { Link } from "react-router-dom";
 import { jsPDF } from "jspdf";
-import "jspdf-autotable";
-import Logo from "../../public/logo.png";
+import autoTable from "jspdf-autotable";
+
+// Define jsPDF with autoTable type
+interface jsPDFWithAutoTable extends jsPDF {
+  autoTable: (options: any) => jsPDFWithAutoTable;
+  lastAutoTable: {
+    finalY: number;
+  };
+}
 
 // Form validation schema
 const schema = yup.object().shape({
@@ -66,6 +79,11 @@ type FormData = yup.InferType<typeof schema>;
 
 const InitialForm: React.FC = () => {
   const [step, setStep] = useState(1);
+  const [pdfGenerationStatus, setPdfGenerationStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   const methods = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: "onChange",
@@ -77,8 +95,36 @@ const InitialForm: React.FC = () => {
     formState: { errors, isValid },
   } = methods;
 
+  // // Add useEffect to ensure jsPDF is properly initialized
+  // useEffect(() => {
+  //   // Polyfill for URL.createObjectURL in older browsers if needed
+  //   if (typeof window !== "undefined" && !window.URL) {
+  //     window.URL = window.URL || window.webkitURL || window.mozURL || window;
+  //   }
+  // }, []);
+
   const onSubmit = (data: FormData) => {
-    generatePDF(data);
+    console.log("Form submitted with data:", data);
+    try {
+      setPdfGenerationStatus("loading");
+      setTimeout(() => {
+        try {
+          console.log("Generating PDF...");
+          generatePDF(data);
+          console.log("PDF generated successfully");
+          setPdfGenerationStatus("success");
+          onOpen(); // Open success modal
+        } catch (error) {
+          console.error("Error generating PDF:", error);
+          setPdfGenerationStatus("error");
+          onOpen(); // Open error modal
+        }
+      }, 500); // Small delay to ensure UI updates
+    } catch (error) {
+      console.error("Error in onSubmit:", error);
+      setPdfGenerationStatus("error");
+      onOpen(); // Open error modal
+    }
   };
 
   const nextStep = () => {
@@ -90,163 +136,214 @@ const InitialForm: React.FC = () => {
   };
 
   const generatePDF = (data: FormData) => {
-    const doc = new jsPDF();
+    try {
+      // Create a basic PDF using vanilla jsPDF (avoiding autoTable)
+      const doc = new jsPDF();
 
-    // Add logo and title
-    const imgData = Logo;
-    doc.addImage(imgData, "PNG", 15, 10, 20, 40);
-    doc.setFontSize(20);
-    doc.setTextColor(94, 53, 147); // #5E3593
-    doc.text("2nd Chance For Pets - Pet Care Form", 50, 30);
+      // Set title
+      doc.setFontSize(20);
+      doc.setTextColor(94, 53, 147); // #5E3593
+      doc.text("2nd Chance For Pets - Pet Care Form", 105, 15, {
+        align: "center",
+      });
 
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
+      // Reset text color and size
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(12);
 
-    // Pet Owner Information
-    doc.text("Pet Owner Information", 15, 60);
-    doc.line(15, 62, 195, 62);
+      // Add sections with simple text
+      let y = 30;
 
-    const ownerInfo = [
-      ["Owner Name", data.ownerName],
-      ["Address", data.address],
-      ["City, State, Zip", `${data.city}, ${data.state} ${data.zipCode}`],
-      ["Phone", data.phone],
-      ["Email", data.email],
-    ];
+      // Owner Information
+      doc.setFontSize(16);
+      doc.text("Pet Owner Information", 14, y);
+      doc.setFontSize(12);
+      y += 10;
 
-    (doc as any).autoTable({
-      startY: 65,
-      head: [],
-      body: ownerInfo,
-      theme: "plain",
-      columnStyles: {
-        0: { cellWidth: 50 },
-        1: { cellWidth: 130 },
-      },
-    });
+      doc.text(`Owner Name: ${data.ownerName}`, 20, y);
+      y += 8;
+      doc.text(`Address: ${data.address}`, 20, y);
+      y += 8;
+      doc.text(
+        `City/State/Zip: ${data.city}, ${data.state} ${data.zipCode}`,
+        20,
+        y,
+      );
+      y += 8;
+      doc.text(`Phone: ${data.phone}`, 20, y);
+      y += 8;
+      doc.text(`Email: ${data.email}`, 20, y);
+      y += 15;
 
-    // Pet Information
-    let y = (doc as any).lastAutoTable.finalY + 10;
-    doc.text("Pet Information", 15, y);
-    doc.line(15, y + 2, 195, y + 2);
+      // Pet Information
+      doc.setFontSize(16);
+      doc.text("Pet Information", 14, y);
+      doc.setFontSize(12);
+      y += 10;
 
-    const petInfo = [
-      ["Pet Name", data.petName],
-      ["Type", data.petType],
-      ["Breed", data.breed],
-      ["Age", data.age.toString()],
-      ["Gender", data.gender],
-      ["Spayed/Neutered", data.spayedNeutered ? "Yes" : "No"],
-      ["Color", data.color],
-      ["Medical Conditions", data.medicalConditions || "None"],
-      ["Medications", data.medications || "None"],
-    ];
+      doc.text(`Pet Name: ${data.petName}`, 20, y);
+      y += 8;
+      doc.text(`Type: ${data.petType}`, 20, y);
+      y += 8;
+      doc.text(`Breed: ${data.breed}`, 20, y);
+      y += 8;
+      doc.text(`Age: ${data.age}`, 20, y);
+      y += 8;
+      doc.text(`Gender: ${data.gender}`, 20, y);
+      y += 8;
+      doc.text(`Spayed/Neutered: ${data.spayedNeutered ? "Yes" : "No"}`, 20, y);
+      y += 8;
+      doc.text(`Color: ${data.color}`, 20, y);
+      y += 8;
 
-    (doc as any).autoTable({
-      startY: y + 5,
-      head: [],
-      body: petInfo,
-      theme: "plain",
-      columnStyles: {
-        0: { cellWidth: 50 },
-        1: { cellWidth: 130 },
-      },
-    });
+      // Check if we need a new page
+      if (y > 250) {
+        doc.addPage();
+        y = 20;
+      }
 
-    // Veterinarian Information
-    y = (doc as any).lastAutoTable.finalY + 10;
-    doc.text("Veterinarian Information", 15, y);
-    doc.line(15, y + 2, 195, y + 2);
+      // Medical Information
+      if (data.medicalConditions) {
+        doc.text(`Medical Conditions: ${data.medicalConditions}`, 20, y);
+        y += 8;
+      }
 
-    const vetInfo = [
-      ["Name", data.veterinarianName],
-      ["Phone", data.veterinarianPhone],
-    ];
+      if (data.medications) {
+        doc.text(`Medications: ${data.medications}`, 20, y);
+        y += 15;
+      } else {
+        y += 15;
+      }
 
-    (doc as any).autoTable({
-      startY: y + 5,
-      head: [],
-      body: vetInfo,
-      theme: "plain",
-      columnStyles: {
-        0: { cellWidth: 50 },
-        1: { cellWidth: 130 },
-      },
-    });
+      // Veterinarian Information
+      doc.setFontSize(16);
+      doc.text("Veterinarian Information", 14, y);
+      doc.setFontSize(12);
+      y += 10;
 
-    // Add a new page for caregiver information
-    doc.addPage();
+      doc.text(`Name: ${data.veterinarianName}`, 20, y);
+      y += 8;
+      doc.text(`Phone: ${data.veterinarianPhone}`, 20, y);
+      y += 15;
 
-    // Caregiver Information
-    doc.text("Primary Caregiver Information", 15, 20);
-    doc.line(15, 22, 195, 22);
+      // Check if we need a new page
+      if (y > 250) {
+        doc.addPage();
+        y = 20;
+      }
 
-    const caregiverInfo = [
-      ["Name", data.caregiverName],
-      ["Phone", data.caregiverPhone],
-      ["Address", data.caregiverAddress],
-    ];
+      // Caregiver Information
+      doc.setFontSize(16);
+      doc.text("Primary Caregiver Information", 14, y);
+      doc.setFontSize(12);
+      y += 10;
 
-    (doc as any).autoTable({
-      startY: 25,
-      head: [],
-      body: caregiverInfo,
-      theme: "plain",
-      columnStyles: {
-        0: { cellWidth: 50 },
-        1: { cellWidth: 130 },
-      },
-    });
+      doc.text(`Name: ${data.caregiverName}`, 20, y);
+      y += 8;
+      doc.text(`Phone: ${data.caregiverPhone}`, 20, y);
+      y += 8;
+      doc.text(`Address: ${data.caregiverAddress}`, 20, y);
+      y += 15;
 
-    // Backup Caregiver Information
-    y = (doc as any).lastAutoTable.finalY + 10;
-    doc.text("Backup Caregiver Information", 15, y);
-    doc.line(15, y + 2, 195, y + 2);
+      // Check if we need a new page
+      if (y > 230) {
+        doc.addPage();
+        y = 20;
+      }
 
-    const backupCaregiverInfo = [
-      ["Name", data.backupCaregiverName],
-      ["Phone", data.backupCaregiverPhone],
-      ["Address", data.backupCaregiverAddress],
-    ];
+      // Backup Caregiver Information
+      doc.setFontSize(16);
+      doc.text("Backup Caregiver Information", 14, y);
+      doc.setFontSize(12);
+      y += 10;
 
-    (doc as any).autoTable({
-      startY: y + 5,
-      head: [],
-      body: backupCaregiverInfo,
-      theme: "plain",
-      columnStyles: {
-        0: { cellWidth: 50 },
-        1: { cellWidth: 130 },
-      },
-    });
+      doc.text(`Name: ${data.backupCaregiverName}`, 20, y);
+      y += 8;
+      doc.text(`Phone: ${data.backupCaregiverPhone}`, 20, y);
+      y += 8;
+      doc.text(`Address: ${data.backupCaregiverAddress}`, 20, y);
+      y += 15;
 
-    // Agreement section
-    y = (doc as any).lastAutoTable.finalY + 20;
-    doc.text("Agreement", 15, y);
-    doc.line(15, y + 2, 195, y + 2);
+      // Agreement
+      doc.setFontSize(16);
+      doc.text("Agreement", 14, y);
+      doc.setFontSize(12);
+      y += 10;
 
-    doc.text(
-      "I hereby authorize the designated caregivers to make health and welfare decisions",
-      15,
-      y + 10,
-    );
-    doc.text("for my pet(s) in the event I am unable to do so.", 15, y + 18);
+      doc.text(
+        "I hereby authorize the designated caregivers to make health and welfare",
+        20,
+        y,
+      );
+      y += 8;
+      doc.text(
+        "decisions for my pet(s) in the event I am unable to do so.",
+        20,
+        y,
+      );
+      y += 20;
 
-    doc.text("Signature: _______________________________", 15, y + 35);
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 15, y + 45);
+      doc.text("Signature: _______________________________", 20, y);
+      y += 10;
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, y);
 
-    // Save the PDF
-    doc.save("pet_care_form.pdf");
+      // Save the PDF - this is the critical line that triggers the download
+      doc.save("pet_care_form.pdf");
+
+      console.log("PDF generated successfully");
+      return true;
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      throw error;
+    }
+  };
+
+  // Direct PDF generation method without form submission
+  const generatePDFDirectly = () => {
+    try {
+      console.log("Direct PDF generation triggered");
+      const formData = methods.getValues();
+      if (!methods.formState.isValid) {
+        alert("Please complete all required fields before generating the PDF");
+        return;
+      }
+
+      // Create a new PDF
+      const doc = new jsPDF();
+
+      // Add a simple title
+      doc.setFontSize(22);
+      doc.text("2nd Chance For Pets Form", 105, 20, { align: "center" });
+      doc.setFontSize(12);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, {
+        align: "center",
+      });
+
+      // Add some form data
+      doc.text(`Owner: ${formData.ownerName || ""}`, 20, 50);
+      doc.text(`Pet Name: ${formData.petName || ""}`, 20, 60);
+
+      // Save the PDF
+      try {
+        doc.save("pet_form.pdf");
+        console.log("PDF saved successfully");
+        return true;
+      } catch (err) {
+        console.error("Error saving PDF:", err);
+        throw err;
+      }
+    } catch (err) {
+      console.error("Error in direct PDF generation:", err);
+      return false;
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-10">
       <div className="flex mb-8 px-8">
-        <img
-          src={Logo}
-          className="w-[55.6px] h-[109.7px]"
-          alt="Second Chance 4 Pets Logo"
-        />
+        <div className="w-[55.6px] h-[109.7px] bg-[#5E3593] flex items-center justify-center text-white font-bold">
+          SC4P
+        </div>
         <h1 className="w-[160.64px] h-[78px] mt-[22px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
           2nd Chance For Pets
         </h1>
@@ -753,9 +850,23 @@ const InitialForm: React.FC = () => {
 
                   <Button
                     type="submit"
-                    className="w-full h-[56px] bg-[#A377DC] text-white rounded-[15px] font-[Inter] font-semibold text-[20px]"
+                    className="w-full h-[56px] bg-[#A377DC] text-white rounded-[15px] font-[Inter] font-semibold text-[20px] mb-3"
+                    isLoading={pdfGenerationStatus === "loading"}
+                    onClick={() => console.log("Submit button clicked")}
                   >
                     Save & Download PDF
+                  </Button>
+
+                  {/* Direct PDF Generation Button */}
+                  <Button
+                    className="w-full h-[56px] bg-[#5E3593] text-white rounded-[15px] font-[Inter] font-semibold text-[20px]"
+                    isLoading={pdfGenerationStatus === "loading"}
+                    onClick={() => {
+                      console.log("Direct PDF button clicked");
+                      generatePDFDirectly();
+                    }}
+                  >
+                    Generate PDF Directly
                   </Button>
                 </div>
               )}
@@ -789,6 +900,30 @@ const InitialForm: React.FC = () => {
           </FormProvider>
         </div>
       </div>
+
+      {/* Status Modal */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalContent>
+          <ModalHeader className="text-[#5E3593]">
+            {pdfGenerationStatus === "success" ? "Success!" : "Error"}
+          </ModalHeader>
+          <ModalBody>
+            {pdfGenerationStatus === "success" ? (
+              <p>Your form has been successfully saved as a PDF.</p>
+            ) : (
+              <p>
+                There was an error generating your PDF. Please try again or
+                contact support for assistance.
+              </p>
+            )}
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onPress={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
