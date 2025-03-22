@@ -5,7 +5,7 @@ import Logo from "../assets/logo.png";
 
 const Landing: React.FC = () => {
   return (
-    <div className="h-screen">
+    <div className="h-screen bg-gray-50">
       {/* Logo and Title Section */}
       <div className="flex">
         <img
