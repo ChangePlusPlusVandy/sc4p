@@ -1,0 +1,39 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    "Content-Type" = "application/javascript"
+    "X-Content-Type-Options" = "nosniff"
+
+[[headers]]
+  for = "/assets/*.js"
+  [headers.values]
+    "Content-Type" = "application/javascript"
+
+[[headers]]
+  for = "/assets/*.css"
+  [headers.values]
+    "Content-Type" = "text/css"
+
+[[headers]]
+  for = "/assets/*.png"
+  [headers.values]
+    "Content-Type" = "image/png"
+
+[[headers]]
+  for = "/assets/*.jpg"
+  [headers.values]
+    "Content-Type" = "image/jpeg"
+
+[[headers]]
+  for = "/assets/*.svg"
+  [headers.values]
+    "Content-Type" = "image/svg+xml" 
