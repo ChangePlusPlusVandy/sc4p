@@ -250,25 +250,27 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       doc.addImage(Logo, "PNG", leftMargin, topMargin, 30, 30);
 
       // Add header with improved styling
-      doc.setFontSize(28);
-      doc.setTextColor(94, 53, 147); // #5E3593
-      doc.text("2nd Chance For Pets", leftMargin + 40, topMargin + 20);
       doc.setFontSize(24);
-      doc.text("Pet Care Form", leftMargin + 40, topMargin + 30);
+      doc.setTextColor(94, 53, 147); // #5E3593
+      doc.setFont("helvetica", "bold");
+      doc.text("2nd Chance For Pets", leftMargin + 40, topMargin + 20);
+      doc.setFontSize(20);
+      doc.text("Pet Care Form", leftMargin + 40, topMargin + 28);
+      doc.setFont("helvetica", "normal");
 
       // Add date and form ID
-      doc.setFontSize(10);
+      doc.setFontSize(8);
       doc.setTextColor(128, 128, 128);
       doc.text(
         `Generated on: ${new Date().toLocaleDateString()}`,
         pageWidth - rightMargin,
-        topMargin + 10,
+        topMargin + 8,
         { align: "right" },
       );
       doc.text(
         `Form ID: ${Math.random().toString(36).substr(2, 9)}`,
         pageWidth - rightMargin,
-        topMargin + 15,
+        topMargin + 12,
         { align: "right" },
       );
 
