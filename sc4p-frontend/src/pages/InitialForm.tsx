@@ -319,19 +319,28 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       ) => {
         if (value === undefined || value === null || value === "") return y;
 
-        // Add subtle background for fields
-        doc.setFillColor(245, 245, 245);
-        doc.rect(x - 2, y - 2, width + 4, 8, "F");
-
+        // Add label without background
         const labelText = `${label}:`;
         doc.setFont("helvetica", "bold");
         doc.text(labelText, x, y);
         doc.setFont("helvetica", "normal");
 
+        // Calculate the width of the label to determine where to start the value box
+        const labelWidth = doc.getTextWidth(labelText);
+        const valueX = x; // Start value at same x position as label
+
+        // Add subtle background for value only
         const valueText = value.toString();
         const splitValue = doc.splitTextToSize(valueText, width) as string[];
-        doc.text(splitValue, x, y + 6);
-        return y + 6 + splitValue.length * lineHeight;
+        const valueHeight = splitValue.length * lineHeight;
+
+        // Draw background rectangle only for the value area
+        doc.setFillColor(245, 245, 245);
+        doc.rect(valueX - 2, y + 2, width, valueHeight + 4, "F");
+
+        // Add value text with small offset from label
+        doc.text(splitValue, valueX, y + 8);
+        return y + 8 + valueHeight + 4; // Add extra spacing after the field
       };
 
       let y = topMargin + 40;
