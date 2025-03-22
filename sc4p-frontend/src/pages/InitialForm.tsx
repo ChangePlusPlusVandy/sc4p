@@ -235,193 +235,265 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       // Create a basic PDF using vanilla jsPDF (avoiding autoTable)
       const doc = new jsPDF();
 
-      // Set title
-      doc.setFontSize(20);
+      // Set margins and page dimensions
+      const leftMargin = 15;
+      const rightMargin = 15;
+      const topMargin = 15;
+      const bottomMargin = 15;
+      const pageWidth = doc.internal.pageSize.width;
+      const pageHeight = doc.internal.pageSize.height;
+      const contentWidth = (pageWidth - leftMargin - rightMargin) / 2;
+      const columnGap = 10;
+
+      // Set title with reduced font size
+      doc.setFontSize(18);
       doc.setTextColor(94, 53, 147); // #5E3593
-      doc.text("2nd Chance For Pets - Pet Care Form", 105, 15, {
-        align: "center",
-      });
+      doc.text(
+        "2nd Chance For Pets - Pet Care Form",
+        pageWidth / 2,
+        topMargin,
+        {
+          align: "center",
+        },
+      );
 
       // Reset text color and size
       doc.setTextColor(0, 0, 0);
-      doc.setFontSize(12);
+      doc.setFontSize(11);
 
-      // Add sections with simple text
-      let y = 30;
+      // Add sections with optimized spacing
+      const y = topMargin + 10;
+
+      // Helper function to add text with word wrap
+      const addText = (text: string, x: number, y: number, width: number) => {
+        const splitText = doc.splitTextToSize(text, width) as string[];
+        doc.text(splitText, x, y);
+        return y + splitText.length * 6; // Adjust line height based on font size
+      };
+
+      // Helper function to add section header
+      const addSectionHeader = (text: string, x: number, y: number) => {
+        doc.setFontSize(14);
+        doc.text(text, x, y);
+        doc.setFontSize(11);
+        return y + 8;
+      };
+
+      // Left Column
+      let leftY = y;
 
       // Owner Information
-      doc.setFontSize(16);
-      doc.text("Pet Owner Information", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
-      doc.text(`Owner Name: ${data.ownerName}`, 20, y);
-      y += 8;
-      doc.text(`Address: ${data.address}`, 20, y);
-      y += 8;
-      doc.text(
-        `City/State/Zip: ${data.city}, ${data.state} ${data.zipCode}`,
-        20,
-        y,
+      leftY = addSectionHeader("Pet Owner Information", leftMargin, leftY);
+      leftY = addText(
+        `Owner Name: ${data.ownerName}`,
+        leftMargin,
+        leftY,
+        contentWidth,
       );
-      y += 8;
-      doc.text(`Phone: ${data.phone}`, 20, y);
-      y += 8;
-      doc.text(`Email: ${data.email}`, 20, y);
-      y += 15;
+      leftY = addText(
+        `Address: ${data.address}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(
+        `City/State/Zip: ${data.city}, ${data.state} ${data.zipCode}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(`Phone: ${data.phone}`, leftMargin, leftY, contentWidth);
+      leftY = addText(`Email: ${data.email}`, leftMargin, leftY, contentWidth);
+      leftY += 5;
 
       // Emergency Contact Information
-      doc.setFontSize(16);
-      doc.text("Emergency Contact Information", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
-      doc.text(`Name: ${data.emergencyContactName || ""}`, 20, y);
-      y += 8;
-      doc.text(`Phone: ${data.emergencyContactPhone || ""}`, 20, y);
-      y += 8;
-      doc.text(
-        `Relationship: ${data.emergencyContactRelationship || ""}`,
-        20,
-        y,
+      leftY = addSectionHeader(
+        "Emergency Contact Information",
+        leftMargin,
+        leftY,
       );
-      y += 15;
-
-      // Check if we need a new page
-      if (y > 230) {
-        doc.addPage();
-        y = 20;
-      }
+      leftY = addText(
+        `Name: ${data.emergencyContactName ?? ""}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(
+        `Phone: ${data.emergencyContactPhone ?? ""}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(
+        `Relationship: ${data.emergencyContactRelationship ?? ""}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY += 5;
 
       // Pet Information
-      doc.setFontSize(16);
-      doc.text("Pet Information", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
-      doc.text(`Pet Name: ${data.petName}`, 20, y);
-      y += 8;
-      doc.text(`Type: ${data.petType}`, 20, y);
-      y += 8;
-      doc.text(`Breed: ${data.breed}`, 20, y);
-      y += 8;
-      doc.text(`Age: ${data.age}`, 20, y);
-      y += 8;
-      doc.text(`Gender: ${data.gender}`, 20, y);
-      y += 8;
-      doc.text(`Spayed/Neutered: ${data.spayedNeutered ? "Yes" : "No"}`, 20, y);
-      y += 8;
-      doc.text(`Color: ${data.color}`, 20, y);
-      y += 8;
+      leftY = addSectionHeader("Pet Information", leftMargin, leftY);
+      leftY = addText(
+        `Pet Name: ${data.petName}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(`Type: ${data.petType}`, leftMargin, leftY, contentWidth);
+      leftY = addText(`Breed: ${data.breed}`, leftMargin, leftY, contentWidth);
+      leftY = addText(`Age: ${data.age}`, leftMargin, leftY, contentWidth);
+      leftY = addText(
+        `Gender: ${data.gender}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(
+        `Spayed/Neutered: ${data.spayedNeutered ? "Yes" : "No"}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(`Color: ${data.color}`, leftMargin, leftY, contentWidth);
 
       if (data.microchipId) {
-        doc.text(`Microchip ID: ${data.microchipId}`, 20, y);
-        y += 8;
+        leftY = addText(
+          `Microchip ID: ${data.microchipId}`,
+          leftMargin,
+          leftY,
+          contentWidth,
+        );
       }
+      leftY += 5;
+
+      // Right Column
+      let rightY = y;
 
       // Pet Insurance Information
       if (data.hasInsurance) {
-        doc.setFontSize(16);
-        doc.text("Pet Health Insurance", 14, y);
-        doc.setFontSize(12);
-        y += 10;
-
+        rightY = addSectionHeader(
+          "Pet Health Insurance",
+          rightMargin + contentWidth + columnGap,
+          rightY,
+        );
         if (data.petInsurance) {
-          doc.text(`Insurance Provider: ${data.petInsurance}`, 20, y);
-          y += 8;
+          rightY = addText(
+            `Insurance Provider: ${data.petInsurance}`,
+            rightMargin + contentWidth + columnGap,
+            rightY,
+            contentWidth,
+          );
         }
-
         if (data.insurancePhone) {
-          doc.text(`Provider Phone: ${data.insurancePhone}`, 20, y);
-          y += 8;
+          rightY = addText(
+            `Provider Phone: ${data.insurancePhone}`,
+            rightMargin + contentWidth + columnGap,
+            rightY,
+            contentWidth,
+          );
         }
-
         if (data.insurancePolicy) {
-          doc.text(`Policy Number: ${data.insurancePolicy}`, 20, y);
-          y += 8;
+          rightY = addText(
+            `Policy Number: ${data.insurancePolicy}`,
+            rightMargin + contentWidth + columnGap,
+            rightY,
+            contentWidth,
+          );
         }
-
         if (data.insuranceCost) {
-          doc.text(`Cost per year: $${data.insuranceCost}`, 20, y);
-          y += 12;
+          rightY = addText(
+            `Cost per year: $${data.insuranceCost}`,
+            rightMargin + contentWidth + columnGap,
+            rightY,
+            contentWidth,
+          );
         }
-      }
-
-      // Check if we need a new page
-      if (y > 230) {
-        doc.addPage();
-        y = 20;
+        rightY += 5;
       }
 
       // Feeding Information
       if (data.specialDiet ?? data.feedingSchedule) {
-        doc.setFontSize(16);
-        doc.text("Feeding Information", 14, y);
-        doc.setFontSize(12);
-        y += 10;
-
+        rightY = addSectionHeader(
+          "Feeding Information",
+          rightMargin + contentWidth + columnGap,
+          rightY,
+        );
         if (data.specialDiet) {
-          doc.text(`Special Diet: ${data.specialDiet}`, 20, y);
-          y += 8;
+          rightY = addText(
+            `Special Diet: ${data.specialDiet}`,
+            rightMargin + contentWidth + columnGap,
+            rightY,
+            contentWidth,
+          );
         }
-
         if (data.feedingSchedule) {
-          doc.text(`Feeding Schedule: ${data.feedingSchedule}`, 20, y);
-          y += 15;
-        } else {
-          y += 7;
+          rightY = addText(
+            `Feeding Schedule: ${data.feedingSchedule}`,
+            rightMargin + contentWidth + columnGap,
+            rightY,
+            contentWidth,
+          );
         }
-      }
-
-      // Check if we need a new page
-      if (y > 230) {
-        doc.addPage();
-        y = 20;
+        rightY += 5;
       }
 
       // Medical Information
-      doc.setFontSize(16);
-      doc.text("Medical Information", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
+      rightY = addSectionHeader(
+        "Medical Information",
+        rightMargin + contentWidth + columnGap,
+        rightY,
+      );
       if (data.medicalConditions) {
-        doc.text(`Medical Conditions: ${data.medicalConditions}`, 20, y);
-        y += 8;
+        rightY = addText(
+          `Medical Conditions: ${data.medicalConditions}`,
+          rightMargin + contentWidth + columnGap,
+          rightY,
+          contentWidth,
+        );
       }
-
       if (data.medications) {
-        doc.text(`Medications: ${data.medications}`, 20, y);
-        y += 8;
+        rightY = addText(
+          `Medications: ${data.medications}`,
+          rightMargin + contentWidth + columnGap,
+          rightY,
+          contentWidth,
+        );
       }
-
       if (data.allergies) {
-        doc.text(`Allergies: ${data.allergies}`, 20, y);
-        y += 8;
+        rightY = addText(
+          `Allergies: ${data.allergies}`,
+          rightMargin + contentWidth + columnGap,
+          rightY,
+          contentWidth,
+        );
       }
-
       if (data.behavioralNotes) {
-        doc.text(`Behavioral Notes: ${data.behavioralNotes}`, 20, y);
-        y += 15;
-      } else {
-        y += 7;
+        rightY = addText(
+          `Behavioral Notes: ${data.behavioralNotes}`,
+          rightMargin + contentWidth + columnGap,
+          rightY,
+          contentWidth,
+        );
       }
+      rightY += 5;
 
       // Check if we need a new page
-      if (y > 230) {
+      if (Math.max(leftY, rightY) > pageHeight - bottomMargin) {
         doc.addPage();
-        y = 20;
+        leftY = topMargin;
+        rightY = topMargin;
       }
 
       // End of Life Care Information
-      doc.setFontSize(16);
-      doc.text("End of Life Care Decisions", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
-      // Serious Illness
-      doc.text("In Case of Serious Illness:", 20, y);
-      y += 8;
+      leftY = addSectionHeader("End of Life Care Decisions", leftMargin, leftY);
+      leftY = addText(
+        "In Case of Serious Illness:",
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY += 3;
 
       let illnessDecisionText = "Not specified";
       if (data.illnessDecision === "vet") {
@@ -435,12 +507,17 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
           "My emergency contacts should consult the caregiver and veterinarian to make any decision about the euthanization of my pet.";
       }
 
-      doc.text(illnessDecisionText, 25, y);
-      y += 15;
+      leftY = addText(
+        illnessDecisionText,
+        leftMargin + 5,
+        leftY,
+        contentWidth - 5,
+      );
+      leftY += 5;
 
       // Death Care
-      doc.text("In Case of Death:", 20, y);
-      y += 8;
+      leftY = addText("In Case of Death:", leftMargin, leftY, contentWidth);
+      leftY += 3;
 
       let deathCareText = "Not specified";
       if (data.deathCarePreference === "burial") {
@@ -453,180 +530,245 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         deathCareText = "Caregiver can determine";
       }
 
-      doc.text(`Remains care preference: ${deathCareText}`, 25, y);
-      y += 8;
+      leftY = addText(
+        `Remains care preference: ${deathCareText}`,
+        leftMargin + 5,
+        leftY,
+        contentWidth - 5,
+      );
 
       if (data.deathCareBudget) {
-        doc.text(
+        leftY = addText(
           `Allocated budget for remains care: $${data.deathCareBudget}`,
-          25,
-          y,
+          leftMargin + 5,
+          leftY,
+          contentWidth - 5,
         );
-        y += 15;
       }
-
-      // Check if we need a new page
-      if (y > 230) {
-        doc.addPage();
-        y = 20;
-      }
+      leftY += 5;
 
       // Veterinarian Information
-      doc.setFontSize(16);
-      doc.text("Veterinarian Information", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
-      doc.text(`Name: ${data.veterinarianName}`, 20, y);
-      y += 8;
-      doc.text(`Phone: ${data.veterinarianPhone}`, 20, y);
-      y += 8;
+      rightY = addSectionHeader(
+        "Veterinarian Information",
+        rightMargin + contentWidth + columnGap,
+        rightY,
+      );
+      rightY = addText(
+        `Name: ${data.veterinarianName}`,
+        rightMargin + contentWidth + columnGap,
+        rightY,
+        contentWidth,
+      );
+      rightY = addText(
+        `Phone: ${data.veterinarianPhone}`,
+        rightMargin + contentWidth + columnGap,
+        rightY,
+        contentWidth,
+      );
 
       if (data.veterinarianAddress) {
-        doc.text(`Address: ${data.veterinarianAddress}`, 20, y);
-        y += 8;
+        rightY = addText(
+          `Address: ${data.veterinarianAddress}`,
+          rightMargin + contentWidth + columnGap,
+          rightY,
+          contentWidth,
+        );
       }
-
       if (data.veterinarianEmail) {
-        doc.text(`Email: ${data.veterinarianEmail}`, 20, y);
-        y += 15;
-      } else {
-        y += 7;
+        rightY = addText(
+          `Email: ${data.veterinarianEmail}`,
+          rightMargin + contentWidth + columnGap,
+          rightY,
+          contentWidth,
+        );
       }
+      rightY += 5;
 
       // Check if we need a new page
-      if (y > 230) {
+      if (Math.max(leftY, rightY) > pageHeight - bottomMargin) {
         doc.addPage();
-        y = 20;
+        leftY = topMargin;
+        rightY = topMargin;
       }
 
       // Caregiver Information
-      doc.setFontSize(16);
-      doc.text("Primary Caregiver Information", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
-      doc.text(`Name: ${data.caregiverName}`, 20, y);
-      y += 8;
-      doc.text(`Phone: ${data.caregiverPhone}`, 20, y);
-      y += 8;
-      doc.text(`Address: ${data.caregiverAddress}`, 20, y);
-      y += 8;
+      leftY = addSectionHeader(
+        "Primary Caregiver Information",
+        leftMargin,
+        leftY,
+      );
+      leftY = addText(
+        `Name: ${data.caregiverName}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(
+        `Phone: ${data.caregiverPhone}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
+      leftY = addText(
+        `Address: ${data.caregiverAddress}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
 
       if (data.caregiverEmail) {
-        doc.text(`Email: ${data.caregiverEmail}`, 20, y);
-        y += 8;
+        leftY = addText(
+          `Email: ${data.caregiverEmail}`,
+          leftMargin,
+          leftY,
+          contentWidth,
+        );
       }
-
       if (data.caregiverRelationship) {
-        doc.text(`Relationship: ${data.caregiverRelationship}`, 20, y);
-        y += 8;
+        leftY = addText(
+          `Relationship: ${data.caregiverRelationship}`,
+          leftMargin,
+          leftY,
+          contentWidth,
+        );
       }
 
-      doc.text(
+      leftY = addText(
         `Has Key to Home: ${data.caregiverHasKey ? "Yes" : "No"}`,
-        20,
-        y,
+        leftMargin,
+        leftY,
+        contentWidth,
       );
-      y += 15;
-
-      // Check if we need a new page
-      if (y > 230) {
-        doc.addPage();
-        y = 20;
-      }
+      leftY += 5;
 
       // Backup Caregiver Information
-      doc.setFontSize(16);
-      doc.text("Backup Caregiver Information", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
-      doc.text(`Name: ${data.backupCaregiverName}`, 20, y);
-      y += 8;
-      doc.text(`Phone: ${data.backupCaregiverPhone}`, 20, y);
-      y += 8;
-      doc.text(`Address: ${data.backupCaregiverAddress}`, 20, y);
-      y += 8;
+      rightY = addSectionHeader(
+        "Backup Caregiver Information",
+        rightMargin + contentWidth + columnGap,
+        rightY,
+      );
+      rightY = addText(
+        `Name: ${data.backupCaregiverName}`,
+        rightMargin + contentWidth + columnGap,
+        rightY,
+        contentWidth,
+      );
+      rightY = addText(
+        `Phone: ${data.backupCaregiverPhone}`,
+        rightMargin + contentWidth + columnGap,
+        rightY,
+        contentWidth,
+      );
+      rightY = addText(
+        `Address: ${data.backupCaregiverAddress}`,
+        rightMargin + contentWidth + columnGap,
+        rightY,
+        contentWidth,
+      );
 
       if (data.backupCaregiverEmail) {
-        doc.text(`Email: ${data.backupCaregiverEmail}`, 20, y);
-        y += 8;
+        rightY = addText(
+          `Email: ${data.backupCaregiverEmail}`,
+          rightMargin + contentWidth + columnGap,
+          rightY,
+          contentWidth,
+        );
       }
-
       if (data.backupCaregiverRelationship) {
-        doc.text(`Relationship: ${data.backupCaregiverRelationship}`, 20, y);
-        y += 8;
+        rightY = addText(
+          `Relationship: ${data.backupCaregiverRelationship}`,
+          rightMargin + contentWidth + columnGap,
+          rightY,
+          contentWidth,
+        );
       }
 
-      doc.text(
+      rightY = addText(
         `Has Key to Home: ${data.backupCaregiverHasKey ? "Yes" : "No"}`,
-        20,
-        y,
+        rightMargin + contentWidth + columnGap,
+        rightY,
+        contentWidth,
       );
-      y += 15;
+      rightY += 5;
 
       // Check if we need a new page
-      if (y > 230) {
+      if (Math.max(leftY, rightY) > pageHeight - bottomMargin) {
         doc.addPage();
-        y = 20;
+        leftY = topMargin;
+        rightY = topMargin;
       }
 
       // Trustee Information
       if (data.trusteeName ?? data.trusteeAddress ?? data.trusteeAllocation) {
-        doc.setFontSize(16);
-        doc.text("Trustee Information", 14, y);
-        doc.setFontSize(12);
-        y += 10;
-
+        leftY = addSectionHeader("Trustee Information", leftMargin, leftY);
         if (data.trusteeName) {
-          doc.text(`Trustee Name: ${data.trusteeName}`, 20, y);
-          y += 8;
+          leftY = addText(
+            `Trustee Name: ${data.trusteeName}`,
+            leftMargin,
+            leftY,
+            contentWidth,
+          );
         }
-
         if (data.trusteeAddress) {
-          doc.text(`Address: ${data.trusteeAddress}`, 20, y);
-          y += 8;
+          leftY = addText(
+            `Address: ${data.trusteeAddress}`,
+            leftMargin,
+            leftY,
+            contentWidth,
+          );
         }
-
         if (data.trusteeCity ?? data.trusteeState ?? data.trusteeZip) {
-          doc.text(
+          leftY = addText(
             `City/State/Zip: ${data.trusteeCity ?? ""}, ${
               data.trusteeState ?? ""
             } ${data.trusteeZip ?? ""}`,
-            20,
-            y,
+            leftMargin,
+            leftY,
+            contentWidth,
           );
-          y += 8;
         }
-
         if (data.trusteeHomePhone) {
-          doc.text(`Home Phone: ${data.trusteeHomePhone}`, 20, y);
-          y += 8;
-        }
-
-        if (data.trusteeCellPhone) {
-          doc.text(`Cell Phone: ${data.trusteeCellPhone}`, 20, y);
-          y += 8;
-        }
-
-        if (data.trusteeEmail) {
-          doc.text(`Email: ${data.trusteeEmail}`, 20, y);
-          y += 8;
-        }
-
-        if (data.trusteeAllocation) {
-          doc.text(
-            `Annual Allocation: $${data.trusteeAllocation}/year for caregiver`,
-            20,
-            y,
+          leftY = addText(
+            `Home Phone: ${data.trusteeHomePhone}`,
+            leftMargin,
+            leftY,
+            contentWidth,
           );
-          y += 12;
         }
+        if (data.trusteeCellPhone) {
+          leftY = addText(
+            `Cell Phone: ${data.trusteeCellPhone}`,
+            leftMargin,
+            leftY,
+            contentWidth,
+          );
+        }
+        if (data.trusteeEmail) {
+          leftY = addText(
+            `Email: ${data.trusteeEmail}`,
+            leftMargin,
+            leftY,
+            contentWidth,
+          );
+        }
+        if (data.trusteeAllocation) {
+          leftY = addText(
+            `Annual Allocation: $${data.trusteeAllocation}/year for caregiver`,
+            leftMargin,
+            leftY,
+            contentWidth,
+          );
+        }
+        leftY += 5;
 
         // Trust Fund Information
-        doc.text("Trust Fund Information:", 20, y);
-        y += 8;
+        leftY = addText(
+          "Trust Fund Information:",
+          leftMargin,
+          leftY,
+          contentWidth,
+        );
+        leftY += 3;
 
         let fundingMethod = "Not specified";
         if (data.trustFundType === "bank-account") {
@@ -641,76 +783,90 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
           fundingMethod = `Other: ${data.trustFundOtherExplanation}`;
         }
 
-        doc.text(`Funding Method: ${fundingMethod}`, 25, y);
-        y += 12;
+        leftY = addText(
+          `Funding Method: ${fundingMethod}`,
+          leftMargin + 5,
+          leftY,
+          contentWidth - 5,
+        );
+        leftY += 5;
 
         // Remaining Funds
-        doc.text("Remaining Funds Distribution:", 20, y);
-        y += 8;
+        leftY = addText(
+          "Remaining Funds Distribution:",
+          leftMargin,
+          leftY,
+          contentWidth,
+        );
+        leftY += 3;
 
         if (data.remainingFundsOrg2ndChance) {
-          doc.text(
+          leftY = addText(
             `2nd Chance 4 Pets: ${data.remainingFundsOrg2ndChance}%`,
-            25,
-            y,
+            leftMargin + 5,
+            leftY,
+            contentWidth - 5,
           );
-          y += 8;
         }
-
         if (data.remainingFundsOrgOther) {
-          doc.text(
+          leftY = addText(
             `Other pet welfare org: ${data.remainingFundsOrgOther}%`,
-            25,
-            y,
+            leftMargin + 5,
+            leftY,
+            contentWidth - 5,
           );
-          y += 8;
-
           if (data.remainingFundsOrgOtherAddress) {
-            doc.text(`Address: ${data.remainingFundsOrgOtherAddress}`, 30, y);
-            y += 8;
+            leftY = addText(
+              `Address: ${data.remainingFundsOrgOtherAddress}`,
+              leftMargin + 10,
+              leftY,
+              contentWidth - 10,
+            );
           }
         }
-
         if (data.remainingFundsOtherBeneficiary) {
-          doc.text(
+          leftY = addText(
             `Other beneficiary: ${data.remainingFundsOtherBeneficiary}`,
-            25,
-            y,
+            leftMargin + 5,
+            leftY,
+            contentWidth - 5,
           );
-          y += 12;
         }
+        leftY += 5;
       }
 
       // Check if we need a new page
-      if (y > 230) {
+      if (Math.max(leftY, rightY) > pageHeight - bottomMargin) {
         doc.addPage();
-        y = 20;
+        leftY = topMargin;
+        rightY = topMargin;
       }
 
       // Agreement
-      doc.setFontSize(16);
-      doc.text("Agreement", 14, y);
-      doc.setFontSize(12);
-      y += 10;
-
-      doc.text(
-        "I hereby authorize the designated caregivers to make health and welfare",
-        20,
-        y,
+      leftY = addSectionHeader("Agreement", leftMargin, leftY);
+      leftY = addText(
+        "I hereby authorize the designated caregivers to make health and welfare decisions for my pet(s) in the event I am unable to do so.",
+        leftMargin,
+        leftY,
+        contentWidth,
       );
-      y += 8;
-      doc.text(
-        "decisions for my pet(s) in the event I am unable to do so.",
-        20,
-        y,
+      leftY += 15;
+
+      leftY = addText(
+        "Signature: _______________________________",
+        leftMargin,
+        leftY,
+        contentWidth,
       );
-      y += 20;
+      leftY += 8;
+      leftY = addText(
+        `Date: ${new Date().toLocaleDateString()}`,
+        leftMargin,
+        leftY,
+        contentWidth,
+      );
 
-      doc.text("Signature: _______________________________", 20, y);
-      y += 10;
-      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, y);
-
-      // Save the PDF - this is the critical line that triggers the download
+      // Save the PDF
       doc.save("pet_care_form.pdf");
 
       console.log("PDF generated successfully");
