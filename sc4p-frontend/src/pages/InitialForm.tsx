@@ -828,6 +828,12 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         y = topMargin;
       }
 
+      // Check if we need a new page before Trustee Information section
+      if (y > pageHeight - bottomMargin) {
+        doc.addPage();
+        y = topMargin;
+      }
+
       // Trustee Information Section - Two columns
       if (data.trusteeName ?? data.trusteeAllocation) {
         y = addSectionHeader("Trustee Information", leftMargin, y);
@@ -893,6 +899,12 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
 
         y = Math.max(leftY, rightY) + 5;
 
+        // Check if we need a new page before Trust Fund Information
+        if (y > pageHeight - bottomMargin) {
+          doc.addPage();
+          y = topMargin;
+        }
+
         // Trust Fund Information
         y = addSubsectionHeader("Trust Fund Information", leftMargin, y);
         let fundingMethod = "Not specified";
@@ -912,6 +924,12 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
           contentWidth,
         );
         y += 5;
+
+        // Check if we need a new page before Remaining Funds Distribution
+        if (y > pageHeight - bottomMargin) {
+          doc.addPage();
+          y = topMargin;
+        }
 
         // Remaining Funds Distribution
         y = addSubsectionHeader("Remaining Funds Distribution", leftMargin, y);
