@@ -65,12 +65,21 @@ const schema = yup.object().shape({
   microchipId: yup.string(),
   petInsurance: yup.string(),
   insurancePolicy: yup.string(),
+  insurancePhone: yup.string(),
+  insuranceCost: yup.string(),
+  hasInsurance: yup.boolean(),
   specialDiet: yup.string(),
   feedingSchedule: yup.string(),
   medicalConditions: yup.string(),
   medications: yup.string(),
   allergies: yup.string(),
   behavioralNotes: yup.string(),
+
+  // Serious Illness and Death Care
+  illnessDecision: yup.string(),
+  deathCarePreference: yup.string(),
+  deathCareBudget: yup.string(),
+
   veterinarianName: yup.string().required("Veterinarian name is required"),
   veterinarianPhone: yup.string().required("Veterinarian phone is required"),
   veterinarianAddress: yup.string(),
@@ -83,6 +92,12 @@ const schema = yup.object().shape({
   caregiverEmail: yup.string().email("Invalid email"),
   caregiverRelationship: yup.string(),
   caregiverHasKey: yup.boolean(),
+  caregiverHasAgreed: yup.boolean(),
+  caregiverCareType: yup.string(), // short-term, long-term, or both
+  caregiverCity: yup.string(),
+  caregiverState: yup.string(),
+  caregiverZip: yup.string(),
+  caregiverHomePhone: yup.string(),
 
   // Backup Caregiver Information
   backupCaregiverName: yup
@@ -97,6 +112,50 @@ const schema = yup.object().shape({
   backupCaregiverEmail: yup.string().email("Invalid email"),
   backupCaregiverRelationship: yup.string(),
   backupCaregiverHasKey: yup.boolean(),
+  backupCaregiverHasAgreed: yup.boolean(),
+  backupCaregiverCareType: yup.string(), // short-term, long-term, or both
+  backupCaregiverCity: yup.string(),
+  backupCaregiverState: yup.string(),
+  backupCaregiverZip: yup.string(),
+  backupCaregiverHomePhone: yup.string(),
+
+  // Pet Sitters and Boarding Facilities
+  petSitterContact: yup.string(),
+  petSitterAddress: yup.string(),
+  petSitterCity: yup.string(),
+  petSitterState: yup.string(),
+  petSitterZip: yup.string(),
+  petSitterHomePhone: yup.string(),
+  petSitterCellPhone: yup.string(),
+  petSitterEmail: yup.string().email("Invalid email"),
+  petSitterDailyCharge: yup.string(),
+
+  // Emergency Contact Info
+  emergencyContact1: yup.string(),
+  emergencyContact1Address: yup.string(),
+  emergencyContact1City: yup.string(),
+  emergencyContact1State: yup.string(),
+  emergencyContact1Zip: yup.string(),
+  emergencyContact1HomePhone: yup.string(),
+  emergencyContact1CellPhone: yup.string(),
+  emergencyContact1Email: yup.string().email("Invalid email"),
+
+  // Trustee Information
+  trusteeName: yup.string(),
+  trusteeAddress: yup.string(),
+  trusteeCity: yup.string(),
+  trusteeState: yup.string(),
+  trusteeZip: yup.string(),
+  trusteeHomePhone: yup.string(),
+  trusteeCellPhone: yup.string(),
+  trusteeEmail: yup.string().email("Invalid email"),
+  trusteeAllocation: yup.string(),
+  trustFundType: yup.string(),
+  trustFundOtherExplanation: yup.string(),
+  remainingFundsOrg2ndChance: yup.string(),
+  remainingFundsOrgOther: yup.string(),
+  remainingFundsOrgOtherAddress: yup.string(),
+  remainingFundsOtherBeneficiary: yup.string(),
 
   // Terms and Agreements
   agreeToTerms: yup.boolean().oneOf([true], "You must agree to the terms"),
@@ -251,12 +310,31 @@ const InitialForm: React.FC = () => {
         y += 8;
       }
 
-      if (data.petInsurance) {
-        doc.text(`Pet Insurance: ${data.petInsurance}`, 20, y);
-        y += 8;
+      // Pet Insurance Information
+      if (data.hasInsurance) {
+        doc.setFontSize(16);
+        doc.text("Pet Health Insurance", 14, y);
+        doc.setFontSize(12);
+        y += 10;
+
+        if (data.petInsurance) {
+          doc.text(`Insurance Provider: ${data.petInsurance}`, 20, y);
+          y += 8;
+        }
+
+        if (data.insurancePhone) {
+          doc.text(`Provider Phone: ${data.insurancePhone}`, 20, y);
+          y += 8;
+        }
+
         if (data.insurancePolicy) {
           doc.text(`Policy Number: ${data.insurancePolicy}`, 20, y);
           y += 8;
+        }
+
+        if (data.insuranceCost) {
+          doc.text(`Cost per year: $${data.insuranceCost}`, 20, y);
+          y += 12;
         }
       }
 
@@ -318,6 +396,64 @@ const InitialForm: React.FC = () => {
         y += 15;
       } else {
         y += 7;
+      }
+
+      // Check if we need a new page
+      if (y > 230) {
+        doc.addPage();
+        y = 20;
+      }
+
+      // End of Life Care Information
+      doc.setFontSize(16);
+      doc.text("End of Life Care Decisions", 14, y);
+      doc.setFontSize(12);
+      y += 10;
+
+      // Serious Illness
+      doc.text("In Case of Serious Illness:", 20, y);
+      y += 8;
+
+      let illnessDecisionText = "Not specified";
+      if (data.illnessDecision === "vet") {
+        illnessDecisionText =
+          "My veterinarian should make the decision if my pet should be euthanized.";
+      } else if (data.illnessDecision === "caregiver") {
+        illnessDecisionText =
+          "My caregiver should make the decision if my pet should be euthanized.";
+      } else if (data.illnessDecision === "consult") {
+        illnessDecisionText =
+          "My emergency contacts should consult the caregiver and veterinarian to make any decision about the euthanization of my pet.";
+      }
+
+      doc.text(illnessDecisionText, 25, y);
+      y += 15;
+
+      // Death Care
+      doc.text("In Case of Death:", 20, y);
+      y += 8;
+
+      let deathCareText = "Not specified";
+      if (data.deathCarePreference === "burial") {
+        deathCareText = "Burial";
+      } else if (data.deathCarePreference === "cremation") {
+        deathCareText = "Cremation";
+      } else if (data.deathCarePreference === "pet-cemetery") {
+        deathCareText = "Local Pet Cemetery";
+      } else if (data.deathCarePreference === "caregiver-determine") {
+        deathCareText = "Caregiver can determine";
+      }
+
+      doc.text(`Remains care preference: ${deathCareText}`, 25, y);
+      y += 8;
+
+      if (data.deathCareBudget) {
+        doc.text(
+          `Allocated budget for remains care: $${data.deathCareBudget}`,
+          25,
+          y,
+        );
+        y += 15;
       }
 
       // Check if we need a new page
@@ -420,6 +556,119 @@ const InitialForm: React.FC = () => {
         y,
       );
       y += 15;
+
+      // Check if we need a new page
+      if (y > 230) {
+        doc.addPage();
+        y = 20;
+      }
+
+      // Trustee Information
+      if (data.trusteeName || data.trusteeAddress || data.trusteeAllocation) {
+        doc.setFontSize(16);
+        doc.text("Trustee Information", 14, y);
+        doc.setFontSize(12);
+        y += 10;
+
+        if (data.trusteeName) {
+          doc.text(`Trustee Name: ${data.trusteeName}`, 20, y);
+          y += 8;
+        }
+
+        if (data.trusteeAddress) {
+          doc.text(`Address: ${data.trusteeAddress}`, 20, y);
+          y += 8;
+        }
+
+        if (data.trusteeCity || data.trusteeState || data.trusteeZip) {
+          doc.text(
+            `City/State/Zip: ${data.trusteeCity || ""}, ${data.trusteeState || ""} ${data.trusteeZip || ""}`,
+            20,
+            y,
+          );
+          y += 8;
+        }
+
+        if (data.trusteeHomePhone) {
+          doc.text(`Home Phone: ${data.trusteeHomePhone}`, 20, y);
+          y += 8;
+        }
+
+        if (data.trusteeCellPhone) {
+          doc.text(`Cell Phone: ${data.trusteeCellPhone}`, 20, y);
+          y += 8;
+        }
+
+        if (data.trusteeEmail) {
+          doc.text(`Email: ${data.trusteeEmail}`, 20, y);
+          y += 8;
+        }
+
+        if (data.trusteeAllocation) {
+          doc.text(
+            `Annual Allocation: $${data.trusteeAllocation}/year for caregiver`,
+            20,
+            y,
+          );
+          y += 12;
+        }
+
+        // Trust Fund Information
+        doc.text("Trust Fund Information:", 20, y);
+        y += 8;
+
+        let fundingMethod = "Not specified";
+        if (data.trustFundType === "bank-account") {
+          fundingMethod = "Bank Account Tied to Will";
+        } else if (data.trustFundType === "life-insurance") {
+          fundingMethod =
+            "Life Insurance policy designates trust as beneficiary";
+        } else if (
+          data.trustFundType === "other-fund" &&
+          data.trustFundOtherExplanation
+        ) {
+          fundingMethod = `Other: ${data.trustFundOtherExplanation}`;
+        }
+
+        doc.text(`Funding Method: ${fundingMethod}`, 25, y);
+        y += 12;
+
+        // Remaining Funds
+        doc.text("Remaining Funds Distribution:", 20, y);
+        y += 8;
+
+        if (data.remainingFundsOrg2ndChance) {
+          doc.text(
+            `2nd Chance 4 Pets: ${data.remainingFundsOrg2ndChance}%`,
+            25,
+            y,
+          );
+          y += 8;
+        }
+
+        if (data.remainingFundsOrgOther) {
+          doc.text(
+            `Other pet welfare org: ${data.remainingFundsOrgOther}%`,
+            25,
+            y,
+          );
+          y += 8;
+
+          if (data.remainingFundsOrgOtherAddress) {
+            doc.text(`Address: ${data.remainingFundsOrgOtherAddress}`, 30, y);
+            y += 8;
+          }
+        }
+
+        if (data.remainingFundsOtherBeneficiary) {
+          doc.text(
+            `Other beneficiary: ${data.remainingFundsOtherBeneficiary}`,
+            25,
+            y,
+          );
+          y += 12;
+        }
+      }
 
       // Check if we need a new page
       if (y > 230) {
@@ -553,6 +802,57 @@ const InitialForm: React.FC = () => {
       }
       y += 7;
 
+      // Pet Insurance
+      if (formData.hasInsurance) {
+        doc.text(
+          `Insurance: ${formData.petInsurance || "Not specified"}`,
+          20,
+          y,
+        );
+        y += 8;
+        if (formData.insurancePolicy) {
+          doc.text(`Policy: ${formData.insurancePolicy}`, 20, y);
+          y += 8;
+        }
+      }
+      y += 7;
+
+      // End of Life Care
+      doc.text("End of Life Care:", 20, y);
+      y += 8;
+
+      // Illness Decision
+      let illnessDecision = "Not specified";
+      if (formData.illnessDecision === "vet") {
+        illnessDecision = "Veterinarian decides";
+      } else if (formData.illnessDecision === "caregiver") {
+        illnessDecision = "Caregiver decides";
+      } else if (formData.illnessDecision === "consult") {
+        illnessDecision = "Consultation required";
+      }
+      doc.text(`• Serious Illness: ${illnessDecision}`, 25, y);
+      y += 8;
+
+      // Death Care
+      let deathCare = "Not specified";
+      if (formData.deathCarePreference === "burial") {
+        deathCare = "Burial";
+      } else if (formData.deathCarePreference === "cremation") {
+        deathCare = "Cremation";
+      } else if (formData.deathCarePreference === "pet-cemetery") {
+        deathCare = "Pet Cemetery";
+      } else if (formData.deathCarePreference === "caregiver-determine") {
+        deathCare = "Caregiver determines";
+      }
+      doc.text(`• Death Care: ${deathCare}`, 25, y);
+      y += 8;
+
+      if (formData.deathCareBudget) {
+        doc.text(`• Budget for Remains: $${formData.deathCareBudget}`, 25, y);
+        y += 8;
+      }
+      y += 7;
+
       // Caregiver Information
       doc.setFontSize(16);
       doc.text("Caregiver Information", 20, y);
@@ -571,6 +871,66 @@ const InitialForm: React.FC = () => {
         y,
       );
       y += 15;
+
+      // Trustee Information (if available)
+      if (
+        formData.trusteeName ||
+        formData.trusteeAllocation ||
+        formData.trustFundType
+      ) {
+        doc.setFontSize(16);
+        doc.text("Trustee & Trust Information", 20, y);
+        y += 10;
+        doc.setFontSize(12);
+
+        if (formData.trusteeName) {
+          doc.text(`Trustee: ${formData.trusteeName}`, 20, y);
+          y += 8;
+        }
+
+        if (formData.trusteeAllocation) {
+          doc.text(`Annual Allocation: $${formData.trusteeAllocation}`, 20, y);
+          y += 8;
+        }
+
+        // Trust Fund Type
+        let fundingMethod = "Not specified";
+        if (formData.trustFundType === "bank-account") {
+          fundingMethod = "Bank Account";
+        } else if (formData.trustFundType === "life-insurance") {
+          fundingMethod = "Life Insurance";
+        } else if (formData.trustFundType === "other-fund") {
+          fundingMethod = "Other";
+        }
+
+        doc.text(`Funding Method: ${fundingMethod}`, 20, y);
+        y += 8;
+
+        // Remaining Funds
+        if (
+          formData.remainingFundsOrg2ndChance ||
+          formData.remainingFundsOrgOther
+        ) {
+          doc.text("Funds Distribution: ", 20, y);
+          y += 8;
+
+          if (formData.remainingFundsOrg2ndChance) {
+            doc.text(
+              `• 2nd Chance 4 Pets: ${formData.remainingFundsOrg2ndChance}%`,
+              25,
+              y,
+            );
+            y += 8;
+          }
+
+          if (formData.remainingFundsOrgOther) {
+            doc.text(`• Other org: ${formData.remainingFundsOrgOther}%`, 25, y);
+            y += 8;
+          }
+        }
+
+        y += 7;
+      }
 
       // Veterinarian
       doc.setFontSize(16);
@@ -611,8 +971,8 @@ const InitialForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10">
-      <div className="flex mb-8 px-8">
+    <div className="h-screen bg-gray-50">
+      <div className="flex">
         <img
           src={Logo}
           className="w-[55.6px] h-[109.7px] mt-[25.98px] ml-[33.9px]"
@@ -631,7 +991,7 @@ const InitialForm: React.FC = () => {
         <div className="bg-white p-8 rounded-lg shadow-md">
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
-              {Array.from({ length: 5 }).map((_, index) => (
+              {Array.from({ length: 6 }).map((_, index) => (
                 <div
                   key={index}
                   className={`h-2 rounded-full flex-grow mx-1 ${
@@ -641,7 +1001,7 @@ const InitialForm: React.FC = () => {
               ))}
             </div>
             <p className="text-center text-gray-600">
-              Step {step} of 5:{" "}
+              Step {step} of 6:{" "}
               {step === 1
                 ? "Owner & Emergency Contact"
                 : step === 2
@@ -650,7 +1010,9 @@ const InitialForm: React.FC = () => {
                     ? "Veterinarian Information"
                     : step === 4
                       ? "Caregiver Information"
-                      : "Review & Submit"}
+                      : step === 5
+                        ? "Trustee Information"
+                        : "Review & Submit"}
             </p>
           </div>
 
@@ -976,34 +1338,6 @@ const InitialForm: React.FC = () => {
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <Controller
-                      name="petInsurance"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          label="Pet Insurance Provider"
-                          placeholder="Enter insurance provider if any"
-                          className="w-full"
-                        />
-                      )}
-                    />
-
-                    <Controller
-                      name="insurancePolicy"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          label="Policy Number"
-                          placeholder="Enter policy number"
-                          className="w-full"
-                        />
-                      )}
-                    />
-                  </div>
-
                   <Controller
                     name="specialDiet"
                     control={control}
@@ -1085,6 +1419,235 @@ const InitialForm: React.FC = () => {
                       />
                     )}
                   />
+
+                  <h2 className="text-xl font-semibold text-[#5E3593] mt-8 mb-4">
+                    Pet Health Insurance
+                  </h2>
+
+                  <div className="mb-4">
+                    <Controller
+                      name="hasInsurance"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex items-center">
+                          <p className="mr-4">
+                            Do you currently own a pet insurance policy?
+                          </p>
+                          <Checkbox
+                            isSelected={field.value}
+                            onValueChange={(checked) => field.onChange(checked)}
+                            name={field.name}
+                            ref={field.ref}
+                          >
+                            Yes
+                          </Checkbox>
+                        </div>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="petInsurance"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Name of Provider"
+                          placeholder="Enter insurance provider if any"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="insurancePhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Phone"
+                          placeholder="(123) 456-7890"
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="insurancePolicy"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Policy Number"
+                          placeholder="Enter policy number"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="insuranceCost"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Cost per year"
+                          placeholder="Enter yearly cost"
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <h2 className="text-xl font-semibold text-[#5E3593] mt-8 mb-4">
+                    In Case of Serious Illness
+                  </h2>
+
+                  <div className="mb-4">
+                    <p className="mb-2">Should my pet become seriously ill:</p>
+                    <Controller
+                      name="illnessDecision"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="space-y-2 ml-4">
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="vet-decision"
+                              value="vet"
+                              checked={field.value === "vet"}
+                              onChange={() => field.onChange("vet")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="vet-decision">
+                              My veterinarian should make the decision if my pet
+                              should be euthanized.
+                            </label>
+                          </div>
+
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="caregiver-decision"
+                              value="caregiver"
+                              checked={field.value === "caregiver"}
+                              onChange={() => field.onChange("caregiver")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="caregiver-decision">
+                              My caregiver should make the decision if my pet
+                              should be euthanized.
+                            </label>
+                          </div>
+
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="consult-decision"
+                              value="consult"
+                              checked={field.value === "consult"}
+                              onChange={() => field.onChange("consult")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="consult-decision">
+                              My emergency contacts should consult the caregiver
+                              and veterinarian to make any decision about the
+                              euthanization of my pet.
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+
+                  <h2 className="text-xl font-semibold text-[#5E3593] mt-8 mb-4">
+                    In Case of Death
+                  </h2>
+
+                  <div className="mb-4">
+                    <p className="mb-2">
+                      When your pet dies, how do you want the pet's remains to
+                      be cared for?
+                    </p>
+                    <Controller
+                      name="deathCarePreference"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="space-y-2 ml-4">
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="burial"
+                              value="burial"
+                              checked={field.value === "burial"}
+                              onChange={() => field.onChange("burial")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="burial">Burial</label>
+                          </div>
+
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="cremation"
+                              value="cremation"
+                              checked={field.value === "cremation"}
+                              onChange={() => field.onChange("cremation")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="cremation">Cremation</label>
+                          </div>
+
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="pet-cemetery"
+                              value="pet-cemetery"
+                              checked={field.value === "pet-cemetery"}
+                              onChange={() => field.onChange("pet-cemetery")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="pet-cemetery">
+                              Local Pet Cemetery
+                            </label>
+                          </div>
+
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="caregiver-determine"
+                              value="caregiver-determine"
+                              checked={field.value === "caregiver-determine"}
+                              onChange={() =>
+                                field.onChange("caregiver-determine")
+                              }
+                              className="mr-2"
+                            />
+                            <label htmlFor="caregiver-determine">
+                              Caregiver can determine
+                            </label>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+
+                  <Controller
+                    name="deathCareBudget"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="I would like to allocate $ for the cost of caring for my pet's remains"
+                        placeholder="Enter amount"
+                        description="You may want to include an allowance for any special markers, urns or caskets in this amount."
+                        className="w-full"
+                      />
+                    )}
+                  />
                 </div>
               )}
 
@@ -1157,8 +1720,132 @@ const InitialForm: React.FC = () => {
               {step === 4 && (
                 <div className="space-y-4">
                   <h2 className="text-xl font-semibold text-[#5E3593] mb-4">
-                    Primary Caregiver Information
+                    CAREGIVER INFORMATION
                   </h2>
+
+                  <p className="text-sm mb-4">
+                    Carefully select a minimum of two caregivers who agree to be
+                    responsible for your pets should anything happen to you.
+                    Caregivers are typically responsible for the day-to-day care
+                    of your pets. They should fully understand the obligation
+                    and requirements for this role. Your choice of caregivers
+                    should take into consideration the potential lifespan of
+                    your pets.
+                  </p>
+
+                  <h3 className="text-lg font-semibold text-[#5E3593] mb-2">
+                    Primary Caregiver
+                  </h3>
+
+                  <div className="mb-4">
+                    <Controller
+                      name="caregiverHasAgreed"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex items-center">
+                          <p className="mr-4">
+                            This caregiver has agreed to care for my pets should
+                            anything happen to me
+                          </p>
+                          <div className="flex gap-4">
+                            <div className="flex items-center">
+                              <input
+                                type="radio"
+                                id="caregiver-agreed-yes"
+                                checked={field.value === true}
+                                onChange={() => field.onChange(true)}
+                                className="mr-2"
+                              />
+                              <label htmlFor="caregiver-agreed-yes">Yes</label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="radio"
+                                id="caregiver-agreed-no"
+                                checked={field.value === false}
+                                onChange={() => field.onChange(false)}
+                                className="mr-2"
+                              />
+                              <label htmlFor="caregiver-agreed-no">No</label>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <Controller
+                      name="caregiverCareType"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex items-center">
+                          <p className="mr-4">This caregiver will provide</p>
+                          <div className="flex gap-4">
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id="caregiver-care-short"
+                                checked={field.value?.includes("short-term")}
+                                onChange={(e) => {
+                                  let value = field.value || "";
+                                  if (e.target.checked) {
+                                    field.onChange(value + " short-term care");
+                                  } else {
+                                    field.onChange(
+                                      value.replace("short-term care", ""),
+                                    );
+                                  }
+                                }}
+                                className="mr-2"
+                              />
+                              <label htmlFor="caregiver-care-short">
+                                short-term care
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id="caregiver-care-long"
+                                checked={field.value?.includes("long-term")}
+                                onChange={(e) => {
+                                  let value = field.value || "";
+                                  if (e.target.checked) {
+                                    field.onChange(value + " long-term care");
+                                  } else {
+                                    field.onChange(
+                                      value.replace("long-term care", ""),
+                                    );
+                                  }
+                                }}
+                                className="mr-2"
+                              />
+                              <label htmlFor="caregiver-care-long">
+                                long-term care
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id="caregiver-care-both"
+                                checked={field.value?.includes("both")}
+                                onChange={(e) => {
+                                  let value = field.value || "";
+                                  if (e.target.checked) {
+                                    field.onChange("both");
+                                  } else {
+                                    field.onChange(value.replace("both", ""));
+                                  }
+                                }}
+                                className="mr-2"
+                              />
+                              <label htmlFor="caregiver-care-both">both</label>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
 
                   <Controller
                     name="caregiverName"
@@ -1176,27 +1863,12 @@ const InitialForm: React.FC = () => {
                   />
 
                   <Controller
-                    name="caregiverPhone"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        label="Caregiver Phone"
-                        placeholder="(123) 456-7890"
-                        isInvalid={!!errors.caregiverPhone}
-                        errorMessage={errors.caregiverPhone?.message}
-                        className="w-full"
-                      />
-                    )}
-                  />
-
-                  <Controller
                     name="caregiverAddress"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        label="Caregiver Address"
+                        label="Address"
                         placeholder="Enter caregiver's address"
                         isInvalid={!!errors.caregiverAddress}
                         errorMessage={errors.caregiverAddress?.message}
@@ -1205,13 +1877,84 @@ const InitialForm: React.FC = () => {
                     )}
                   />
 
+                  <div className="grid grid-cols-3 gap-4">
+                    <Controller
+                      name="caregiverCity"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="City"
+                          placeholder="City"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="caregiverState"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="State"
+                          placeholder="State"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="caregiverZip"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Zip"
+                          placeholder="Zip Code"
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="caregiverHomePhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Home Phone"
+                          placeholder="(123) 456-7890"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="caregiverPhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Cell Phone"
+                          placeholder="(123) 456-7890"
+                          isInvalid={!!errors.caregiverPhone}
+                          errorMessage={errors.caregiverPhone?.message}
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
                   <Controller
                     name="caregiverEmail"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        label="Caregiver Email"
+                        label="Email"
                         placeholder="Enter caregiver's email"
                         isInvalid={!!errors.caregiverEmail}
                         errorMessage={errors.caregiverEmail?.message}
@@ -1220,41 +1963,125 @@ const InitialForm: React.FC = () => {
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <Controller
-                      name="caregiverRelationship"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          {...field}
-                          label="Relationship to You"
-                          placeholder="Friend, Family, etc."
-                          className="w-full"
-                        />
-                      )}
-                    />
+                  <h3 className="text-lg font-semibold text-[#5E3593] mt-8 mb-2">
+                    Alternate Caregiver
+                  </h3>
 
+                  <div className="mb-4">
                     <Controller
-                      name="caregiverHasKey"
+                      name="backupCaregiverHasAgreed"
                       control={control}
                       render={({ field }) => (
-                        <div className="flex items-center h-full pt-8">
-                          <Checkbox
-                            isSelected={field.value}
-                            onValueChange={(checked) => field.onChange(checked)}
-                            name={field.name}
-                            ref={field.ref}
-                          >
-                            Has Key to Home
-                          </Checkbox>
+                        <div className="flex items-center">
+                          <p className="mr-4">
+                            This caregiver has agreed to care for my pets should
+                            anything happen to me
+                          </p>
+                          <div className="flex gap-4">
+                            <div className="flex items-center">
+                              <input
+                                type="radio"
+                                id="backup-caregiver-agreed-yes"
+                                checked={field.value === true}
+                                onChange={() => field.onChange(true)}
+                                className="mr-2"
+                              />
+                              <label htmlFor="backup-caregiver-agreed-yes">
+                                Yes
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="radio"
+                                id="backup-caregiver-agreed-no"
+                                checked={field.value === false}
+                                onChange={() => field.onChange(false)}
+                                className="mr-2"
+                              />
+                              <label htmlFor="backup-caregiver-agreed-no">
+                                No
+                              </label>
+                            </div>
+                          </div>
                         </div>
                       )}
                     />
                   </div>
 
-                  <h2 className="text-xl font-semibold text-[#5E3593] mt-8 mb-4">
-                    Backup Caregiver Information
-                  </h2>
+                  <div className="mb-4">
+                    <Controller
+                      name="backupCaregiverCareType"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex items-center">
+                          <p className="mr-4">This caregiver will provide</p>
+                          <div className="flex gap-4">
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id="backup-caregiver-care-short"
+                                checked={field.value?.includes("short-term")}
+                                onChange={(e) => {
+                                  let value = field.value || "";
+                                  if (e.target.checked) {
+                                    field.onChange(value + " short-term care");
+                                  } else {
+                                    field.onChange(
+                                      value.replace("short-term care", ""),
+                                    );
+                                  }
+                                }}
+                                className="mr-2"
+                              />
+                              <label htmlFor="backup-caregiver-care-short">
+                                short-term care
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id="backup-caregiver-care-long"
+                                checked={field.value?.includes("long-term")}
+                                onChange={(e) => {
+                                  let value = field.value || "";
+                                  if (e.target.checked) {
+                                    field.onChange(value + " long-term care");
+                                  } else {
+                                    field.onChange(
+                                      value.replace("long-term care", ""),
+                                    );
+                                  }
+                                }}
+                                className="mr-2"
+                              />
+                              <label htmlFor="backup-caregiver-care-long">
+                                long-term care
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="checkbox"
+                                id="backup-caregiver-care-both"
+                                checked={field.value?.includes("both")}
+                                onChange={(e) => {
+                                  let value = field.value || "";
+                                  if (e.target.checked) {
+                                    field.onChange("both");
+                                  } else {
+                                    field.onChange(value.replace("both", ""));
+                                  }
+                                }}
+                                className="mr-2"
+                              />
+                              <label htmlFor="backup-caregiver-care-both">
+                                both
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
 
                   <Controller
                     name="backupCaregiverName"
@@ -1262,25 +2089,10 @@ const InitialForm: React.FC = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
-                        label="Backup Caregiver Name"
+                        label="Caregiver Name"
                         placeholder="Enter backup caregiver's name"
                         isInvalid={!!errors.backupCaregiverName}
                         errorMessage={errors.backupCaregiverName?.message}
-                        className="w-full"
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    name="backupCaregiverPhone"
-                    control={control}
-                    render={({ field }) => (
-                      <Input
-                        {...field}
-                        label="Backup Caregiver Phone"
-                        placeholder="(123) 456-7890"
-                        isInvalid={!!errors.backupCaregiverPhone}
-                        errorMessage={errors.backupCaregiverPhone?.message}
                         className="w-full"
                       />
                     )}
@@ -1292,7 +2104,7 @@ const InitialForm: React.FC = () => {
                     render={({ field }) => (
                       <Input
                         {...field}
-                        label="Backup Caregiver Address"
+                        label="Address"
                         placeholder="Enter backup caregiver's address"
                         isInvalid={!!errors.backupCaregiverAddress}
                         errorMessage={errors.backupCaregiverAddress?.message}
@@ -1301,13 +2113,84 @@ const InitialForm: React.FC = () => {
                     )}
                   />
 
+                  <div className="grid grid-cols-3 gap-4">
+                    <Controller
+                      name="backupCaregiverCity"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="City"
+                          placeholder="City"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="backupCaregiverState"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="State"
+                          placeholder="State"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="backupCaregiverZip"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Zip"
+                          placeholder="Zip Code"
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="backupCaregiverHomePhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Home Phone"
+                          placeholder="(123) 456-7890"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="backupCaregiverPhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Cell Phone"
+                          placeholder="(123) 456-7890"
+                          isInvalid={!!errors.backupCaregiverPhone}
+                          errorMessage={errors.backupCaregiverPhone?.message}
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
                   <Controller
                     name="backupCaregiverEmail"
                     control={control}
                     render={({ field }) => (
                       <Input
                         {...field}
-                        label="Backup Caregiver Email"
+                        label="Email"
                         placeholder="Enter backup caregiver's email"
                         isInvalid={!!errors.backupCaregiverEmail}
                         errorMessage={errors.backupCaregiverEmail?.message}
@@ -1316,41 +2199,588 @@ const InitialForm: React.FC = () => {
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <h3 className="text-lg font-semibold text-[#5E3593] mt-8 mb-2">
+                    Pet Sitters and Boarding Facilities
+                  </h3>
+
+                  <p className="text-sm mb-4">
+                    Should your designated caregiver go on vacation or be
+                    temporarily unavailable to care for your pets, who should
+                    take care of them?
+                  </p>
+
+                  <Controller
+                    name="petSitterContact"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Contact"
+                        placeholder="Enter pet sitter or facility name"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="petSitterAddress"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Address"
+                        placeholder="Enter pet sitter's address"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <div className="grid grid-cols-3 gap-4">
                     <Controller
-                      name="backupCaregiverRelationship"
+                      name="petSitterCity"
                       control={control}
                       render={({ field }) => (
                         <Input
                           {...field}
-                          label="Relationship to You"
-                          placeholder="Friend, Family, etc."
+                          label="City"
+                          placeholder="City"
                           className="w-full"
                         />
                       )}
                     />
 
                     <Controller
-                      name="backupCaregiverHasKey"
+                      name="petSitterState"
                       control={control}
                       render={({ field }) => (
-                        <div className="flex items-center h-full pt-8">
-                          <Checkbox
-                            isSelected={field.value}
-                            onValueChange={(checked) => field.onChange(checked)}
-                            name={field.name}
-                            ref={field.ref}
-                          >
-                            Has Key to Home
-                          </Checkbox>
-                        </div>
+                        <Input
+                          {...field}
+                          label="State"
+                          placeholder="State"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="petSitterZip"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Zip"
+                          placeholder="Zip Code"
+                          className="w-full"
+                        />
                       )}
                     />
                   </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <Controller
+                      name="petSitterHomePhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Home Phone"
+                          placeholder="(123) 456-7890"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="petSitterCellPhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Cell Phone"
+                          placeholder="(123) 456-7890"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="petSitterDailyCharge"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Average daily charge (or costs)"
+                          placeholder="$"
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Controller
+                    name="petSitterEmail"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Email"
+                        placeholder="Enter pet sitter's email"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <h3 className="text-lg font-semibold text-[#5E3593] mt-8 mb-2">
+                    EMERGENCY CONTACT INFORMATION
+                  </h3>
+
+                  <p className="text-sm mb-4">
+                    Emergency contacts might include friends and family members
+                    who may not necessarily take care of your pets but would be
+                    able to assist in case of an emergency.
+                  </p>
+
+                  <Controller
+                    name="emergencyContact1"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Contact #1"
+                        placeholder="Enter emergency contact name"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="emergencyContact1Address"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Address"
+                        placeholder="Enter emergency contact's address"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <Controller
+                      name="emergencyContact1City"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="City"
+                          placeholder="City"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="emergencyContact1State"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="State"
+                          placeholder="State"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="emergencyContact1Zip"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Zip"
+                          placeholder="Zip Code"
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="emergencyContact1HomePhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Home Phone"
+                          placeholder="(123) 456-7890"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="emergencyContact1CellPhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Cell Phone"
+                          placeholder="(123) 456-7890"
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Controller
+                    name="emergencyContact1Email"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Email"
+                        placeholder="Enter emergency contact's email"
+                        className="w-full"
+                      />
+                    )}
+                  />
                 </div>
               )}
 
               {step === 5 && (
+                <div className="space-y-4">
+                  <h2 className="text-xl font-semibold text-[#5E3593] mb-4">
+                    Trustee Information
+                  </h2>
+
+                  <div className="mb-4">
+                    <p className="font-medium">
+                      Primary Trustee or Trustee Service
+                    </p>
+                  </div>
+
+                  <Controller
+                    name="trusteeName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Trustee Name"
+                        placeholder="Enter trustee's name"
+                        isInvalid={!!errors.trusteeName}
+                        errorMessage={errors.trusteeName?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="trusteeAddress"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Address"
+                        placeholder="Enter trustee's address"
+                        isInvalid={!!errors.trusteeAddress}
+                        errorMessage={errors.trusteeAddress?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <Controller
+                      name="trusteeCity"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="City"
+                          placeholder="City"
+                          isInvalid={!!errors.trusteeCity}
+                          errorMessage={errors.trusteeCity?.message}
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="trusteeState"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="State"
+                          placeholder="State"
+                          isInvalid={!!errors.trusteeState}
+                          errorMessage={errors.trusteeState?.message}
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="trusteeZip"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Zip Code"
+                          placeholder="Zip Code"
+                          isInvalid={!!errors.trusteeZip}
+                          errorMessage={errors.trusteeZip?.message}
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="trusteeHomePhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Home Phone"
+                          placeholder="(123) 456-7890"
+                          isInvalid={!!errors.trusteeHomePhone}
+                          errorMessage={errors.trusteeHomePhone?.message}
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="trusteeCellPhone"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Cell Phone"
+                          placeholder="(123) 456-7890"
+                          isInvalid={!!errors.trusteeCellPhone}
+                          errorMessage={errors.trusteeCellPhone?.message}
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Controller
+                    name="trusteeEmail"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Email"
+                        placeholder="Enter trustee's email"
+                        isInvalid={!!errors.trusteeEmail}
+                        errorMessage={errors.trusteeEmail?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="trusteeAllocation"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="I would like to allocate $ per year for my Trustee or Trustee service to provide for the caregiver"
+                        placeholder="Enter amount"
+                        isInvalid={!!errors.trusteeAllocation}
+                        errorMessage={errors.trusteeAllocation?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <h2 className="text-xl font-semibold text-[#5E3593] mt-8 mb-4">
+                    Trust Fund Information
+                  </h2>
+
+                  <div className="mb-4">
+                    <p className="mb-2">
+                      For the benefit of the Trustee, please indicate how you
+                      plan to provide funds for the care of your pets:
+                    </p>
+                    <Controller
+                      name="trustFundType"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="space-y-2 ml-4">
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="bank-account"
+                              value="bank-account"
+                              checked={field.value === "bank-account"}
+                              onChange={() => field.onChange("bank-account")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="bank-account">
+                              Bank Account Tied to Will
+                            </label>
+                          </div>
+
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="life-insurance"
+                              value="life-insurance"
+                              checked={field.value === "life-insurance"}
+                              onChange={() => field.onChange("life-insurance")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="life-insurance">
+                              Life Insurance policy designates trust as
+                              beneficiary
+                            </label>
+                          </div>
+
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              id="other-fund"
+                              value="other-fund"
+                              checked={field.value === "other-fund"}
+                              onChange={() => field.onChange("other-fund")}
+                              className="mr-2"
+                            />
+                            <label htmlFor="other-fund">Other</label>
+                          </div>
+                        </div>
+                      )}
+                    />
+                  </div>
+
+                  {methods.watch("trustFundType") === "other-fund" && (
+                    <Controller
+                      name="trustFundOtherExplanation"
+                      control={control}
+                      render={({ field }) => (
+                        <Textarea
+                          {...field}
+                          label="Please explain"
+                          placeholder="Explain how you plan to provide funds"
+                          isInvalid={!!errors.trustFundOtherExplanation}
+                          errorMessage={
+                            errors.trustFundOtherExplanation?.message
+                          }
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  )}
+
+                  <p className="text-gray-600 text-sm mt-2">
+                    We encourage you to work with an attorney or financial
+                    planner to appropriately fund your trust so that the Trustee
+                    is able to access the funds.
+                  </p>
+
+                  <h2 className="text-xl font-semibold text-[#5E3593] mt-8 mb-4">
+                    Remaining Funds
+                  </h2>
+
+                  <p className="mb-4">
+                    Should my pet(s) die while under the care of a caregiver, I
+                    would like my remaining funds distributed to (percentages
+                    should total 100%).
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="remainingFundsOrg2ndChance"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="2nd Chance 4 Pets (%)"
+                          placeholder="Enter percentage"
+                          isInvalid={!!errors.remainingFundsOrg2ndChance}
+                          errorMessage={
+                            errors.remainingFundsOrg2ndChance?.message
+                          }
+                          className="w-full"
+                          endContent={
+                            <div className="pointer-events-none flex items-center">
+                              %
+                            </div>
+                          }
+                        />
+                      )}
+                    />
+                    <p className="text-gray-600 text-sm mt-2">
+                      Address: 1484 Pollard Road, No. 444, Los Gatos, CA 95032
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="remainingFundsOrgOther"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Other pet welfare organization (%)"
+                          placeholder="Enter percentage"
+                          isInvalid={!!errors.remainingFundsOrgOther}
+                          errorMessage={errors.remainingFundsOrgOther?.message}
+                          className="w-full"
+                          endContent={
+                            <div className="pointer-events-none flex items-center">
+                              %
+                            </div>
+                          }
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="remainingFundsOrgOtherAddress"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Address"
+                          placeholder="Enter organization's address"
+                          isInvalid={!!errors.remainingFundsOrgOtherAddress}
+                          errorMessage={
+                            errors.remainingFundsOrgOtherAddress?.message
+                          }
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Controller
+                    name="remainingFundsOtherBeneficiary"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Other beneficiary"
+                        placeholder="Enter other beneficiary details"
+                        isInvalid={!!errors.remainingFundsOtherBeneficiary}
+                        errorMessage={
+                          errors.remainingFundsOtherBeneficiary?.message
+                        }
+                        className="w-full"
+                      />
+                    )}
+                  />
+                </div>
+              )}
+
+              {step === 6 && (
                 <div>
                   <h2 className="text-xl font-semibold text-[#5E3593] mb-4">
                     Review & Submit
@@ -1373,14 +2803,12 @@ const InitialForm: React.FC = () => {
                           name={field.name}
                           ref={field.ref}
                           isInvalid={!!errors.agreeToTerms}
+                          color="secondary"
                         >
-                          I confirm that all information provided is accurate
-                          and I authorize the designated caregivers to make
-                          health and welfare decisions for my pet(s) in the
-                          event I am unable to do so.
+                          I understand and agree to the terms above
                         </Checkbox>
                         {errors.agreeToTerms && (
-                          <p className="text-danger text-sm mt-1">
+                          <p className="text-danger text-small">
                             {errors.agreeToTerms.message}
                           </p>
                         )}
@@ -1390,24 +2818,20 @@ const InitialForm: React.FC = () => {
 
                   <Button
                     type="submit"
-                    className="w-full h-[56px] bg-[#A377DC] text-white rounded-[15px] font-[Inter] font-semibold text-[20px] mb-3"
-                    isLoading={pdfGenerationStatus === "loading"}
-                    onClick={() => console.log("Submit button clicked")}
+                    className="w-full bg-[#5E3593] text-white rounded-lg font-semibold"
+                    isDisabled={!methods.formState.isValid}
                   >
-                    Save & Download PDF
+                    Save and Download PDF
                   </Button>
 
-                  {/* Direct PDF Generation Button */}
-                  <Button
-                    className="w-full h-[56px] bg-[#5E3593] text-white rounded-[15px] font-[Inter] font-semibold text-[20px]"
-                    isLoading={pdfGenerationStatus === "loading"}
-                    onClick={() => {
-                      console.log("Direct PDF button clicked");
-                      generatePDFDirectly();
-                    }}
-                  >
-                    Generate PDF Directly
-                  </Button>
+                  <div className="mt-4">
+                    <Button
+                      onClick={generatePDFDirectly}
+                      className="w-full bg-gray-200 text-gray-800 rounded-lg font-semibold"
+                    >
+                      Generate PDF Directly
+                    </Button>
+                  </div>
                 </div>
               )}
 
@@ -1427,7 +2851,7 @@ const InitialForm: React.FC = () => {
                   </Link>
                 )}
 
-                {step < 5 && (
+                {step < 6 && (
                   <Button
                     onClick={nextStep}
                     className="px-8 bg-[#A377DC] text-white rounded-[15px] font-[Inter] font-semibold"
