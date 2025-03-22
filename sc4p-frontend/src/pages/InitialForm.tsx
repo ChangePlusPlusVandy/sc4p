@@ -247,9 +247,9 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       const lineHeight = 7;
 
       // Add logo with better positioning and sizing
-      doc.addImage(Logo, "PNG", leftMargin, topMargin, 30, 30);
+      doc.addImage(Logo, "PNG", leftMargin, topMargin, 15, 30);
 
-      // Add header with improved styling
+      // Add header with improved styling and better organization
       doc.setFontSize(24);
       doc.setTextColor(94, 53, 147); // #5E3593
       doc.setFont("helvetica", "bold");
@@ -1283,7 +1283,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       <div className="flex">
         <img
           src={Logo}
-          className="w-[55.6px] h-[109.7px] mt-[25.98px] ml-[33.9px]"
+          className="h-[109.7px] w-auto mt-[25.98px] ml-[33.9px]"
           alt="Second Chance 4 Pets Logo"
         />
         <h1 className="w-[160.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
