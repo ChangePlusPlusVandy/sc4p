@@ -170,7 +170,7 @@ type FormData = yup.InferType<typeof schema>;
 
 const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
   methods: externalMethods,
-}) => {
+}): JSX.Element => {
   const [step, setStep] = useState(1);
   const [pdfGenerationStatus, setPdfGenerationStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -242,627 +242,704 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       const bottomMargin = 15;
       const pageWidth = doc.internal.pageSize.width;
       const pageHeight = doc.internal.pageSize.height;
-      const contentWidth = (pageWidth - leftMargin - rightMargin) / 2;
-      const columnGap = 10;
+      const contentWidth = pageWidth - leftMargin - rightMargin;
+      const columnWidth = (contentWidth - 20) / 2; // Width for each column with gap
+      const lineHeight = 7;
 
-      // Set title with reduced font size
-      doc.setFontSize(18);
+      // Add logo at the top
+      doc.addImage(Logo, "PNG", leftMargin, topMargin, 30, 30);
+
+      // Set title with reduced font size and brand color
+      doc.setFontSize(20);
       doc.setTextColor(94, 53, 147); // #5E3593
-      doc.text(
-        "2nd Chance For Pets - Pet Care Form",
-        pageWidth / 2,
-        topMargin,
-        {
-          align: "center",
-        },
-      );
+      doc.text("2nd Chance For Pets", leftMargin + 40, topMargin + 20);
+      doc.setFontSize(16);
+      doc.text("Pet Care Form", leftMargin + 40, topMargin + 30);
 
-      // Reset text color and size
+      // Reset text color and size for content
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(11);
-
-      // Add sections with optimized spacing
-      const y = topMargin + 10;
 
       // Helper function to add text with word wrap
       const addText = (text: string, x: number, y: number, width: number) => {
         const splitText = doc.splitTextToSize(text, width) as string[];
         doc.text(splitText, x, y);
-        return y + splitText.length * 6; // Adjust line height based on font size
+        return y + splitText.length * lineHeight;
       };
 
       // Helper function to add section header
       const addSectionHeader = (text: string, x: number, y: number) => {
         doc.setFontSize(14);
-        doc.text(text, x, y);
+        doc.setTextColor(94, 53, 147); // #5E3593
+        const splitText = doc.splitTextToSize(text, contentWidth) as string[];
+        doc.text(splitText, x, y);
         doc.setFontSize(11);
-        return y + 8;
+        doc.setTextColor(0, 0, 0);
+        return y + splitText.length * 10 + 5;
       };
 
-      // Left Column
+      // Helper function to add subsection header
+      const addSubsectionHeader = (text: string, x: number, y: number) => {
+        doc.setFontSize(12);
+        doc.setTextColor(94, 53, 147); // #5E3593
+        const splitText = doc.splitTextToSize(text, contentWidth) as string[];
+        doc.text(splitText, x, y);
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        return y + splitText.length * 8 + 5;
+      };
+
+      // Helper function to add field with label
+      const addField = (
+        label: string,
+        value: string | number | boolean | undefined,
+        x: number,
+        y: number,
+        width: number,
+      ) => {
+        if (value === undefined || value === null || value === "") return y;
+
+        const labelText = `${label}:`;
+        doc.setFont("helvetica", "bold");
+        doc.text(labelText, x, y);
+        doc.setFont("helvetica", "normal");
+
+        const valueText = value.toString();
+        const splitValue = doc.splitTextToSize(
+          valueText,
+          width - 30,
+        ) as string[];
+        doc.text(splitValue, x + 30, y);
+        return y + Math.max(lineHeight, splitValue.length * lineHeight);
+      };
+
+      let y = topMargin + 40;
+
+      // Owner Information Section - Two columns
+      y = addSectionHeader("Pet Owner Information", leftMargin, y);
       let leftY = y;
-
-      // Owner Information
-      leftY = addSectionHeader("Pet Owner Information", leftMargin, leftY);
-      leftY = addText(
-        `Owner Name: ${data.ownerName}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY = addText(
-        `Address: ${data.address}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY = addText(
-        `City/State/Zip: ${data.city}, ${data.state} ${data.zipCode}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY = addText(`Phone: ${data.phone}`, leftMargin, leftY, contentWidth);
-      leftY = addText(`Email: ${data.email}`, leftMargin, leftY, contentWidth);
-      leftY += 5;
-
-      // Emergency Contact Information
-      leftY = addSectionHeader(
-        "Emergency Contact Information",
-        leftMargin,
-        leftY,
-      );
-      leftY = addText(
-        `Name: ${data.emergencyContactName ?? ""}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY = addText(
-        `Phone: ${data.emergencyContactPhone ?? ""}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY = addText(
-        `Relationship: ${data.emergencyContactRelationship ?? ""}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY += 5;
-
-      // Pet Information
-      leftY = addSectionHeader("Pet Information", leftMargin, leftY);
-      leftY = addText(
-        `Pet Name: ${data.petName}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY = addText(`Type: ${data.petType}`, leftMargin, leftY, contentWidth);
-      leftY = addText(`Breed: ${data.breed}`, leftMargin, leftY, contentWidth);
-      leftY = addText(`Age: ${data.age}`, leftMargin, leftY, contentWidth);
-      leftY = addText(
-        `Gender: ${data.gender}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY = addText(
-        `Spayed/Neutered: ${data.spayedNeutered ? "Yes" : "No"}`,
-        leftMargin,
-        leftY,
-        contentWidth,
-      );
-      leftY = addText(`Color: ${data.color}`, leftMargin, leftY, contentWidth);
-
-      if (data.microchipId) {
-        leftY = addText(
-          `Microchip ID: ${data.microchipId}`,
-          leftMargin,
-          leftY,
-          contentWidth,
-        );
-      }
-      leftY += 5;
-
-      // Right Column
       let rightY = y;
 
-      // Pet Insurance Information
-      if (data.hasInsurance) {
-        rightY = addSectionHeader(
-          "Pet Health Insurance",
-          rightMargin + contentWidth + columnGap,
+      // Left column
+      leftY = addField(
+        "Full Name",
+        data.ownerName,
+        leftMargin,
+        leftY,
+        columnWidth,
+      );
+      leftY = addField("Address", data.address, leftMargin, leftY, columnWidth);
+      leftY = addField(
+        "City/State/Zip",
+        `${data.city}, ${data.state} ${data.zipCode}`,
+        leftMargin,
+        leftY,
+        columnWidth,
+      );
+
+      // Right column
+      rightY = addField(
+        "Phone",
+        data.phone,
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
+      rightY = addField(
+        "Email",
+        data.email,
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
+
+      y = Math.max(leftY, rightY) + 5;
+
+      // Emergency Contact Section - Two columns
+      y = addSectionHeader("Emergency Contact Information", leftMargin, y);
+      leftY = y;
+      rightY = y;
+
+      // Left column
+      leftY = addField(
+        "Name",
+        data.emergencyContactName,
+        leftMargin,
+        leftY,
+        columnWidth,
+      );
+      leftY = addField(
+        "Phone",
+        data.emergencyContactPhone,
+        leftMargin,
+        leftY,
+        columnWidth,
+      );
+
+      // Right column
+      rightY = addField(
+        "Relationship",
+        data.emergencyContactRelationship,
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
+
+      y = Math.max(leftY, rightY) + 5;
+
+      // Pet Information Section - Two columns
+      y = addSectionHeader("Pet Information", leftMargin, y);
+      leftY = y;
+      rightY = y;
+
+      // Left column
+      leftY = addField(
+        "Pet Name",
+        data.petName,
+        leftMargin,
+        leftY,
+        columnWidth,
+      );
+      leftY = addField("Type", data.petType, leftMargin, leftY, columnWidth);
+      leftY = addField("Breed", data.breed, leftMargin, leftY, columnWidth);
+      leftY = addField("Age", data.age, leftMargin, leftY, columnWidth);
+
+      // Right column
+      rightY = addField(
+        "Gender",
+        data.gender,
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
+      rightY = addField(
+        "Spayed/Neutered",
+        data.spayedNeutered ? "Yes" : "No",
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
+      rightY = addField(
+        "Color",
+        data.color,
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
+      if (data.microchipId) {
+        rightY = addField(
+          "Microchip ID",
+          data.microchipId,
+          leftMargin + columnWidth + 20,
           rightY,
+          columnWidth,
         );
-        if (data.petInsurance) {
-          rightY = addText(
-            `Insurance Provider: ${data.petInsurance}`,
-            rightMargin + contentWidth + columnGap,
-            rightY,
-            contentWidth,
-          );
-        }
-        if (data.insurancePhone) {
-          rightY = addText(
-            `Provider Phone: ${data.insurancePhone}`,
-            rightMargin + contentWidth + columnGap,
-            rightY,
-            contentWidth,
-          );
-        }
-        if (data.insurancePolicy) {
-          rightY = addText(
-            `Policy Number: ${data.insurancePolicy}`,
-            rightMargin + contentWidth + columnGap,
-            rightY,
-            contentWidth,
-          );
-        }
-        if (data.insuranceCost) {
-          rightY = addText(
-            `Cost per year: $${data.insuranceCost}`,
-            rightMargin + contentWidth + columnGap,
-            rightY,
-            contentWidth,
-          );
-        }
-        rightY += 5;
       }
 
-      // Feeding Information
-      if (data.specialDiet ?? data.feedingSchedule) {
-        rightY = addSectionHeader(
-          "Feeding Information",
-          rightMargin + contentWidth + columnGap,
-          rightY,
+      y = Math.max(leftY, rightY) + 5;
+
+      // Check if we need a new page
+      if (y > pageHeight - bottomMargin) {
+        doc.addPage();
+        y = topMargin;
+      }
+
+      // Pet Health Information Section - Single column for longer text
+      y = addSectionHeader("Pet Health Information", leftMargin, y);
+
+      // Insurance Information
+      if (data.hasInsurance) {
+        y = addSubsectionHeader("Insurance Information", leftMargin, y);
+        y = addField(
+          "Provider",
+          data.petInsurance,
+          leftMargin,
+          y,
+          contentWidth,
         );
+        y = addField(
+          "Policy Number",
+          data.insurancePolicy,
+          leftMargin,
+          y,
+          contentWidth,
+        );
+        y = addField(
+          "Provider Phone",
+          data.insurancePhone,
+          leftMargin,
+          y,
+          contentWidth,
+        );
+        y = addField(
+          "Annual Cost",
+          data.insuranceCost,
+          leftMargin,
+          y,
+          contentWidth,
+        );
+        y += 5;
+      }
+
+      // Special Care Information
+      if (data.specialDiet ?? data.feedingSchedule) {
+        y = addSubsectionHeader("Special Care Information", leftMargin, y);
         if (data.specialDiet) {
-          rightY = addText(
-            `Special Diet: ${data.specialDiet}`,
-            rightMargin + contentWidth + columnGap,
-            rightY,
+          y = addField(
+            "Special Diet",
+            data.specialDiet,
+            leftMargin,
+            y,
             contentWidth,
           );
         }
         if (data.feedingSchedule) {
-          rightY = addText(
-            `Feeding Schedule: ${data.feedingSchedule}`,
-            rightMargin + contentWidth + columnGap,
-            rightY,
+          y = addField(
+            "Feeding Schedule",
+            data.feedingSchedule,
+            leftMargin,
+            y,
             contentWidth,
           );
         }
-        rightY += 5;
+        y += 5;
       }
 
       // Medical Information
-      rightY = addSectionHeader(
-        "Medical Information",
-        rightMargin + contentWidth + columnGap,
-        rightY,
-      );
-      if (data.medicalConditions) {
-        rightY = addText(
-          `Medical Conditions: ${data.medicalConditions}`,
-          rightMargin + contentWidth + columnGap,
-          rightY,
-          contentWidth,
-        );
+      if (data.medicalConditions ?? data.medications ?? data.allergies) {
+        y = addSubsectionHeader("Medical Information", leftMargin, y);
+        if (data.medicalConditions) {
+          y = addField(
+            "Medical Conditions",
+            data.medicalConditions,
+            leftMargin,
+            y,
+            contentWidth,
+          );
+        }
+        if (data.medications) {
+          y = addField(
+            "Medications",
+            data.medications,
+            leftMargin,
+            y,
+            contentWidth,
+          );
+        }
+        if (data.allergies) {
+          y = addField(
+            "Allergies",
+            data.allergies,
+            leftMargin,
+            y,
+            contentWidth,
+          );
+        }
+        y += 5;
       }
-      if (data.medications) {
-        rightY = addText(
-          `Medications: ${data.medications}`,
-          rightMargin + contentWidth + columnGap,
-          rightY,
-          contentWidth,
-        );
-      }
-      if (data.allergies) {
-        rightY = addText(
-          `Allergies: ${data.allergies}`,
-          rightMargin + contentWidth + columnGap,
-          rightY,
-          contentWidth,
-        );
-      }
-      if (data.behavioralNotes) {
-        rightY = addText(
-          `Behavioral Notes: ${data.behavioralNotes}`,
-          rightMargin + contentWidth + columnGap,
-          rightY,
-          contentWidth,
-        );
-      }
-      rightY += 5;
 
       // Check if we need a new page
-      if (Math.max(leftY, rightY) > pageHeight - bottomMargin) {
+      if (y > pageHeight - bottomMargin) {
         doc.addPage();
-        leftY = topMargin;
-        rightY = topMargin;
+        y = topMargin;
       }
 
-      // End of Life Care Information
-      leftY = addSectionHeader("End of Life Care Decisions", leftMargin, leftY);
-      leftY = addText(
-        "In Case of Serious Illness:",
+      // End of Life Care Section - Two columns
+      y = addSectionHeader("End of Life Care Decisions", leftMargin, y);
+      leftY = y;
+      rightY = y;
+
+      // Left column
+      let illnessDecision = "Not specified";
+      if (data.illnessDecision === "vet") {
+        illnessDecision =
+          "Veterinarian should make the decision if pet should be euthanized";
+      } else if (data.illnessDecision === "caregiver") {
+        illnessDecision =
+          "Caregiver should make the decision if pet should be euthanized";
+      } else if (data.illnessDecision === "consult") {
+        illnessDecision =
+          "Emergency contacts should consult caregiver and veterinarian for decision";
+      }
+      leftY = addField(
+        "Serious Illness Decision",
+        illnessDecision,
         leftMargin,
         leftY,
-        contentWidth,
+        columnWidth,
       );
-      leftY += 3;
 
-      let illnessDecisionText = "Not specified";
-      if (data.illnessDecision === "vet") {
-        illnessDecisionText =
-          "My veterinarian should make the decision if my pet should be euthanized.";
-      } else if (data.illnessDecision === "caregiver") {
-        illnessDecisionText =
-          "My caregiver should make the decision if my pet should be euthanized.";
-      } else if (data.illnessDecision === "consult") {
-        illnessDecisionText =
-          "My emergency contacts should consult the caregiver and veterinarian to make any decision about the euthanization of my pet.";
-      }
-
-      leftY = addText(
-        illnessDecisionText,
-        leftMargin + 5,
-        leftY,
-        contentWidth - 5,
-      );
-      leftY += 5;
-
-      // Death Care
-      leftY = addText("In Case of Death:", leftMargin, leftY, contentWidth);
-      leftY += 3;
-
-      let deathCareText = "Not specified";
+      // Right column
+      let deathCare = "Not specified";
       if (data.deathCarePreference === "burial") {
-        deathCareText = "Burial";
+        deathCare = "Burial";
       } else if (data.deathCarePreference === "cremation") {
-        deathCareText = "Cremation";
+        deathCare = "Cremation";
       } else if (data.deathCarePreference === "pet-cemetery") {
-        deathCareText = "Local Pet Cemetery";
+        deathCare = "Local Pet Cemetery";
       } else if (data.deathCarePreference === "caregiver-determine") {
-        deathCareText = "Caregiver can determine";
+        deathCare = "Caregiver can determine";
       }
-
-      leftY = addText(
-        `Remains care preference: ${deathCareText}`,
-        leftMargin + 5,
-        leftY,
-        contentWidth - 5,
+      rightY = addField(
+        "Death Care Preference",
+        deathCare,
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
       );
 
       if (data.deathCareBudget) {
-        leftY = addText(
-          `Allocated budget for remains care: $${data.deathCareBudget}`,
-          leftMargin + 5,
-          leftY,
-          contentWidth - 5,
+        rightY = addField(
+          "Budget for Remains",
+          `$${data.deathCareBudget}`,
+          leftMargin + columnWidth + 20,
+          rightY,
+          columnWidth,
         );
       }
-      leftY += 5;
 
-      // Veterinarian Information
-      rightY = addSectionHeader(
-        "Veterinarian Information",
-        rightMargin + contentWidth + columnGap,
-        rightY,
+      y = Math.max(leftY, rightY) + 5;
+
+      // Check if we need a new page
+      if (y > pageHeight - bottomMargin) {
+        doc.addPage();
+        y = topMargin;
+      }
+
+      // Veterinarian Information Section - Two columns
+      y = addSectionHeader("Veterinarian Information", leftMargin, y);
+      leftY = y;
+      rightY = y;
+
+      // Left column
+      leftY = addField(
+        "Name",
+        data.veterinarianName,
+        leftMargin,
+        leftY,
+        columnWidth,
       );
-      rightY = addText(
-        `Name: ${data.veterinarianName}`,
-        rightMargin + contentWidth + columnGap,
-        rightY,
-        contentWidth,
-      );
-      rightY = addText(
-        `Phone: ${data.veterinarianPhone}`,
-        rightMargin + contentWidth + columnGap,
-        rightY,
-        contentWidth,
+      leftY = addField(
+        "Phone",
+        data.veterinarianPhone,
+        leftMargin,
+        leftY,
+        columnWidth,
       );
 
+      // Right column
       if (data.veterinarianAddress) {
-        rightY = addText(
-          `Address: ${data.veterinarianAddress}`,
-          rightMargin + contentWidth + columnGap,
+        rightY = addField(
+          "Address",
+          data.veterinarianAddress,
+          leftMargin + columnWidth + 20,
           rightY,
-          contentWidth,
+          columnWidth,
         );
       }
       if (data.veterinarianEmail) {
-        rightY = addText(
-          `Email: ${data.veterinarianEmail}`,
-          rightMargin + contentWidth + columnGap,
+        rightY = addField(
+          "Email",
+          data.veterinarianEmail,
+          leftMargin + columnWidth + 20,
           rightY,
-          contentWidth,
+          columnWidth,
         );
       }
-      rightY += 5;
+
+      y = Math.max(leftY, rightY) + 5;
 
       // Check if we need a new page
-      if (Math.max(leftY, rightY) > pageHeight - bottomMargin) {
+      if (y > pageHeight - bottomMargin) {
         doc.addPage();
-        leftY = topMargin;
-        rightY = topMargin;
+        y = topMargin;
       }
 
-      // Caregiver Information
-      leftY = addSectionHeader(
-        "Primary Caregiver Information",
+      // Caregiver Information Section - Two columns
+      y = addSectionHeader("Caregiver Information", leftMargin, y);
+
+      // Primary Caregiver
+      y = addSubsectionHeader("Primary Caregiver", leftMargin, y);
+      leftY = y;
+      rightY = y;
+
+      // Left column
+      leftY = addField(
+        "Name",
+        data.caregiverName,
         leftMargin,
         leftY,
+        columnWidth,
       );
-      leftY = addText(
-        `Name: ${data.caregiverName}`,
+      leftY = addField(
+        "Phone",
+        data.caregiverPhone,
         leftMargin,
         leftY,
-        contentWidth,
+        columnWidth,
       );
-      leftY = addText(
-        `Phone: ${data.caregiverPhone}`,
+      leftY = addField(
+        "Address",
+        data.caregiverAddress,
         leftMargin,
         leftY,
-        contentWidth,
-      );
-      leftY = addText(
-        `Address: ${data.caregiverAddress}`,
-        leftMargin,
-        leftY,
-        contentWidth,
+        columnWidth,
       );
 
+      // Right column
       if (data.caregiverEmail) {
-        leftY = addText(
-          `Email: ${data.caregiverEmail}`,
-          leftMargin,
-          leftY,
-          contentWidth,
+        rightY = addField(
+          "Email",
+          data.caregiverEmail,
+          leftMargin + columnWidth + 20,
+          rightY,
+          columnWidth,
         );
       }
       if (data.caregiverRelationship) {
-        leftY = addText(
-          `Relationship: ${data.caregiverRelationship}`,
-          leftMargin,
-          leftY,
-          contentWidth,
+        rightY = addField(
+          "Relationship",
+          data.caregiverRelationship,
+          leftMargin + columnWidth + 20,
+          rightY,
+          columnWidth,
         );
       }
+      rightY = addField(
+        "Has Key to Home",
+        data.caregiverHasKey ? "Yes" : "No",
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
+      rightY = addField(
+        "Care Type",
+        data.caregiverCareType,
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
 
-      leftY = addText(
-        `Has Key to Home: ${data.caregiverHasKey ? "Yes" : "No"}`,
+      y = Math.max(leftY, rightY) + 5;
+
+      // Backup Caregiver
+      y = addSubsectionHeader("Backup Caregiver", leftMargin, y);
+      leftY = y;
+      rightY = y;
+
+      // Left column
+      leftY = addField(
+        "Name",
+        data.backupCaregiverName,
         leftMargin,
         leftY,
-        contentWidth,
+        columnWidth,
       );
-      leftY += 5;
-
-      // Backup Caregiver Information
-      rightY = addSectionHeader(
-        "Backup Caregiver Information",
-        rightMargin + contentWidth + columnGap,
-        rightY,
+      leftY = addField(
+        "Phone",
+        data.backupCaregiverPhone,
+        leftMargin,
+        leftY,
+        columnWidth,
       );
-      rightY = addText(
-        `Name: ${data.backupCaregiverName}`,
-        rightMargin + contentWidth + columnGap,
-        rightY,
-        contentWidth,
-      );
-      rightY = addText(
-        `Phone: ${data.backupCaregiverPhone}`,
-        rightMargin + contentWidth + columnGap,
-        rightY,
-        contentWidth,
-      );
-      rightY = addText(
-        `Address: ${data.backupCaregiverAddress}`,
-        rightMargin + contentWidth + columnGap,
-        rightY,
-        contentWidth,
+      leftY = addField(
+        "Address",
+        data.backupCaregiverAddress,
+        leftMargin,
+        leftY,
+        columnWidth,
       );
 
+      // Right column
       if (data.backupCaregiverEmail) {
-        rightY = addText(
-          `Email: ${data.backupCaregiverEmail}`,
-          rightMargin + contentWidth + columnGap,
+        rightY = addField(
+          "Email",
+          data.backupCaregiverEmail,
+          leftMargin + columnWidth + 20,
           rightY,
-          contentWidth,
+          columnWidth,
         );
       }
       if (data.backupCaregiverRelationship) {
-        rightY = addText(
-          `Relationship: ${data.backupCaregiverRelationship}`,
-          rightMargin + contentWidth + columnGap,
+        rightY = addField(
+          "Relationship",
+          data.backupCaregiverRelationship,
+          leftMargin + columnWidth + 20,
           rightY,
-          contentWidth,
+          columnWidth,
         );
       }
-
-      rightY = addText(
-        `Has Key to Home: ${data.backupCaregiverHasKey ? "Yes" : "No"}`,
-        rightMargin + contentWidth + columnGap,
+      rightY = addField(
+        "Has Key to Home",
+        data.backupCaregiverHasKey ? "Yes" : "No",
+        leftMargin + columnWidth + 20,
         rightY,
-        contentWidth,
+        columnWidth,
       );
-      rightY += 5;
+      rightY = addField(
+        "Care Type",
+        data.backupCaregiverCareType,
+        leftMargin + columnWidth + 20,
+        rightY,
+        columnWidth,
+      );
+
+      y = Math.max(leftY, rightY) + 5;
 
       // Check if we need a new page
-      if (Math.max(leftY, rightY) > pageHeight - bottomMargin) {
+      if (y > pageHeight - bottomMargin) {
         doc.addPage();
-        leftY = topMargin;
-        rightY = topMargin;
+        y = topMargin;
       }
 
-      // Trustee Information
-      if (data.trusteeName ?? data.trusteeAddress ?? data.trusteeAllocation) {
-        leftY = addSectionHeader("Trustee Information", leftMargin, leftY);
-        if (data.trusteeName) {
-          leftY = addText(
-            `Trustee Name: ${data.trusteeName}`,
-            leftMargin,
-            leftY,
-            contentWidth,
-          );
-        }
-        if (data.trusteeAddress) {
-          leftY = addText(
-            `Address: ${data.trusteeAddress}`,
-            leftMargin,
-            leftY,
-            contentWidth,
-          );
-        }
-        if (data.trusteeCity ?? data.trusteeState ?? data.trusteeZip) {
-          leftY = addText(
-            `City/State/Zip: ${data.trusteeCity ?? ""}, ${
-              data.trusteeState ?? ""
-            } ${data.trusteeZip ?? ""}`,
-            leftMargin,
-            leftY,
-            contentWidth,
-          );
-        }
-        if (data.trusteeHomePhone) {
-          leftY = addText(
-            `Home Phone: ${data.trusteeHomePhone}`,
-            leftMargin,
-            leftY,
-            contentWidth,
-          );
-        }
-        if (data.trusteeCellPhone) {
-          leftY = addText(
-            `Cell Phone: ${data.trusteeCellPhone}`,
-            leftMargin,
-            leftY,
-            contentWidth,
-          );
-        }
-        if (data.trusteeEmail) {
-          leftY = addText(
-            `Email: ${data.trusteeEmail}`,
-            leftMargin,
-            leftY,
-            contentWidth,
-          );
-        }
-        if (data.trusteeAllocation) {
-          leftY = addText(
-            `Annual Allocation: $${data.trusteeAllocation}/year for caregiver`,
-            leftMargin,
-            leftY,
-            contentWidth,
-          );
-        }
-        leftY += 5;
+      // Trustee Information Section - Two columns
+      if (data.trusteeName ?? data.trusteeAllocation) {
+        y = addSectionHeader("Trustee Information", leftMargin, y);
+        leftY = y;
+        rightY = y;
 
-        // Trust Fund Information
-        leftY = addText(
-          "Trust Fund Information:",
+        // Left column
+        leftY = addField(
+          "Trustee Name",
+          data.trusteeName,
           leftMargin,
           leftY,
-          contentWidth,
+          columnWidth,
         );
-        leftY += 3;
+        leftY = addField(
+          "Address",
+          data.trusteeAddress,
+          leftMargin,
+          leftY,
+          columnWidth,
+        );
+        if (data.trusteeCity ?? data.trusteeState ?? data.trusteeZip) {
+          leftY = addField(
+            "City/State/Zip",
+            `${data.trusteeCity ?? ""}, ${data.trusteeState ?? ""} ${
+              data.trusteeZip ?? ""
+            }`,
+            leftMargin,
+            leftY,
+            columnWidth,
+          );
+        }
 
+        // Right column
+        rightY = addField(
+          "Home Phone",
+          data.trusteeHomePhone,
+          leftMargin + columnWidth + 20,
+          rightY,
+          columnWidth,
+        );
+        rightY = addField(
+          "Cell Phone",
+          data.trusteeCellPhone,
+          leftMargin + columnWidth + 20,
+          rightY,
+          columnWidth,
+        );
+        rightY = addField(
+          "Email",
+          data.trusteeEmail,
+          leftMargin + columnWidth + 20,
+          rightY,
+          columnWidth,
+        );
+        rightY = addField(
+          "Annual Allocation",
+          data.trusteeAllocation ? `$${data.trusteeAllocation}` : undefined,
+          leftMargin + columnWidth + 20,
+          rightY,
+          columnWidth,
+        );
+
+        y = Math.max(leftY, rightY) + 5;
+
+        // Trust Fund Information
+        y = addSubsectionHeader("Trust Fund Information", leftMargin, y);
         let fundingMethod = "Not specified";
         if (data.trustFundType === "bank-account") {
           fundingMethod = "Bank Account Tied to Will";
         } else if (data.trustFundType === "life-insurance") {
           fundingMethod =
             "Life Insurance policy designates trust as beneficiary";
-        } else if (
-          data.trustFundType === "other-fund" &&
-          data.trustFundOtherExplanation
-        ) {
-          fundingMethod = `Other: ${data.trustFundOtherExplanation}`;
+        } else if (data.trustFundType === "other-fund") {
+          fundingMethod = data.trustFundOtherExplanation ?? "Other";
         }
-
-        leftY = addText(
-          `Funding Method: ${fundingMethod}`,
-          leftMargin + 5,
-          leftY,
-          contentWidth - 5,
-        );
-        leftY += 5;
-
-        // Remaining Funds
-        leftY = addText(
-          "Remaining Funds Distribution:",
+        y = addField(
+          "Funding Method",
+          fundingMethod,
           leftMargin,
-          leftY,
+          y,
           contentWidth,
         );
-        leftY += 3;
+        y += 5;
 
+        // Remaining Funds Distribution
+        y = addSubsectionHeader("Remaining Funds Distribution", leftMargin, y);
         if (data.remainingFundsOrg2ndChance) {
-          leftY = addText(
-            `2nd Chance 4 Pets: ${data.remainingFundsOrg2ndChance}%`,
-            leftMargin + 5,
-            leftY,
-            contentWidth - 5,
+          y = addField(
+            "2nd Chance 4 Pets",
+            `${data.remainingFundsOrg2ndChance}%`,
+            leftMargin,
+            y,
+            contentWidth,
           );
         }
         if (data.remainingFundsOrgOther) {
-          leftY = addText(
-            `Other pet welfare org: ${data.remainingFundsOrgOther}%`,
-            leftMargin + 5,
-            leftY,
-            contentWidth - 5,
+          y = addField(
+            "Other Pet Welfare Organization",
+            `${data.remainingFundsOrgOther}%`,
+            leftMargin,
+            y,
+            contentWidth,
           );
           if (data.remainingFundsOrgOtherAddress) {
-            leftY = addText(
-              `Address: ${data.remainingFundsOrgOtherAddress}`,
-              leftMargin + 10,
-              leftY,
-              contentWidth - 10,
+            y = addField(
+              "Organization Address",
+              data.remainingFundsOrgOtherAddress,
+              leftMargin,
+              y,
+              contentWidth,
             );
           }
         }
         if (data.remainingFundsOtherBeneficiary) {
-          leftY = addText(
-            `Other beneficiary: ${data.remainingFundsOtherBeneficiary}`,
-            leftMargin + 5,
-            leftY,
-            contentWidth - 5,
+          y = addField(
+            "Other Beneficiary",
+            data.remainingFundsOtherBeneficiary,
+            leftMargin,
+            y,
+            contentWidth,
           );
         }
-        leftY += 5;
       }
 
-      // Check if we need a new page
-      if (Math.max(leftY, rightY) > pageHeight - bottomMargin) {
-        doc.addPage();
-        leftY = topMargin;
-        rightY = topMargin;
-      }
-
-      // Agreement
-      leftY = addSectionHeader("Agreement", leftMargin, leftY);
-      leftY = addText(
+      // Agreement Section - Single column for longer text
+      y = addSectionHeader("Agreement", leftMargin, y);
+      y = addText(
         "I hereby authorize the designated caregivers to make health and welfare decisions for my pet(s) in the event I am unable to do so.",
         leftMargin,
-        leftY,
+        y,
         contentWidth,
       );
-      leftY += 15;
+      y += 20;
 
-      leftY = addText(
+      // Signature and Date
+      doc.setFont("helvetica", "normal");
+      y = addText(
         "Signature: _______________________________",
         leftMargin,
-        leftY,
+        y,
         contentWidth,
       );
-      leftY += 8;
-      leftY = addText(
+      y += 10;
+      y = addText(
         `Date: ${new Date().toLocaleDateString()}`,
         leftMargin,
-        leftY,
+        y,
         contentWidth,
       );
 
