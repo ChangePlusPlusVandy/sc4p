@@ -232,64 +232,82 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
 
   const generatePDF = (data: FormData) => {
     try {
-      // Create a basic PDF using vanilla jsPDF (avoiding autoTable)
+      // Create a new PDF with better margins and formatting
       const doc = new jsPDF();
 
       // Set margins and page dimensions
-      const leftMargin = 15;
-      const rightMargin = 15;
-      const topMargin = 15;
-      const bottomMargin = 15;
+      const leftMargin = 20;
+      const rightMargin = 20;
+      const topMargin = 20;
+      const bottomMargin = 20;
       const pageWidth = doc.internal.pageSize.width;
       const pageHeight = doc.internal.pageSize.height;
       const contentWidth = pageWidth - leftMargin - rightMargin;
-      const columnWidth = (contentWidth - 20) / 2; // Width for each column with gap
+      const columnWidth = (contentWidth - 20) / 2;
       const lineHeight = 7;
 
-      // Add logo at the top
+      // Add logo with better positioning and sizing
       doc.addImage(Logo, "PNG", leftMargin, topMargin, 30, 30);
 
-      // Set title with reduced font size and brand color
-      doc.setFontSize(20);
+      // Add header with improved styling
+      doc.setFontSize(28);
       doc.setTextColor(94, 53, 147); // #5E3593
       doc.text("2nd Chance For Pets", leftMargin + 40, topMargin + 20);
-      doc.setFontSize(16);
+      doc.setFontSize(24);
       doc.text("Pet Care Form", leftMargin + 40, topMargin + 30);
+
+      // Add date and form ID
+      doc.setFontSize(10);
+      doc.setTextColor(128, 128, 128);
+      doc.text(
+        `Generated on: ${new Date().toLocaleDateString()}`,
+        pageWidth - rightMargin,
+        topMargin + 10,
+        { align: "right" },
+      );
+      doc.text(
+        `Form ID: ${Math.random().toString(36).substr(2, 9)}`,
+        pageWidth - rightMargin,
+        topMargin + 15,
+        { align: "right" },
+      );
 
       // Reset text color and size for content
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(11);
 
-      // Helper function to add text with word wrap
+      // Helper function to add text with word wrap and better spacing
       const addText = (text: string, x: number, y: number, width: number) => {
         const splitText = doc.splitTextToSize(text, width) as string[];
         doc.text(splitText, x, y);
         return y + splitText.length * lineHeight;
       };
 
-      // Helper function to add section header
+      // Helper function to add section header with improved styling
       const addSectionHeader = (text: string, x: number, y: number) => {
+        doc.setFontSize(16);
+        doc.setTextColor(94, 53, 147); // #5E3593
+        doc.setFont("helvetica", "bold");
+        doc.text(text, x, y);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        return y + 15;
+      };
+
+      // Helper function to add subsection header with improved styling
+      const addSubsectionHeader = (text: string, x: number, y: number) => {
         doc.setFontSize(14);
         doc.setTextColor(94, 53, 147); // #5E3593
-        const splitText = doc.splitTextToSize(text, contentWidth) as string[];
-        doc.text(splitText, x, y);
+        doc.setFont("helvetica", "bold");
+        doc.text(text, x, y);
+        doc.setFont("helvetica", "normal");
         doc.setFontSize(11);
         doc.setTextColor(0, 0, 0);
-        return y + splitText.length * 10 + 5;
+        return y + 8;
       };
 
-      // Helper function to add subsection header
-      const addSubsectionHeader = (text: string, x: number, y: number) => {
-        doc.setFontSize(12);
-        doc.setTextColor(94, 53, 147); // #5E3593
-        const splitText = doc.splitTextToSize(text, contentWidth) as string[];
-        doc.text(splitText, x, y);
-        doc.setFontSize(11);
-        doc.setTextColor(0, 0, 0);
-        return y + splitText.length * 8 + 5;
-      };
-
-      // Helper function to add field with label
+      // Helper function to add field with label and improved formatting
       const addField = (
         label: string,
         value: string | number | boolean | undefined,
@@ -299,28 +317,29 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       ) => {
         if (value === undefined || value === null || value === "") return y;
 
+        // Add subtle background for fields
+        doc.setFillColor(245, 245, 245);
+        doc.rect(x - 2, y - 2, width + 4, 8, "F");
+
         const labelText = `${label}:`;
         doc.setFont("helvetica", "bold");
         doc.text(labelText, x, y);
         doc.setFont("helvetica", "normal");
 
         const valueText = value.toString();
-        const splitValue = doc.splitTextToSize(
-          valueText,
-          width - 30,
-        ) as string[];
-        doc.text(splitValue, x + 30, y);
-        return y + Math.max(lineHeight, splitValue.length * lineHeight);
+        const splitValue = doc.splitTextToSize(valueText, width) as string[];
+        doc.text(splitValue, x, y + 6);
+        return y + 6 + splitValue.length * lineHeight;
       };
 
       let y = topMargin + 40;
 
-      // Owner Information Section - Two columns
+      // Owner Information Section with improved layout
       y = addSectionHeader("Pet Owner Information", leftMargin, y);
       let leftY = y;
       let rightY = y;
 
-      // Left column
+      // Left column with improved spacing
       leftY = addField(
         "Full Name",
         data.ownerName,
@@ -337,7 +356,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         columnWidth,
       );
 
-      // Right column
+      // Right column with improved spacing
       rightY = addField(
         "Phone",
         data.phone,
@@ -353,9 +372,9 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         columnWidth,
       );
 
-      y = Math.max(leftY, rightY) + 5;
+      y = Math.max(leftY, rightY) + 10;
 
-      // Emergency Contact Section - Two columns
+      // Emergency Contact Section with improved layout
       y = addSectionHeader("Emergency Contact Information", leftMargin, y);
       leftY = y;
       rightY = y;
@@ -385,9 +404,15 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         columnWidth,
       );
 
-      y = Math.max(leftY, rightY) + 5;
+      y = Math.max(leftY, rightY) + 10;
 
-      // Pet Information Section - Two columns
+      // Check if we need a new page
+      if (y > pageHeight - bottomMargin) {
+        doc.addPage();
+        y = topMargin;
+      }
+
+      // Pet Information Section with improved layout
       y = addSectionHeader("Pet Information", leftMargin, y);
       leftY = y;
       rightY = y;
@@ -436,7 +461,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         );
       }
 
-      y = Math.max(leftY, rightY) + 5;
+      y = Math.max(leftY, rightY) + 10;
 
       // Check if we need a new page
       if (y > pageHeight - bottomMargin) {
@@ -444,10 +469,10 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         y = topMargin;
       }
 
-      // Pet Health Information Section - Single column for longer text
+      // Pet Health Information Section with improved layout
       y = addSectionHeader("Pet Health Information", leftMargin, y);
 
-      // Insurance Information
+      // Insurance Information with improved formatting
       if (data.hasInsurance) {
         y = addSubsectionHeader("Insurance Information", leftMargin, y);
         y = addField(
@@ -481,7 +506,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         y += 5;
       }
 
-      // Special Care Information
+      // Special Care Information with improved formatting
       if (data.specialDiet ?? data.feedingSchedule) {
         y = addSubsectionHeader("Special Care Information", leftMargin, y);
         if (data.specialDiet) {
@@ -505,7 +530,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         y += 5;
       }
 
-      // Medical Information
+      // Medical Information with improved formatting
       if (data.medicalConditions ?? data.medications ?? data.allergies) {
         y = addSubsectionHeader("Medical Information", leftMargin, y);
         if (data.medicalConditions) {
@@ -544,7 +569,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         y = topMargin;
       }
 
-      // End of Life Care Section - Two columns
+      // End of Life Care Section with improved layout
       y = addSectionHeader("End of Life Care Decisions", leftMargin, y);
       leftY = y;
       rightY = y;
@@ -598,7 +623,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         );
       }
 
-      y = Math.max(leftY, rightY) + 5;
+      y = Math.max(leftY, rightY) + 10;
 
       // Check if we need a new page
       if (y > pageHeight - bottomMargin) {
@@ -606,7 +631,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         y = topMargin;
       }
 
-      // Veterinarian Information Section - Two columns
+      // Veterinarian Information Section with improved layout
       y = addSectionHeader("Veterinarian Information", leftMargin, y);
       leftY = y;
       rightY = y;
@@ -632,7 +657,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         rightY = addField(
           "Address",
           data.veterinarianAddress,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
@@ -641,7 +666,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         rightY = addField(
           "Email",
           data.veterinarianEmail,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
@@ -691,7 +716,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         rightY = addField(
           "Email",
           data.caregiverEmail,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
@@ -700,7 +725,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         rightY = addField(
           "Relationship",
           data.caregiverRelationship,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
@@ -708,14 +733,14 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       rightY = addField(
         "Has Key to Home",
         data.caregiverHasKey ? "Yes" : "No",
-        leftMargin + columnWidth + 20,
+        leftMargin + columnWidth + 15,
         rightY,
         columnWidth,
       );
       rightY = addField(
         "Care Type",
         data.caregiverCareType,
-        leftMargin + columnWidth + 20,
+        leftMargin + columnWidth + 15,
         rightY,
         columnWidth,
       );
@@ -755,7 +780,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         rightY = addField(
           "Email",
           data.backupCaregiverEmail,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
@@ -764,7 +789,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         rightY = addField(
           "Relationship",
           data.backupCaregiverRelationship,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
@@ -772,14 +797,14 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
       rightY = addField(
         "Has Key to Home",
         data.backupCaregiverHasKey ? "Yes" : "No",
-        leftMargin + columnWidth + 20,
+        leftMargin + columnWidth + 15,
         rightY,
         columnWidth,
       );
       rightY = addField(
         "Care Type",
         data.backupCaregiverCareType,
-        leftMargin + columnWidth + 20,
+        leftMargin + columnWidth + 15,
         rightY,
         columnWidth,
       );
@@ -829,28 +854,28 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         rightY = addField(
           "Home Phone",
           data.trusteeHomePhone,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
         rightY = addField(
           "Cell Phone",
           data.trusteeCellPhone,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
         rightY = addField(
           "Email",
           data.trusteeEmail,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
         rightY = addField(
           "Annual Allocation",
           data.trusteeAllocation ? `$${data.trusteeAllocation}` : undefined,
-          leftMargin + columnWidth + 20,
+          leftMargin + columnWidth + 15,
           rightY,
           columnWidth,
         );
