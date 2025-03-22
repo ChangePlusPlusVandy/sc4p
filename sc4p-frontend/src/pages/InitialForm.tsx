@@ -40,6 +40,17 @@ const schema = yup.object().shape({
   phone: yup.string().required("Phone number is required"),
   email: yup.string().email("Invalid email").required("Email is required"),
 
+  // Emergency Contact Information (New section)
+  emergencyContactName: yup
+    .string()
+    .required("Emergency contact name is required"),
+  emergencyContactPhone: yup
+    .string()
+    .required("Emergency contact phone is required"),
+  emergencyContactRelationship: yup
+    .string()
+    .required("Relationship is required"),
+
   // Emergency Care Information
   petName: yup.string().required("Pet name is required"),
   petType: yup.string().required("Pet type is required"),
@@ -51,15 +62,27 @@ const schema = yup.object().shape({
   gender: yup.string().required("Gender is required"),
   spayedNeutered: yup.boolean(),
   color: yup.string().required("Color is required"),
+  microchipId: yup.string(),
+  petInsurance: yup.string(),
+  insurancePolicy: yup.string(),
+  specialDiet: yup.string(),
+  feedingSchedule: yup.string(),
   medicalConditions: yup.string(),
   medications: yup.string(),
+  allergies: yup.string(),
+  behavioralNotes: yup.string(),
   veterinarianName: yup.string().required("Veterinarian name is required"),
   veterinarianPhone: yup.string().required("Veterinarian phone is required"),
+  veterinarianAddress: yup.string(),
+  veterinarianEmail: yup.string().email("Invalid email"),
 
   // Caregiver Information
   caregiverName: yup.string().required("Caregiver name is required"),
   caregiverPhone: yup.string().required("Caregiver phone is required"),
   caregiverAddress: yup.string().required("Caregiver address is required"),
+  caregiverEmail: yup.string().email("Invalid email"),
+  caregiverRelationship: yup.string(),
+  caregiverHasKey: yup.boolean(),
 
   // Backup Caregiver Information
   backupCaregiverName: yup
@@ -71,6 +94,9 @@ const schema = yup.object().shape({
   backupCaregiverAddress: yup
     .string()
     .required("Backup caregiver address is required"),
+  backupCaregiverEmail: yup.string().email("Invalid email"),
+  backupCaregiverRelationship: yup.string(),
+  backupCaregiverHasKey: yup.boolean(),
 
   // Terms and Agreements
   agreeToTerms: yup.boolean().oneOf([true], "You must agree to the terms"),
@@ -176,6 +202,29 @@ const InitialForm: React.FC = () => {
       doc.text(`Email: ${data.email}`, 20, y);
       y += 15;
 
+      // Emergency Contact Information
+      doc.setFontSize(16);
+      doc.text("Emergency Contact Information", 14, y);
+      doc.setFontSize(12);
+      y += 10;
+
+      doc.text(`Name: ${data.emergencyContactName || ""}`, 20, y);
+      y += 8;
+      doc.text(`Phone: ${data.emergencyContactPhone || ""}`, 20, y);
+      y += 8;
+      doc.text(
+        `Relationship: ${data.emergencyContactRelationship || ""}`,
+        20,
+        y,
+      );
+      y += 15;
+
+      // Check if we need a new page
+      if (y > 230) {
+        doc.addPage();
+        y = 20;
+      }
+
       // Pet Information
       doc.setFontSize(16);
       doc.text("Pet Information", 14, y);
@@ -197,13 +246,58 @@ const InitialForm: React.FC = () => {
       doc.text(`Color: ${data.color}`, 20, y);
       y += 8;
 
+      if (data.microchipId) {
+        doc.text(`Microchip ID: ${data.microchipId}`, 20, y);
+        y += 8;
+      }
+
+      if (data.petInsurance) {
+        doc.text(`Pet Insurance: ${data.petInsurance}`, 20, y);
+        y += 8;
+        if (data.insurancePolicy) {
+          doc.text(`Policy Number: ${data.insurancePolicy}`, 20, y);
+          y += 8;
+        }
+      }
+
       // Check if we need a new page
-      if (y > 250) {
+      if (y > 230) {
+        doc.addPage();
+        y = 20;
+      }
+
+      // Feeding Information
+      if (data.specialDiet || data.feedingSchedule) {
+        doc.setFontSize(16);
+        doc.text("Feeding Information", 14, y);
+        doc.setFontSize(12);
+        y += 10;
+
+        if (data.specialDiet) {
+          doc.text(`Special Diet: ${data.specialDiet}`, 20, y);
+          y += 8;
+        }
+
+        if (data.feedingSchedule) {
+          doc.text(`Feeding Schedule: ${data.feedingSchedule}`, 20, y);
+          y += 15;
+        } else {
+          y += 7;
+        }
+      }
+
+      // Check if we need a new page
+      if (y > 230) {
         doc.addPage();
         y = 20;
       }
 
       // Medical Information
+      doc.setFontSize(16);
+      doc.text("Medical Information", 14, y);
+      doc.setFontSize(12);
+      y += 10;
+
       if (data.medicalConditions) {
         doc.text(`Medical Conditions: ${data.medicalConditions}`, 20, y);
         y += 8;
@@ -211,9 +305,25 @@ const InitialForm: React.FC = () => {
 
       if (data.medications) {
         doc.text(`Medications: ${data.medications}`, 20, y);
+        y += 8;
+      }
+
+      if (data.allergies) {
+        doc.text(`Allergies: ${data.allergies}`, 20, y);
+        y += 8;
+      }
+
+      if (data.behavioralNotes) {
+        doc.text(`Behavioral Notes: ${data.behavioralNotes}`, 20, y);
         y += 15;
       } else {
-        y += 15;
+        y += 7;
+      }
+
+      // Check if we need a new page
+      if (y > 230) {
+        doc.addPage();
+        y = 20;
       }
 
       // Veterinarian Information
@@ -225,10 +335,22 @@ const InitialForm: React.FC = () => {
       doc.text(`Name: ${data.veterinarianName}`, 20, y);
       y += 8;
       doc.text(`Phone: ${data.veterinarianPhone}`, 20, y);
-      y += 15;
+      y += 8;
+
+      if (data.veterinarianAddress) {
+        doc.text(`Address: ${data.veterinarianAddress}`, 20, y);
+        y += 8;
+      }
+
+      if (data.veterinarianEmail) {
+        doc.text(`Email: ${data.veterinarianEmail}`, 20, y);
+        y += 15;
+      } else {
+        y += 7;
+      }
 
       // Check if we need a new page
-      if (y > 250) {
+      if (y > 230) {
         doc.addPage();
         y = 20;
       }
@@ -244,6 +366,23 @@ const InitialForm: React.FC = () => {
       doc.text(`Phone: ${data.caregiverPhone}`, 20, y);
       y += 8;
       doc.text(`Address: ${data.caregiverAddress}`, 20, y);
+      y += 8;
+
+      if (data.caregiverEmail) {
+        doc.text(`Email: ${data.caregiverEmail}`, 20, y);
+        y += 8;
+      }
+
+      if (data.caregiverRelationship) {
+        doc.text(`Relationship: ${data.caregiverRelationship}`, 20, y);
+        y += 8;
+      }
+
+      doc.text(
+        `Has Key to Home: ${data.caregiverHasKey ? "Yes" : "No"}`,
+        20,
+        y,
+      );
       y += 15;
 
       // Check if we need a new page
@@ -263,7 +402,30 @@ const InitialForm: React.FC = () => {
       doc.text(`Phone: ${data.backupCaregiverPhone}`, 20, y);
       y += 8;
       doc.text(`Address: ${data.backupCaregiverAddress}`, 20, y);
+      y += 8;
+
+      if (data.backupCaregiverEmail) {
+        doc.text(`Email: ${data.backupCaregiverEmail}`, 20, y);
+        y += 8;
+      }
+
+      if (data.backupCaregiverRelationship) {
+        doc.text(`Relationship: ${data.backupCaregiverRelationship}`, 20, y);
+        y += 8;
+      }
+
+      doc.text(
+        `Has Key to Home: ${data.backupCaregiverHasKey ? "Yes" : "No"}`,
+        20,
+        y,
+      );
       y += 15;
+
+      // Check if we need a new page
+      if (y > 230) {
+        doc.addPage();
+        y = 20;
+      }
 
       // Agreement
       doc.setFontSize(16);
@@ -312,17 +474,126 @@ const InitialForm: React.FC = () => {
       // Create a new PDF
       const doc = new jsPDF();
 
-      // Add a simple title
+      // Add a title
       doc.setFontSize(22);
+      doc.setTextColor(94, 53, 147); // #5E3593
       doc.text("2nd Chance For Pets Form", 105, 20, { align: "center" });
       doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
       doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, {
         align: "center",
       });
 
-      // Add some form data
-      doc.text(`Owner: ${formData.ownerName || ""}`, 20, 50);
-      doc.text(`Pet Name: ${formData.petName || ""}`, 20, 60);
+      // Add form data in a simplified format
+      let y = 40;
+
+      // Pet Owner
+      doc.setFontSize(16);
+      doc.text("Pet Owner", 20, y);
+      y += 10;
+      doc.setFontSize(12);
+
+      doc.text(`Name: ${formData.ownerName || ""}`, 20, y);
+      y += 8;
+      doc.text(
+        `Contact: ${formData.phone || ""} / ${formData.email || ""}`,
+        20,
+        y,
+      );
+      y += 8;
+      doc.text(
+        `Address: ${formData.address || ""}, ${formData.city || ""}, ${formData.state || ""} ${formData.zipCode || ""}`,
+        20,
+        y,
+      );
+      y += 15;
+
+      // Pet Information
+      doc.setFontSize(16);
+      doc.text("Pet Information", 20, y);
+      y += 10;
+      doc.setFontSize(12);
+
+      doc.text(
+        `Pet: ${formData.petName || ""} - ${formData.petType || ""} - ${formData.breed || ""}`,
+        20,
+        y,
+      );
+      y += 8;
+      doc.text(
+        `Details: ${formData.age || ""} year(s), ${formData.gender || ""}, ${formData.color || ""}`,
+        20,
+        y,
+      );
+      y += 8;
+
+      if (
+        formData.medicalConditions ||
+        formData.medications ||
+        formData.allergies
+      ) {
+        doc.text("Health Notes:", 20, y);
+        y += 8;
+        if (formData.medicalConditions) {
+          doc.text(
+            `• Medical Conditions: ${formData.medicalConditions}`,
+            25,
+            y,
+          );
+          y += 8;
+        }
+        if (formData.medications) {
+          doc.text(`• Medications: ${formData.medications}`, 25, y);
+          y += 8;
+        }
+        if (formData.allergies) {
+          doc.text(`• Allergies: ${formData.allergies}`, 25, y);
+          y += 8;
+        }
+      }
+      y += 7;
+
+      // Caregiver Information
+      doc.setFontSize(16);
+      doc.text("Caregiver Information", 20, y);
+      y += 10;
+      doc.setFontSize(12);
+
+      doc.text(
+        `Primary: ${formData.caregiverName || ""} (${formData.caregiverPhone || ""})`,
+        20,
+        y,
+      );
+      y += 8;
+      doc.text(
+        `Backup: ${formData.backupCaregiverName || ""} (${formData.backupCaregiverPhone || ""})`,
+        20,
+        y,
+      );
+      y += 15;
+
+      // Veterinarian
+      doc.setFontSize(16);
+      doc.text("Veterinarian", 20, y);
+      y += 10;
+      doc.setFontSize(12);
+
+      doc.text(`Name: ${formData.veterinarianName || ""}`, 20, y);
+      y += 8;
+      doc.text(`Phone: ${formData.veterinarianPhone || ""}`, 20, y);
+      y += 20;
+
+      // Agreement
+      doc.text(
+        "By downloading this form, I confirm all information is accurate to the best of my knowledge.",
+        20,
+        y,
+      );
+      y += 20;
+
+      doc.text("Signature: _______________________________", 20, y);
+      y += 10;
+      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, y);
 
       // Save the PDF
       try {
@@ -372,14 +643,14 @@ const InitialForm: React.FC = () => {
             <p className="text-center text-gray-600">
               Step {step} of 5:{" "}
               {step === 1
-                ? "Pet Owner Information"
+                ? "Owner & Emergency Contact"
                 : step === 2
-                ? "Pet Information"
-                : step === 3
-                ? "Veterinarian Information"
-                : step === 4
-                ? "Caregiver Information"
-                : "Review & Submit"}
+                  ? "Pet Details & Care"
+                  : step === 3
+                    ? "Veterinarian Information"
+                    : step === 4
+                      ? "Caregiver Information"
+                      : "Review & Submit"}
             </p>
           </div>
 
@@ -493,6 +764,57 @@ const InitialForm: React.FC = () => {
                         placeholder="email@example.com"
                         isInvalid={!!errors.email}
                         errorMessage={errors.email?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <h2 className="text-xl font-semibold text-[#5E3593] mt-8 mb-4">
+                    Emergency Contact Information
+                  </h2>
+
+                  <Controller
+                    name="emergencyContactName"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Emergency Contact Name"
+                        placeholder="Enter emergency contact name"
+                        isInvalid={!!errors.emergencyContactName}
+                        errorMessage={errors.emergencyContactName?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="emergencyContactPhone"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Emergency Contact Phone"
+                        placeholder="(123) 456-7890"
+                        isInvalid={!!errors.emergencyContactPhone}
+                        errorMessage={errors.emergencyContactPhone?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="emergencyContactRelationship"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Relationship to You"
+                        placeholder="Friend, Family, etc."
+                        isInvalid={!!errors.emergencyContactRelationship}
+                        errorMessage={
+                          errors.emergencyContactRelationship?.message
+                        }
                         className="w-full"
                       />
                     )}
@@ -642,6 +964,73 @@ const InitialForm: React.FC = () => {
                   </div>
 
                   <Controller
+                    name="microchipId"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Microchip ID (if applicable)"
+                        placeholder="Enter microchip ID"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="petInsurance"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Pet Insurance Provider"
+                          placeholder="Enter insurance provider if any"
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="insurancePolicy"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Policy Number"
+                          placeholder="Enter policy number"
+                          className="w-full"
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Controller
+                    name="specialDiet"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea
+                        {...field}
+                        label="Special Diet Requirements"
+                        placeholder="Describe any special diet needs"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="feedingSchedule"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea
+                        {...field}
+                        label="Feeding Schedule"
+                        placeholder="Describe feeding routine and amounts"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
                     name="medicalConditions"
                     control={control}
                     render={({ field }) => (
@@ -663,9 +1052,35 @@ const InitialForm: React.FC = () => {
                       <Textarea
                         {...field}
                         label="Medications"
-                        placeholder="List any medications"
+                        placeholder="List any medications and dosage instructions"
                         isInvalid={!!errors.medications}
                         errorMessage={errors.medications?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="allergies"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea
+                        {...field}
+                        label="Allergies"
+                        placeholder="List any known allergies"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="behavioralNotes"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea
+                        {...field}
+                        label="Behavioral Notes"
+                        placeholder="Any important behavioral information caregivers should know"
                         className="w-full"
                       />
                     )}
@@ -704,6 +1119,34 @@ const InitialForm: React.FC = () => {
                         placeholder="(123) 456-7890"
                         isInvalid={!!errors.veterinarianPhone}
                         errorMessage={errors.veterinarianPhone?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="veterinarianAddress"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Veterinarian Address"
+                        placeholder="Enter veterinarian's clinic address"
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="veterinarianEmail"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Veterinarian Email"
+                        placeholder="Enter veterinarian's email address"
+                        isInvalid={!!errors.veterinarianEmail}
+                        errorMessage={errors.veterinarianEmail?.message}
                         className="w-full"
                       />
                     )}
@@ -762,6 +1205,53 @@ const InitialForm: React.FC = () => {
                     )}
                   />
 
+                  <Controller
+                    name="caregiverEmail"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Caregiver Email"
+                        placeholder="Enter caregiver's email"
+                        isInvalid={!!errors.caregiverEmail}
+                        errorMessage={errors.caregiverEmail?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="caregiverRelationship"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Relationship to You"
+                          placeholder="Friend, Family, etc."
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="caregiverHasKey"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex items-center h-full pt-8">
+                          <Checkbox
+                            isSelected={field.value}
+                            onValueChange={(checked) => field.onChange(checked)}
+                            name={field.name}
+                            ref={field.ref}
+                          >
+                            Has Key to Home
+                          </Checkbox>
+                        </div>
+                      )}
+                    />
+                  </div>
+
                   <h2 className="text-xl font-semibold text-[#5E3593] mt-8 mb-4">
                     Backup Caregiver Information
                   </h2>
@@ -810,6 +1300,53 @@ const InitialForm: React.FC = () => {
                       />
                     )}
                   />
+
+                  <Controller
+                    name="backupCaregiverEmail"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        {...field}
+                        label="Backup Caregiver Email"
+                        placeholder="Enter backup caregiver's email"
+                        isInvalid={!!errors.backupCaregiverEmail}
+                        errorMessage={errors.backupCaregiverEmail?.message}
+                        className="w-full"
+                      />
+                    )}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <Controller
+                      name="backupCaregiverRelationship"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          label="Relationship to You"
+                          placeholder="Friend, Family, etc."
+                          className="w-full"
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      name="backupCaregiverHasKey"
+                      control={control}
+                      render={({ field }) => (
+                        <div className="flex items-center h-full pt-8">
+                          <Checkbox
+                            isSelected={field.value}
+                            onValueChange={(checked) => field.onChange(checked)}
+                            name={field.name}
+                            ref={field.ref}
+                          >
+                            Has Key to Home
+                          </Checkbox>
+                        </div>
+                      )}
+                    />
+                  </div>
                 </div>
               )}
 
