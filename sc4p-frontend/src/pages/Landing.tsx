@@ -41,7 +41,9 @@ const Landing: React.FC = () => {
                 </Button>
               </Link>
               <Button
-                onClick={() => (window.location.href = "/form.pdf")}
+                onClick={() =>
+                  (window.location.href = "/src/assets/forms/2-page-form.pdf")
+                }
                 className="w-full h-[56px] bg-white border-2 border-[#AF94D3] text-[#5E3593] rounded-[15px] font-[Inter] font-semibold text-[20px]"
               >
                 Download Blank Form
