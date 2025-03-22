@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import InitialForm from "./pages/InitialForm";
 import Landing from "./pages/Landing";
+import TestForm from "./pages/TestForm";
 
 export const App: React.FC = () => {
   return (
@@ -10,6 +11,7 @@ export const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/initialForm" element={<InitialForm />} />
+        <Route path="/test" element={<TestForm />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

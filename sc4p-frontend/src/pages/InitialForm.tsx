@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { useForm, Controller, FormProvider } from "react-hook-form";
+import {
+  useForm,
+  Controller,
+  FormProvider,
+  UseFormReturn,
+} from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {
@@ -163,17 +168,21 @@ const schema = yup.object().shape({
 
 type FormData = yup.InferType<typeof schema>;
 
-const InitialForm: React.FC = () => {
+const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
+  methods: externalMethods,
+}) => {
   const [step, setStep] = useState(1);
   const [pdfGenerationStatus, setPdfGenerationStatus] = useState<
     "idle" | "loading" | "success" | "error"
   >("idle");
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const methods = useForm<FormData>({
+  const internalMethods = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: "onChange",
   });
+
+  const methods = externalMethods ?? internalMethods;
 
   const {
     handleSubmit,
