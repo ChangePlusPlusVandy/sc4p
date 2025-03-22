@@ -345,7 +345,7 @@ const InitialForm: React.FC = () => {
       }
 
       // Feeding Information
-      if (data.specialDiet || data.feedingSchedule) {
+      if (data.specialDiet ?? data.feedingSchedule) {
         doc.setFontSize(16);
         doc.text("Feeding Information", 14, y);
         doc.setFontSize(12);
@@ -564,7 +564,7 @@ const InitialForm: React.FC = () => {
       }
 
       // Trustee Information
-      if (data.trusteeName || data.trusteeAddress || data.trusteeAllocation) {
+      if (data.trusteeName ?? data.trusteeAddress ?? data.trusteeAllocation) {
         doc.setFontSize(16);
         doc.text("Trustee Information", 14, y);
         doc.setFontSize(12);
@@ -580,9 +580,11 @@ const InitialForm: React.FC = () => {
           y += 8;
         }
 
-        if (data.trusteeCity || data.trusteeState || data.trusteeZip) {
+        if (data.trusteeCity ?? data.trusteeState ?? data.trusteeZip) {
           doc.text(
-            `City/State/Zip: ${data.trusteeCity || ""}, ${data.trusteeState || ""} ${data.trusteeZip || ""}`,
+            `City/State/Zip: ${data.trusteeCity ?? ""}, ${
+              data.trusteeState ?? ""
+            } ${data.trusteeZip ?? ""}`,
             20,
             y,
           );
@@ -751,7 +753,9 @@ const InitialForm: React.FC = () => {
       );
       y += 8;
       doc.text(
-        `Address: ${formData.address || ""}, ${formData.city || ""}, ${formData.state || ""} ${formData.zipCode || ""}`,
+        `Address: ${formData.address || ""}, ${formData.city || ""}, ${
+          formData.state || ""
+        } ${formData.zipCode || ""}`,
         20,
         y,
       );
@@ -764,21 +768,25 @@ const InitialForm: React.FC = () => {
       doc.setFontSize(12);
 
       doc.text(
-        `Pet: ${formData.petName || ""} - ${formData.petType || ""} - ${formData.breed || ""}`,
+        `Pet: ${formData.petName || ""} - ${formData.petType || ""} - ${
+          formData.breed || ""
+        }`,
         20,
         y,
       );
       y += 8;
       doc.text(
-        `Details: ${formData.age || ""} year(s), ${formData.gender || ""}, ${formData.color || ""}`,
+        `Details: ${formData.age || ""} year(s), ${formData.gender || ""}, ${
+          formData.color || ""
+        }`,
         20,
         y,
       );
       y += 8;
 
       if (
-        formData.medicalConditions ||
-        formData.medications ||
+        formData.medicalConditions ??
+        formData.medications ??
         formData.allergies
       ) {
         doc.text("Health Notes:", 20, y);
@@ -805,7 +813,7 @@ const InitialForm: React.FC = () => {
       // Pet Insurance
       if (formData.hasInsurance) {
         doc.text(
-          `Insurance: ${formData.petInsurance || "Not specified"}`,
+          `Insurance: ${formData.petInsurance ?? "Not specified"}`,
           20,
           y,
         );
@@ -860,13 +868,17 @@ const InitialForm: React.FC = () => {
       doc.setFontSize(12);
 
       doc.text(
-        `Primary: ${formData.caregiverName || ""} (${formData.caregiverPhone || ""})`,
+        `Primary: ${formData.caregiverName || ""} (${
+          formData.caregiverPhone || ""
+        })`,
         20,
         y,
       );
       y += 8;
       doc.text(
-        `Backup: ${formData.backupCaregiverName || ""} (${formData.backupCaregiverPhone || ""})`,
+        `Backup: ${formData.backupCaregiverName || ""} (${
+          formData.backupCaregiverPhone || ""
+        })`,
         20,
         y,
       );
@@ -874,8 +886,8 @@ const InitialForm: React.FC = () => {
 
       // Trustee Information (if available)
       if (
-        formData.trusteeName ||
-        formData.trusteeAllocation ||
+        formData.trusteeName ??
+        formData.trusteeAllocation ??
         formData.trustFundType
       ) {
         doc.setFontSize(16);
@@ -908,7 +920,7 @@ const InitialForm: React.FC = () => {
 
         // Remaining Funds
         if (
-          formData.remainingFundsOrg2ndChance ||
+          formData.remainingFundsOrg2ndChance ??
           formData.remainingFundsOrgOther
         ) {
           doc.text("Funds Distribution: ", 20, y);
@@ -1005,14 +1017,14 @@ const InitialForm: React.FC = () => {
               {step === 1
                 ? "Owner & Emergency Contact"
                 : step === 2
-                  ? "Pet Details & Care"
-                  : step === 3
-                    ? "Veterinarian Information"
-                    : step === 4
-                      ? "Caregiver Information"
-                      : step === 5
-                        ? "Trustee Information"
-                        : "Review & Submit"}
+                ? "Pet Details & Care"
+                : step === 3
+                ? "Veterinarian Information"
+                : step === 4
+                ? "Caregiver Information"
+                : step === 5
+                ? "Trustee Information"
+                : "Review & Submit"}
             </p>
           </div>
 
@@ -1788,7 +1800,7 @@ const InitialForm: React.FC = () => {
                                 id="caregiver-care-short"
                                 checked={field.value?.includes("short-term")}
                                 onChange={(e) => {
-                                  let value = field.value || "";
+                                  const value = field.value ?? "";
                                   if (e.target.checked) {
                                     field.onChange(value + " short-term care");
                                   } else {
@@ -1809,7 +1821,7 @@ const InitialForm: React.FC = () => {
                                 id="caregiver-care-long"
                                 checked={field.value?.includes("long-term")}
                                 onChange={(e) => {
-                                  let value = field.value || "";
+                                  const value = field.value ?? "";
                                   if (e.target.checked) {
                                     field.onChange(value + " long-term care");
                                   } else {
@@ -1830,7 +1842,7 @@ const InitialForm: React.FC = () => {
                                 id="caregiver-care-both"
                                 checked={field.value?.includes("both")}
                                 onChange={(e) => {
-                                  let value = field.value || "";
+                                  const value = field.value ?? "";
                                   if (e.target.checked) {
                                     field.onChange("both");
                                   } else {
@@ -2022,7 +2034,7 @@ const InitialForm: React.FC = () => {
                                 id="backup-caregiver-care-short"
                                 checked={field.value?.includes("short-term")}
                                 onChange={(e) => {
-                                  let value = field.value || "";
+                                  const value = field.value ?? "";
                                   if (e.target.checked) {
                                     field.onChange(value + " short-term care");
                                   } else {
@@ -2043,7 +2055,7 @@ const InitialForm: React.FC = () => {
                                 id="backup-caregiver-care-long"
                                 checked={field.value?.includes("long-term")}
                                 onChange={(e) => {
-                                  let value = field.value || "";
+                                  const value = field.value ?? "";
                                   if (e.target.checked) {
                                     field.onChange(value + " long-term care");
                                   } else {
@@ -2064,7 +2076,7 @@ const InitialForm: React.FC = () => {
                                 id="backup-caregiver-care-both"
                                 checked={field.value?.includes("both")}
                                 onChange={(e) => {
-                                  let value = field.value || "";
+                                  const value = field.value ?? "";
                                   if (e.target.checked) {
                                     field.onChange("both");
                                   } else {
