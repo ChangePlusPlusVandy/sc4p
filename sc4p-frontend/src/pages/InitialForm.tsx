@@ -24,7 +24,7 @@ import {
 import { Link } from "react-router-dom";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import Logo from "../assets/logo.png";
+import Logo from "/logo.png";
 
 // Define jsPDF with autoTable type
 interface jsPDFWithAutoTable extends jsPDF {
@@ -1286,8 +1286,8 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
           className="h-[109.7px] w-auto mt-[25.98px] ml-[33.9px]"
           alt="Second Chance 4 Pets Logo"
         />
-        <h1 className="w-[160.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
-          2nd Chance For Pets
+        <h1 className="w-[130.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
+          2nd Chance 4 Pets
         </h1>
       </div>
 
