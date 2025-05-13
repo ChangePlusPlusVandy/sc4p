@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@nextui-org/react";
-import Logo from "../assets/logo.png";
+import Logo from "/logo.png";
 
 const Landing: React.FC = () => {
   return (
@@ -13,8 +13,8 @@ const Landing: React.FC = () => {
           className="w-[55.6px] h-[109.7px] mt-[25.98px] ml-[33.9px]"
           alt="Second Chance 4 Pets Logo"
         />
-        <h1 className="w-[160.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
-          2nd Chance For Pets
+        <h1 className="w-[130.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
+          2nd Chance 4 Pets
         </h1>
       </div>
 
@@ -42,7 +42,7 @@ const Landing: React.FC = () => {
               </Link>
               <Button
                 onClick={() =>
-                  (window.location.href = "/src/assets/forms/2-page-form.pdf")
+                  (window.location.href = "/care-instructions-form.pdf")
                 }
                 className="w-full h-[56px] bg-white border-2 border-[#AF94D3] text-[#5E3593] rounded-[15px] font-[Inter] font-semibold text-[20px]"
               >
@@ -51,13 +51,6 @@ const Landing: React.FC = () => {
             </div>
           </div>
         </div>
-
-        <p className="mt-8 font-[Inter] text-[18px] font-semibold">
-          Need help?{" "}
-          <a href="tel:+1234567890" className="text-[#5F17BE] underline">
-            Call us at (123) 456-7890
-          </a>
-        </p>
       </div>
     </div>
   );
