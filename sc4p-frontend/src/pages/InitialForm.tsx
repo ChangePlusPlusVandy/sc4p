@@ -190,14 +190,6 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
     formState: { errors, isValid },
   } = methods;
 
-  // // Add useEffect to ensure jsPDF is properly initialized
-  // useEffect(() => {
-  //   // Polyfill for URL.createObjectURL in older browsers if needed
-  //   if (typeof window !== "undefined" && !window.URL) {
-  //     window.URL = window.URL || window.webkitURL || window.mozURL || window;
-  //   }
-  // }, []);
-
   const onSubmit = (data: FormData) => {
     console.log("Form submitted with data:", data);
     try {
@@ -1011,14 +1003,16 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
   return (
     <div className="min-h-screen bg-gray-50 pb-8">
       <div className="flex">
-        <img
-          src={Logo}
-          className="h-[109.7px] w-auto mt-[25.98px] ml-[33.9px]"
-          alt="Second Chance 4 Pets Logo"
-        />
-        <h1 className="w-[130.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593]">
-          2nd Chance 4 Pets
-        </h1>
+        <Link to="/" className="flex">
+          <img
+            src={Logo}
+            className="h-[109.7px] w-auto mt-[25.98px] ml-[33.9px]"
+            alt="Second Chance 4 Pets Logo"
+          />
+          <h1 className="w-[130.64px] h-[78px] mt-[48.4px] ml-[15px] font-[Inter] text-[24px] font-bold leading-[28.73px] text-left text-[#5E3593] hover:text-[#7E53C3] transition-colors">
+            2nd Chance 4 Pets
+          </h1>
+        </Link>
       </div>
 
       <div className="max-w-3xl mx-auto px-4 mb-8">
