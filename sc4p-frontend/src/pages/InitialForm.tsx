@@ -1008,276 +1008,6 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
     }
   };
 
-  // Direct PDF generation method without form submission
-  const generatePDFDirectly = () => {
-    try {
-      console.log("Direct PDF generation triggered");
-      const formData = methods.getValues();
-      if (!methods.formState.isValid) {
-        alert("Please complete all required fields before generating the PDF");
-        return;
-      }
-
-      // Create a new PDF
-      const doc = new jsPDF();
-
-      // Add a title
-      doc.setFontSize(22);
-      doc.setTextColor(94, 53, 147); // #5E3593
-      doc.text("2nd Chance For Pets Form", 105, 20, { align: "center" });
-      doc.setFontSize(12);
-      doc.setTextColor(0, 0, 0);
-      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 105, 30, {
-        align: "center",
-      });
-
-      // Add form data in a simplified format
-      let y = 40;
-
-      // Pet Owner
-      doc.setFontSize(16);
-      doc.text("Pet Owner", 20, y);
-      y += 10;
-      doc.setFontSize(12);
-
-      doc.text(`Name: ${formData.ownerName || ""}`, 20, y);
-      y += 8;
-      doc.text(
-        `Contact: ${formData.phone || ""} / ${formData.email || ""}`,
-        20,
-        y,
-      );
-      y += 8;
-      doc.text(
-        `Address: ${formData.address || ""}, ${formData.city || ""}, ${
-          formData.state || ""
-        } ${formData.zipCode || ""}`,
-        20,
-        y,
-      );
-      y += 15;
-
-      // Pet Information
-      doc.setFontSize(16);
-      doc.text("Pet Information", 20, y);
-      y += 10;
-      doc.setFontSize(12);
-
-      doc.text(
-        `Pet: ${formData.petName || ""} - ${formData.petType || ""} - ${
-          formData.breed || ""
-        }`,
-        20,
-        y,
-      );
-      y += 8;
-      doc.text(
-        `Details: ${formData.age || ""} year(s), ${formData.gender || ""}, ${
-          formData.color || ""
-        }`,
-        20,
-        y,
-      );
-      y += 8;
-
-      if (
-        formData.medicalConditions ??
-        formData.medications ??
-        formData.allergies
-      ) {
-        doc.text("Health Notes:", 20, y);
-        y += 8;
-        if (formData.medicalConditions) {
-          doc.text(
-            `• Medical Conditions: ${formData.medicalConditions}`,
-            25,
-            y,
-          );
-          y += 8;
-        }
-        if (formData.medications) {
-          doc.text(`• Medications: ${formData.medications}`, 25, y);
-          y += 8;
-        }
-        if (formData.allergies) {
-          doc.text(`• Allergies: ${formData.allergies}`, 25, y);
-          y += 8;
-        }
-      }
-      y += 7;
-
-      // Pet Insurance
-      if (formData.hasInsurance) {
-        doc.text(
-          `Insurance: ${formData.petInsurance ?? "Not specified"}`,
-          20,
-          y,
-        );
-        y += 8;
-        if (formData.insurancePolicy) {
-          doc.text(`Policy: ${formData.insurancePolicy}`, 20, y);
-          y += 8;
-        }
-      }
-      y += 7;
-
-      // End of Life Care
-      doc.text("End of Life Care:", 20, y);
-      y += 8;
-
-      // Illness Decision
-      let illnessDecision = "Not specified";
-      if (formData.illnessDecision === "vet") {
-        illnessDecision = "Veterinarian decides";
-      } else if (formData.illnessDecision === "caregiver") {
-        illnessDecision = "Caregiver decides";
-      } else if (formData.illnessDecision === "consult") {
-        illnessDecision = "Consultation required";
-      }
-      doc.text(`• Serious Illness: ${illnessDecision}`, 25, y);
-      y += 8;
-
-      // Death Care
-      let deathCare = "Not specified";
-      if (formData.deathCarePreference === "burial") {
-        deathCare = "Burial";
-      } else if (formData.deathCarePreference === "cremation") {
-        deathCare = "Cremation";
-      } else if (formData.deathCarePreference === "pet-cemetery") {
-        deathCare = "Pet Cemetery";
-      } else if (formData.deathCarePreference === "caregiver-determine") {
-        deathCare = "Caregiver determines";
-      }
-      doc.text(`• Death Care: ${deathCare}`, 25, y);
-      y += 8;
-
-      if (formData.deathCareBudget) {
-        doc.text(`• Budget for Remains: $${formData.deathCareBudget}`, 25, y);
-        y += 8;
-      }
-      y += 7;
-
-      // Caregiver Information
-      doc.setFontSize(16);
-      doc.text("Caregiver Information", 20, y);
-      y += 10;
-      doc.setFontSize(12);
-
-      doc.text(
-        `Primary: ${formData.caregiverName || ""} (${
-          formData.caregiverPhone || ""
-        })`,
-        20,
-        y,
-      );
-      y += 8;
-      doc.text(
-        `Backup: ${formData.backupCaregiverName || ""} (${
-          formData.backupCaregiverPhone || ""
-        })`,
-        20,
-        y,
-      );
-      y += 15;
-
-      // Trustee Information (if available)
-      if (
-        formData.trusteeName ??
-        formData.trusteeAllocation ??
-        formData.trustFundType
-      ) {
-        doc.setFontSize(16);
-        doc.text("Trustee & Trust Information", 20, y);
-        y += 10;
-        doc.setFontSize(12);
-
-        if (formData.trusteeName) {
-          doc.text(`Trustee: ${formData.trusteeName}`, 20, y);
-          y += 8;
-        }
-
-        if (formData.trusteeAllocation) {
-          doc.text(`Annual Allocation: $${formData.trusteeAllocation}`, 20, y);
-          y += 8;
-        }
-
-        // Trust Fund Type
-        let fundingMethod = "Not specified";
-        if (formData.trustFundType === "bank-account") {
-          fundingMethod = "Bank Account";
-        } else if (formData.trustFundType === "life-insurance") {
-          fundingMethod = "Life Insurance";
-        } else if (formData.trustFundType === "other-fund") {
-          fundingMethod = "Other";
-        }
-
-        doc.text(`Funding Method: ${fundingMethod}`, 20, y);
-        y += 8;
-
-        // Remaining Funds
-        if (
-          formData.remainingFundsOrg2ndChance ??
-          formData.remainingFundsOrgOther
-        ) {
-          doc.text("Funds Distribution: ", 20, y);
-          y += 8;
-
-          if (formData.remainingFundsOrg2ndChance) {
-            doc.text(
-              `• 2nd Chance 4 Pets: ${formData.remainingFundsOrg2ndChance}%`,
-              25,
-              y,
-            );
-            y += 8;
-          }
-
-          if (formData.remainingFundsOrgOther) {
-            doc.text(`• Other org: ${formData.remainingFundsOrgOther}%`, 25, y);
-            y += 8;
-          }
-        }
-
-        y += 7;
-      }
-
-      // Veterinarian
-      doc.setFontSize(16);
-      doc.text("Veterinarian", 20, y);
-      y += 10;
-      doc.setFontSize(12);
-
-      doc.text(`Name: ${formData.veterinarianName || ""}`, 20, y);
-      y += 8;
-      doc.text(`Phone: ${formData.veterinarianPhone || ""}`, 20, y);
-      y += 20;
-
-      // Agreement
-      doc.text(
-        "By downloading this form, I confirm all information is accurate to the best of my knowledge.",
-        20,
-        y,
-      );
-      y += 20;
-
-      doc.text("Signature: _______________________________", 20, y);
-      y += 10;
-      doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, y);
-
-      // Save the PDF
-      try {
-        doc.save("pet_form.pdf");
-        console.log("PDF saved successfully");
-        return true;
-      } catch (err) {
-        console.error("Error saving PDF:", err);
-        throw err;
-      }
-    } catch (err) {
-      console.error("Error in direct PDF generation:", err);
-      return false;
-    }
-  };
-
   return (
     <div className="h-screen bg-gray-50">
       <div className="flex">
@@ -1313,14 +1043,14 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
               {step === 1
                 ? "Owner & Emergency Contact"
                 : step === 2
-                ? "Pet Details & Care"
-                : step === 3
-                ? "Veterinarian Information"
-                : step === 4
-                ? "Caregiver Information"
-                : step === 5
-                ? "Trustee Information"
-                : "Review & Submit"}
+                  ? "Pet Details & Care"
+                  : step === 3
+                    ? "Veterinarian Information"
+                    : step === 4
+                      ? "Caregiver Information"
+                      : step === 5
+                        ? "Trustee Information"
+                        : "Review & Submit"}
             </p>
           </div>
 
@@ -1519,23 +1249,26 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       control={control}
                       render={({ field }) => (
                         <Select
-                          {...field}
+                          selectedKeys={field.value ? [field.value] : []}
+                          onSelectionChange={(keys) =>
+                            field.onChange([...keys][0])
+                          }
                           label="Pet Type"
                           placeholder="Select pet type"
                           isInvalid={!!errors.petType}
                           errorMessage={errors.petType?.message}
                           className="w-full"
                         >
-                          <SelectItem key="dog" value="Dog">
+                          <SelectItem key="Dog" value="Dog">
                             Dog
                           </SelectItem>
-                          <SelectItem key="cat" value="Cat">
+                          <SelectItem key="Cat" value="Cat">
                             Cat
                           </SelectItem>
-                          <SelectItem key="bird" value="Bird">
+                          <SelectItem key="Bird" value="Bird">
                             Bird
                           </SelectItem>
-                          <SelectItem key="other" value="Other">
+                          <SelectItem key="Other" value="Other">
                             Other
                           </SelectItem>
                         </Select>
@@ -1581,17 +1314,20 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       control={control}
                       render={({ field }) => (
                         <Select
-                          {...field}
+                          selectedKeys={field.value ? [field.value] : []}
+                          onSelectionChange={(keys) =>
+                            field.onChange([...keys][0])
+                          }
                           label="Gender"
                           placeholder="Select gender"
                           isInvalid={!!errors.gender}
                           errorMessage={errors.gender?.message}
                           className="w-full"
                         >
-                          <SelectItem key="male" value="Male">
+                          <SelectItem key="Male" value="Male">
                             Male
                           </SelectItem>
-                          <SelectItem key="female" value="Female">
+                          <SelectItem key="Female" value="Female">
                             Female
                           </SelectItem>
                         </Select>
@@ -3131,15 +2867,6 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                   >
                     Save and Download PDF
                   </Button>
-
-                  <div className="mt-4">
-                    <Button
-                      onClick={generatePDFDirectly}
-                      className="w-full bg-gray-200 text-gray-800 rounded-lg font-semibold"
-                    >
-                      Generate PDF Directly
-                    </Button>
-                  </div>
                 </div>
               )}
 
