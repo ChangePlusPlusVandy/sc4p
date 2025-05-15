@@ -1009,7 +1009,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
   };
 
   return (
-    <div className="h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-8">
       <div className="flex">
         <img
           src={Logo}
@@ -1021,7 +1021,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
         </h1>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4">
+      <div className="max-w-3xl mx-auto px-4 mb-8">
         <h1 className="text-3xl font-bold text-center text-[#5E3593] mb-8">
           Pet Care Form
         </h1>
