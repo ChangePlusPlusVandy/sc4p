@@ -43,7 +43,14 @@ const schema = yup.object().shape({
   state: yup.string().required("State is required"),
   zipCode: yup.string().required("Zip code is required"),
   phone: yup.string().required("Phone number is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
+  email: yup
+    .string()
+    .test("email-or-na", "Invalid email", function (value) {
+      if (!value) return true; // Allow empty values
+      if (value.toLowerCase() === "n/a") return true;
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value);
+    })
+    .required("Email is required"),
 
   // Emergency Contact Information (New section)
   emergencyContactName: yup
@@ -88,13 +95,25 @@ const schema = yup.object().shape({
   veterinarianName: yup.string().required("Veterinarian name is required"),
   veterinarianPhone: yup.string().required("Veterinarian phone is required"),
   veterinarianAddress: yup.string(),
-  veterinarianEmail: yup.string().email("Invalid email"),
+  veterinarianEmail: yup
+    .string()
+    .test("email-or-na", "Invalid email", function (value) {
+      if (!value) return true; // Allow empty values
+      if (value.toLowerCase() === "n/a") return true;
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value);
+    }),
 
   // Caregiver Information
   caregiverName: yup.string().required("Caregiver name is required"),
   caregiverPhone: yup.string().required("Caregiver phone is required"),
   caregiverAddress: yup.string().required("Caregiver address is required"),
-  caregiverEmail: yup.string().email("Invalid email"),
+  caregiverEmail: yup
+    .string()
+    .test("email-or-na", "Invalid email", function (value) {
+      if (!value) return true; // Allow empty values
+      if (value.toLowerCase() === "n/a") return true;
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value);
+    }),
   caregiverRelationship: yup.string(),
   caregiverHasKey: yup.boolean(),
   caregiverHasAgreed: yup.boolean(),
@@ -114,7 +133,13 @@ const schema = yup.object().shape({
   backupCaregiverAddress: yup
     .string()
     .required("Backup caregiver address is required"),
-  backupCaregiverEmail: yup.string().email("Invalid email"),
+  backupCaregiverEmail: yup
+    .string()
+    .test("email-or-na", "Invalid email", function (value) {
+      if (!value) return true; // Allow empty values
+      if (value.toLowerCase() === "n/a") return true;
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value);
+    }),
   backupCaregiverRelationship: yup.string(),
   backupCaregiverHasKey: yup.boolean(),
   backupCaregiverHasAgreed: yup.boolean(),
@@ -132,7 +157,13 @@ const schema = yup.object().shape({
   petSitterZip: yup.string(),
   petSitterHomePhone: yup.string(),
   petSitterCellPhone: yup.string(),
-  petSitterEmail: yup.string().email("Invalid email"),
+  petSitterEmail: yup
+    .string()
+    .test("email-or-na", "Invalid email", function (value) {
+      if (!value) return true; // Allow empty values
+      if (value.toLowerCase() === "n/a") return true;
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value);
+    }),
   petSitterDailyCharge: yup.string(),
 
   // Emergency Contact Info
@@ -143,7 +174,13 @@ const schema = yup.object().shape({
   emergencyContact1Zip: yup.string(),
   emergencyContact1HomePhone: yup.string(),
   emergencyContact1CellPhone: yup.string(),
-  emergencyContact1Email: yup.string().email("Invalid email"),
+  emergencyContact1Email: yup
+    .string()
+    .test("email-or-na", "Invalid email", function (value) {
+      if (!value) return true; // Allow empty values
+      if (value.toLowerCase() === "n/a") return true;
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value);
+    }),
 
   // Trustee Information
   trusteeName: yup.string(),
@@ -153,7 +190,13 @@ const schema = yup.object().shape({
   trusteeZip: yup.string(),
   trusteeHomePhone: yup.string(),
   trusteeCellPhone: yup.string(),
-  trusteeEmail: yup.string().email("Invalid email"),
+  trusteeEmail: yup
+    .string()
+    .test("email-or-na", "Invalid email", function (value) {
+      if (!value) return true; // Allow empty values
+      if (value.toLowerCase() === "n/a") return true;
+      return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value);
+    }),
   trusteeAllocation: yup.string(),
   trustFundType: yup.string(),
   trustFundOtherExplanation: yup.string(),
@@ -1155,7 +1198,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       <Input
                         {...field}
                         label="Email Address"
-                        placeholder="email@example.com"
+                        placeholder="Enter email or type 'N/A'"
                         isInvalid={!!errors.email}
                         errorMessage={errors.email?.message}
                         className="w-full"
@@ -1745,7 +1788,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       <Input
                         {...field}
                         label="Veterinarian Email"
-                        placeholder="Enter veterinarian's email address"
+                        placeholder="Enter email or type 'N/A'"
                         isInvalid={!!errors.veterinarianEmail}
                         errorMessage={errors.veterinarianEmail?.message}
                         className="w-full"
@@ -1993,7 +2036,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       <Input
                         {...field}
                         label="Email"
-                        placeholder="Enter caregiver's email"
+                        placeholder="Enter email or type 'N/A'"
                         isInvalid={!!errors.caregiverEmail}
                         errorMessage={errors.caregiverEmail?.message}
                         className="w-full"
@@ -2229,7 +2272,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       <Input
                         {...field}
                         label="Email"
-                        placeholder="Enter backup caregiver's email"
+                        placeholder="Enter email or type 'N/A'"
                         isInvalid={!!errors.backupCaregiverEmail}
                         errorMessage={errors.backupCaregiverEmail?.message}
                         className="w-full"
@@ -2362,7 +2405,9 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       <Input
                         {...field}
                         label="Email"
-                        placeholder="Enter pet sitter's email"
+                        placeholder="Enter email or type 'N/A'"
+                        isInvalid={!!errors.petSitterEmail}
+                        errorMessage={errors.petSitterEmail?.message}
                         className="w-full"
                       />
                     )}
@@ -2480,7 +2525,9 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       <Input
                         {...field}
                         label="Email"
-                        placeholder="Enter emergency contact's email"
+                        placeholder="Enter email or type 'N/A'"
+                        isInvalid={!!errors.emergencyContact1Email}
+                        errorMessage={errors.emergencyContact1Email?.message}
                         className="w-full"
                       />
                     )}
@@ -2616,7 +2663,7 @@ const InitialForm: React.FC<{ methods?: UseFormReturn<FormData> }> = ({
                       <Input
                         {...field}
                         label="Email"
-                        placeholder="Enter trustee's email"
+                        placeholder="Enter email or type 'N/A'"
                         isInvalid={!!errors.trusteeEmail}
                         errorMessage={errors.trusteeEmail?.message}
                         className="w-full"
